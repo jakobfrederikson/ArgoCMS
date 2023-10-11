@@ -15,5 +15,6 @@ namespace ArgoCMS.Data
         public DbSet<Employee> Employees { get; set; } = default!;
         public DbSet<Team> Teams { get; set; } = default!;
         public DbSet<Project> Projects { get; set; } = default!;
+        public DbSet<Notice> Notices { get; set; }
     }
 }
