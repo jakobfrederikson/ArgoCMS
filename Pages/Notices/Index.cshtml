@@ -1,0 +1,54 @@
+﻿@page
+@model ArgoCMS.Pages.Notices.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Notices</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Notice[0].OwnerID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Notice[0].NoticeTitle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Notice[0].NoticeMessageContent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Notice[0].DateCreated)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Notice) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.OwnerID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NoticeTitle)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NoticeMessageContent)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateCreated)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.NoticeId">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.NoticeId">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.NoticeId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

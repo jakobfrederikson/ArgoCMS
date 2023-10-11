@@ -1,0 +1,55 @@
+﻿@page
+@model CompanyManagementSystem.Pages.Employees.DetailsModel
+
+@{
+	ViewData["Title"] = "Details";
+}
+
+<h1>@Model.Employee.FirstName @Model.Employee.LastName's Details</h1>
+
+<div>
+	<h4>User Profile</h4>
+	<hr />
+	<dl class="row">
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Employee.Id)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Employee.Id)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Employee.ReportsToId)
+		</dt>
+		<dd class="col-sm-10">
+			<a asp-area="" asp-page="/Employees/Details" asp-route-id="@Model.ReportsTo.Id">@Model.ReportsTo.FirstName @Model.ReportsTo.LastName</a>
+		</dd>
+		<dt class="col-sm-2">
+			Full name
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Employee.FirstName) @Html.DisplayFor(model => model.Employee.LastName)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.EmployeeRole)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.EmployeeRole)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Employee.PersonalEmail)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Employee.PersonalEmail)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Employee.EmploymentDate)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Employee.EmploymentDate)
+		</dd>
+	</dl>
+</div>
+
+<div>
+<a asp-page="./Index">Back to List</a>
+</div>

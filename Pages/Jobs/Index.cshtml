@@ -1,0 +1,78 @@
+﻿@page
+@model ArgoCMS.Pages.Jobs.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Jobs</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Job[0].OwnerID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Job[0].TeamID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Job[0].JobName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Job[0].JobDescription)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Job[0].DateCreated)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Job[0].DueDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Job[0].JobStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Job[0].PriorityLevel)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Job) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.OwnerID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TeamID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.JobName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.JobDescription)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateCreated)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DueDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.JobStatus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PriorityLevel)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.JobId">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.JobId">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.JobId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
