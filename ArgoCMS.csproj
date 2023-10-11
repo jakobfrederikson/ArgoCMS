@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
-    <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>aspnet-ArgoCMS-31c90d27-2758-46b0-ab21-191f19b69c02</UserSecretsId>
   </PropertyGroup>
@@ -13,10 +12,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="7.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.10" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Authorization\" />
   </ItemGroup>
 
 </Project>
