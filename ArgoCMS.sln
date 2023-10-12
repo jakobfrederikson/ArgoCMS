@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34024.191
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArgoCMS", "ArgoCMS.csproj", "{5EF8880C-63B7-462D-AC7D-2095DB2A2A90}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArgoCMS", "ArgoCMS.csproj", "{5EF8880C-63B7-462D-AC7D-2095DB2A2A90}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
