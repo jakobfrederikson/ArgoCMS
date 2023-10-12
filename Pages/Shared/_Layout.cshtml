@@ -19,63 +19,50 @@
   <!-- Sidebar -->
   <nav
        id="sidebarMenu"
-       class="collapse d-lg-block sidebar collapse bg-white"
-       >
+             class="collapse d-lg-block sidebar collapse bg-dark_blue text-snow-white">
     <div class="position-sticky">
       <div class="list-group list-group-flush mx-3 mt-4">
 
         <a asp-area=""
             asp-page="/Dashboard"
-            class="list-group-item list-group-item-action py-2 ripple">
-            <object 
-                class="me-3"
-                type="image/svg+xml" 
-                data="~/images/dashboard.svg">
-            </object>
+                       class="list-group-item dashboard-list py-2 ripple bg-dark_blue text-snow-white">
+                        <img src="~/images/dashboard.svg" class="me-1 white-svg-filter" />
             <span>Dashboard</span>
         </a>
 
         <a asp-area=""
             asp-page="/Jobs/Index"
-            class="list-group-item list-group-item-action py-2">
-            <object class="me-3"
-                type="image/svg+xml" 
-                data="~/images/task-list.svg">
-            </object> 
+                       class="list-group-item dashboard-list py-2 bg-dark_blue text-snow-white">
+                        <img src="~/images/task-list.svg" class="me-1 white-svg-filter" />
             <span>Jobs</span>
         </a>
 
         <a asp-area=""
             asp-page="/Teams/Index"
-            class="list-group-item list-group-item-action py-2">
-            <object 
-                class="me-3"
-                type="image/svg+xml" 
-                data="~/images/shield-half.svg">
-            </object>
+                       class="list-group-item dashboard-list py-2 bg-dark_blue text-snow-white">
+                        <img src="~/images/shield-half.svg" class="me-1 white-svg-filter" />
             <span>Teams</span>
         </a>
           
         <a
            asp-area=""
            asp-page="/Projects/Index"
-           class="list-group-item list-group-item-action py-2">
-           <object 
-               class="me-3"
-               type="image/svg+xml" 
-               data="~/images/target.svg">
-           </object>
+                       class="list-group-item dashboard-list py-2 bg-dark_blue text-snow-white">
+                        <img src="~/images/target.svg" class="me-1 white-svg-filter" />
            <span>Projects</span>
        </a>
 
+        <a asp-area=""
+            asp-page="/Notices/Index"
+                       class="list-group-item dashboard-list py-2 bg-dark_blue text-snow-white">
+                        <img src="~/images/alert.svg" class="me-1 white-svg-filter" />
+            <span>Notices</span>
+        </a>
+
         <a  asp-area=""
             asp-page="/Employees/Index"
-            class="list-group-item list-group-item-action py-2">
-            <object 
-                class="me-3"
-                type="image/svg+xml" 
-                data="~/images/users.svg">
-            </object>
+                       class="list-group-item dashboard-list py-2 bg-dark_blue text-snow-white">
+                        <img src="~/images/users.svg" class="me-1 white-svg-filter" />
             <span>Employees</span>
         </a>
       </div>
@@ -86,25 +73,24 @@
   <!-- Navbar -->
   <nav
        id="main-navbar"
-       class="navbar navbar-expand-lg navbar-light bg-white fixed-top"
+       class="navbar navbar-expand-lg navbar-light fixed-top bg-dark_blue"
        >
     <!-- Container wrapper -->
     <div class="container-fluid">
       <!-- Toggle button -->
-      <button
-              class="navbar-toggler"
+      <button class="navbar-toggler bg-dark_blue text-snow-white"
               type="button"
               data-mdb-toggle="collapse"
               data-mdb-target="#sidebarMenu"
               aria-controls="sidebarMenu"
               aria-expanded="false"
               aria-label="Toggle navigation">
-        <object type="image/svg+xml" data="~/images/menu.svg"></object>
+              <img src="~/images/menu.svg" />
       </button>
 
       <!-- Brand -->
       <a class="navbar-brand" href="/Index">
-        <h3>ArgoCMS</h3>
+            <h3 class="text-snow-white">ArgoCMS</h3>
       </a>
 
 
@@ -120,7 +106,7 @@
              data-mdb-toggle="dropdown"
              aria-expanded="false"
              >
-            <object type="image/svg+xml" data="~/images/bell.svg"></object>
+            <img src="~/images/bell.svg" class="white-svg-filter" />
             <span class="badge rounded-pill badge-notification bg-danger"
                   >1</span>
           </a>
@@ -146,17 +132,11 @@
 <!--Main Navigation-->
 
 <!--Main layout-->
-<main style="margin-top: 70px">
+    <main style="margin-top: 68px;">
     <div class="container">
         @RenderBody()
     </div>
 </main>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2023 - ArgoCMS - <a asp-area="" asp-page="/Privacy">Privacy</a>
-        </div>
-    </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
