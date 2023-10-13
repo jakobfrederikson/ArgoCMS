@@ -1,4 +1,5 @@
 ﻿@page
+@using Newtonsoft.Json;
 @model CompanyManagementSystem.Pages.DashboardModel
 @{
     ViewData["title"] = "Dashboard";
@@ -7,69 +8,81 @@
 <h1>Dashboard</h1>
 <hr />
 
-<div class="row row-cols-lg-3 row-cols-sm-1">
+<div class="row">
     
     <!-- Column 1 -->
-    <div class="col mb-2">
-        <!-- Tasks -->
-        <div class="card mb-4" style="">
-            <div class="card-body">
-                <h5 class="card-title">Tasks</h5>
-                <h6 class="card-subtitle mb-2 text-muted">Your tasks</h6>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" class="card-link">Card link</a>
-                <a href="#" class="card-link">Another link</a>
+    <div class="col-xl-6">
+        <div class="card mb-4 bg-dark_blue">
+            <div class="card-header">
+                <h5>Tasks</h5>
             </div>
-        </div>
-
-        <!-- Projects -->
-        <div class="card" style="">
             <div class="card-body">
-                <h5 class="card-title">Projects</h5>
-                <h6 class="card-subtitle mb-2 text-muted">Your projects</h6>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" class="card-link">Card link</a>
-                <a href="#" class="card-link">Another link</a>
+                <canvas id="myChart"></canvas>
             </div>
         </div>
     </div>
 
-    <!-- Column 2 -->
-    <div class="col mb-2">
-        <div class="card mb-4" style="">
-            <!-- Teams -->
-            <div class="card-body">
-                <h5 class="card-title">Teams</h5>
-                <h6 class="card-subtitle mb-2 text-muted">Your teams</h6>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" class="card-link">Card link</a>
-                <a href="#" class="card-link">Another link</a>
-            </div>
-        </div>
 
-        <!-- Reports To -->
-        <div class="card" style="">
+    <div class="col-xl-6">
+        <div class="card mb-4 bg-dark_blue">
+            <div class="card-header">
+                <h5>Projects</h5>
+            </div>
             <div class="card-body">
-                <h5 class="card-title">Reports to</h5>
-                <h6 class="card-subtitle mb-2 text-muted">Your managers</h6>
                 <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" class="card-link">Card link</a>
-                <a href="#" class="card-link">Another link</a>
             </div>
         </div>
     </div>
 
-    <!-- Column 3 -->
-    <div class="col mb-2">
-        <!-- Notices -->
-        <div class="card" style="">
+    <div class="col-xl-6">
+        <div class="card mb-4 bg-dark_blue">
+            <div class="card-header">
+                <h5>Teams</h5>
+            </div>
             <div class="card-body">
-                <h5 class="card-title">Notices</h5>
-                <h6 class="card-subtitle mb-2 text-muted">All relevant notices</h6>
                 <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" class="card-link">Card link</a>
-                <a href="#" class="card-link">Another link</a>
             </div>
         </div>
     </div>
+
+    <div class="col-xl-6">
+        <div class="card mb-4 bg-dark_blue">
+            <div class="card-header">
+                <h5>Reports to</h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-12">
+        <div class="card mb-4 bg-dark_blue">
+            <div class="card-header">
+                <h5>Notices</h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            </div>
+        </div>
+    </div>
+
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    let tasks = @Html.Raw(JsonConvert.SerializeObject(Model.Jobs));
+    const ctx = document.getElementById('myChart');
+    console.log(tasks);
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ["test", "blah"],
+            datasets: [{
+                data: [12, 19]
+            }]
+        }
+    });
+
+</script>
