@@ -44,8 +44,21 @@ body {
     background: #101322;
 }
 
-.dashboard-list:hover{
+.dashboard-list:hover {
     background: #101322;
+}
+
+.dashboard-card-link {
+    text-decoration: none;
+    color: #F3F5F7;
+}
+
+.dashboard-card-link:hover {
+    color: #d4d4d4;
+}
+
+.notice-block {
+    padding: 3px;
 }
 
 /* Sidebar */
