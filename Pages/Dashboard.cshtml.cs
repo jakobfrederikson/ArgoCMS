@@ -18,10 +18,11 @@ namespace CompanyManagementSystem.Pages
         {
         }
 
-        public IList<Job> Jobs { get; set; }
+        public IDictionary<string, JobStatus> Jobs { get; set; }
         public List<Project> Projects { get; set; }
         public Team Team { get; set; }
         public Employee ReportsTo { get; set; }
+        public IList<Notice> Notices { get; set; }
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -32,9 +33,16 @@ namespace CompanyManagementSystem.Pages
                 return NotFound($"Could not find user with id of: {userId}");
             }
 
-            var jobs = await Context.Jobs
-                                            .Where(a => a.EmployeeID == user.Id)
-                                            .ToListAsync();
+            var jobDict = InitializeDictionary();
+
+            foreach (var job in Context.Jobs)
+            {
+                if (job.EmployeeID == userId)
+                {
+                    jobDict[job.JobStatus.ToString()]++;
+                }
+            }
+
             var projects = await Context.Projects
                                 .Include(e => e.Employees)
                                 .Where(e => e.Employees.Contains(user))
@@ -43,9 +51,11 @@ namespace CompanyManagementSystem.Pages
                         .FirstOrDefault(t => t.TeamId == user.TeamID);
             var reportsTo = await UserManager.FindByIdAsync(user.ReportsToId);
 
-            if (jobs != null)
+            var notices = Context.Notices.ToList();
+
+            if (jobDict != null)
             {
-                Jobs = jobs;
+                Jobs = jobDict;
             }
 
             if (projects != null)
@@ -63,7 +73,26 @@ namespace CompanyManagementSystem.Pages
                 ReportsTo = reportsTo;
             }
 
+            if (notices != null)
+            {
+                Notices = notices;
+            }
+
             return Page();
         }
-    }
+
+        private Dictionary<string, JobStatus> InitializeDictionary()
+        {
+            var jobDict = new Dictionary<string, JobStatus>();
+
+            jobDict["Unread"] = 0;
+            jobDict["Read"] = 0;
+            jobDict["Working"] = 0;
+            jobDict["Submitted"] = 0;
+            jobDict["Completed"] = 0;
+
+
+            return jobDict;
+        }
+    }    
 }

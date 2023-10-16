@@ -13,26 +13,18 @@
     <!-- Column 1 -->
     <div class="col-xl-6">
         <div class="card mb-4 bg-dark_blue">
-            <div class="card-header">
-                <h5>Tasks</h5>
-            </div>
+            <a asp-area="" asp-page="Jobs/Index"
+            class="dashboard-card-link">
+                <div class="card-header">
+                    <h5>Tasks</h5>
+                </div>
+            </a>
             <div class="card-body">
-                <canvas id="myChart"></canvas>
+                <canvas id="myChart" class="text-snow-white"></canvas>
             </div>
         </div>
     </div>
 
-
-    <div class="col-xl-6">
-        <div class="card mb-4 bg-dark_blue">
-            <div class="card-header">
-                <h5>Projects</h5>
-            </div>
-            <div class="card-body">
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            </div>
-        </div>
-    </div>
 
     <div class="col-xl-6">
         <div class="card mb-4 bg-dark_blue">
@@ -40,8 +32,38 @@
                 <h5>Teams</h5>
             </div>
             <div class="card-body">
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <p class="card-text"><strong>@Model.Team.TeamName</strong></p>
             </div>
+     
+            <div class="card-footer bg-primary bg-gradient">
+                <div class="row align-items-center">
+                    <div class="col-9">
+                        <p class="mb-0">Total tasks completed</p>
+                    </div>
+                    <div class="col-3 text-right">
+                        <p class="mb-0">2</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-6">
+        <div class="card mb-4 bg-dark_blue">
+            <div class="card-header">
+                <h5>Projects</h5>
+            </div>
+            <div class="card-body">
+                @foreach (var project in Model.Projects)
+                {
+                    <div class="notice-block">
+                        <p class="card-text"><strong>@project.ProjectName</strong></p>
+                        <h6 class="card-subtitle mb-2 text-muted">Posted on @project.DateCreated</h6>
+                        <p class="card-text">@project.ProjectDescription</p>
+                    </div>
+                    <br />
+                }
+            </div>           
         </div>
     </div>
 
@@ -51,7 +73,8 @@
                 <h5>Reports to</h5>
             </div>
             <div class="card-body">
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <p class="card-text">@Model.ReportsTo.FullName</p>
+                <p class="card-text">@Model.ReportsTo.UserName</p>
             </div>
         </div>
     </div>
@@ -62,7 +85,15 @@
                 <h5>Notices</h5>
             </div>
             <div class="card-body">
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                @foreach(var notice in Model.Notices)
+                {
+                    <div class="notice-block">
+                        <p class="card-text"><strong>@notice.NoticeTitle</strong></p>
+                        <h6 class="card-subtitle mb-2 text-muted">Posted on @notice.DateCreated</h6>
+                        <p class="card-text">@notice.NoticeMessageContent</p>
+                    </div>
+                    <br />
+                }
             </div>
         </div>
     </div>
@@ -72,17 +103,16 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-    let tasks = @Html.Raw(JsonConvert.SerializeObject(Model.Jobs));
-    const ctx = document.getElementById('myChart');
-    console.log(tasks);
-    new Chart(ctx, {
+    Chart.defaults.color = "#F3F5F7";
+    let jobs = @Html.Raw(JsonConvert.SerializeObject(Model.Jobs));
+    const jobsChart = document.getElementById('myChart');
+    new Chart(jobsChart, {
         type: 'doughnut',
         data: {
-            labels: ["test", "blah"],
+            labels: Object.keys(jobs),
             datasets: [{
-                data: [12, 19]
+                data: Object.values(jobs)
             }]
         }
-    });
-
+    });    
 </script>
