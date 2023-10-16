@@ -1,41 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ArgoCMS.Data;
 using ArgoCMS.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using CompanyManagementSystem.Pages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ArgoCMS.Pages.Jobs
 {
-    public class EditModel : PageModel
+    public class EditModel : DependencyInjection_BasePageModel
     {
-        private readonly ArgoCMS.Data.ApplicationDbContext _context;
-
-        public EditModel(ArgoCMS.Data.ApplicationDbContext context)
+        public EditModel(
+            ApplicationDbContext context,
+            IAuthorizationService authorizationService,
+            UserManager<Employee> userManager)
+            : base(context, authorizationService, userManager)
         {
-            _context = context;
         }
 
         [BindProperty]
         public Job Job { get; set; } = default!;
+        public IEnumerable<SelectListItem> Employees { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Jobs == null)
+            if (id == null || Context.Jobs == null)
             {
                 return NotFound();
             }
 
-            var job =  await _context.Jobs.FirstOrDefaultAsync(m => m.JobId == id);
+            var job =  await Context.Jobs.FirstOrDefaultAsync(m => m.JobId == id);
             if (job == null)
             {
                 return NotFound();
             }
             Job = job;
+
+            Employees = Context.Employees.Select(
+                e => new SelectListItem { Text = e.FullName, Value = e.Id });
+
             return Page();
         }
 
@@ -48,11 +52,21 @@ namespace ArgoCMS.Pages.Jobs
                 return Page();
             }
 
-            _context.Attach(Job).State = EntityState.Modified;
+            var job = await Context.Jobs
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync
+                            (j => j.JobId == Job.JobId);
+
+            Job.TeamID = Context.Employees
+                .Where(e => e.Id == Job.EmployeeID)
+                .Select(e => e.TeamID)
+                .Single();
+
+            Context.Attach(Job).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await Context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -71,7 +85,7 @@ namespace ArgoCMS.Pages.Jobs
 
         private bool JobExists(int id)
         {
-          return _context.Jobs.Any(e => e.JobId == id);
+          return Context.Jobs.Any(e => e.JobId == id);
         }
     }
 }

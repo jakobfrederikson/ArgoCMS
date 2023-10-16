@@ -14,18 +14,10 @@
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Job.OwnerID" class="control-label"></label>
-                <input asp-for="Job.OwnerID" class="form-control" />
-                <span asp-validation-for="Job.OwnerID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="Job.EmployeeID" class="control-label"></label>
-                <select asp-for="Job.EmployeeID" class ="form-control" asp-items="ViewBag.EmployeeID"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Job.TeamID" class="control-label"></label>
-                <input asp-for="Job.TeamID" class="form-control" />
-                <span asp-validation-for="Job.TeamID" class="text-danger"></span>
+                <select asp-for="Job.EmployeeID" class="form-control" asp-items="Model.Employees">
+                    <option selected disabled>Please select an Employee</option>
+                </select>
             </div>
             <div class="form-group">
                 <label asp-for="Job.JobName" class="control-label"></label>
@@ -38,23 +30,15 @@
                 <span asp-validation-for="Job.JobDescription" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Job.DateCreated" class="control-label"></label>
-                <input asp-for="Job.DateCreated" class="form-control" />
-                <span asp-validation-for="Job.DateCreated" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="Job.DueDate" class="control-label"></label>
                 <input asp-for="Job.DueDate" class="form-control" />
                 <span asp-validation-for="Job.DueDate" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Job.JobStatus" class="control-label"></label>
-                <select asp-for="Job.JobStatus" class="form-control"></select>
-                <span asp-validation-for="Job.JobStatus" class="text-danger"></span>
-            </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="Job.PriorityLevel" class="control-label"></label>
-                <select asp-for="Job.PriorityLevel" class="form-control"></select>
+                <select asp-for="Job.PriorityLevel" class="form-control" asp-items="Html.GetEnumSelectList<ArgoCMS.Models.PriorityLevel>()">
+                    <option selected disabled>Please select a priority level</option>
+                </select>
                 <span asp-validation-for="Job.PriorityLevel" class="text-danger"></span>
             </div>
             <div class="form-group">
