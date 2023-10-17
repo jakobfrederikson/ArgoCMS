@@ -11,16 +11,130 @@
 <div class="row">
     
     <!-- Column 1 -->
-    <div class="col-xl-6">
+    <div class="col-xl-3 col-md-6">
+        <div class="card mb-4 bg-dark_blue">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-8">
+                        <h5>Employees</h5>
+                    </div>
+                    <div class="col-4 text-right text-center">
+                        <h3>@Model.TotalEmployees</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-warning bg-gradient text-black">
+                <div class="row align-items-center">
+                    <div class="col-9">
+                        <p class="mb-0"># total employees</p>
+                    </div>
+                    <div class="col-3">
+                        <img src="~/images/users.svg" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+        <div class="card mb-4 bg-dark_blue">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-8">
+                        <h5>Teams</h5>
+                    </div>
+                    <div class="col-4 text-right text-center">
+                        <h3>@Model.TotalTeams</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-info bg-gradient text-black">
+                <div class="row align-items-center">
+                    <div class="col-9">
+                        <p class="mb-0"># total teams</p>
+                    </div>
+                    <div class="col-3">
+                        <img src="~/images/shield-half.svg" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+        <div class="card mb-4 bg-dark_blue">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-8">
+                        <h5>Jobs</h5>
+                    </div>
+                    <div class="col-4 text-right text-center">
+                        <h3>@Model.TotalJobs</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-primary bg-gradient text-black">
+                <div class="row align-items-center">
+                    <div class="col-9">
+                        <p class="mb-0 text-snow-white"># total jobs completed</p>
+                    </div>
+                    <div class="col-3">
+                        <img src="~/images/task-list.svg" class="white-svg-filter" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+        <div class="card mb-4 bg-dark_blue">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-8">
+                        <h5>Projects</h5>
+                    </div>
+                    <div class="col-4 text-right text-center">
+                        <h3>@Model.TotalProjects</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-light bg-gradient text-black">
+                <div class="row align-items-center">
+                    <div class="col-9">
+                        <p class="mb-0"># total projects completed</p>
+                    </div>
+                    <div class="col-3">
+                        <img src="~/images/target.svg" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-4">
         <div class="card mb-4 bg-dark_blue">
             <a asp-area="" asp-page="Jobs/Index"
             class="dashboard-card-link">
                 <div class="card-header">
-                    <h5>Tasks</h5>
+                    <h5>Your Jobs</h5>
                 </div>
             </a>
-            <div class="card-body">
-                <canvas id="myChart" class="text-snow-white"></canvas>
+            <div class="card-body justify-content-between align-content-between">
+                <canvas id="userJobsChart" class="text-snow-white"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-8">
+        <div class="card mb-4 bg-dark_blue">
+            <a asp-area="" asp-page="Jobs/Index"
+               class="dashboard-card-link">
+                <div class="card-header">
+                    <h5>Team Job Statistics</h5>
+                </div>
+            </a>
+            <div class="card-body justify-content-between align-content-between">
+                <canvas id="companyWideChart" class="text-snow-white"></canvas>
             </div>
         </div>
     </div>
@@ -104,8 +218,8 @@
 
 <script>
     Chart.defaults.color = "#F3F5F7";
-    let jobs = @Html.Raw(JsonConvert.SerializeObject(Model.Jobs));
-    const jobsChart = document.getElementById('myChart');
+    let jobs = @Html.Raw(JsonConvert.SerializeObject(Model.UserJobStatus));
+    const jobsChart = document.getElementById('userJobsChart');
     new Chart(jobsChart, {
         type: 'doughnut',
         data: {
@@ -115,4 +229,29 @@
             }]
         }
     });    
+
+    Chart.defaults.color = "#F3F5F7";
+    let teamJobs = @Html.Raw(JsonConvert.SerializeObject(Model.TeamMemberJobCompletion));
+    let colours = @Html.Raw(JsonConvert.SerializeObject(Model.BackgroundColours));
+
+    const companyWideChart = document.getElementById('companyWideChart');
+    let test = new Chart(companyWideChart, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(teamJobs),
+            datasets: [{
+                label: "Tasks Completed",
+                data: Object.values(teamJobs),
+                backgroundColor: colours
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
 </script>
