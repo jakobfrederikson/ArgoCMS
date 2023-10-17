@@ -23,6 +23,8 @@ namespace ArgoCMS.Pages.Teams
         [BindProperty]
         public Team Team { get; set; } = default!;
 
+        private string createdById = string.Empty;
+
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null || _context.Teams == null)
@@ -36,6 +38,7 @@ namespace ArgoCMS.Pages.Teams
                 return NotFound();
             }
             Team = team;
+            createdById = Team.OwnerID;
             return Page();
         }
 
@@ -48,6 +51,15 @@ namespace ArgoCMS.Pages.Teams
                 return Page();
             }
 
+            var team = await _context.Teams.AsNoTracking().SingleOrDefaultAsync(t => t.TeamId == Team.TeamId);
+
+            if (team == null)
+            {
+                return NotFound($"{Team.TeamName} was not found.");
+            }
+
+
+            Team.OwnerID = team.OwnerID;
             _context.Attach(Team).State = EntityState.Modified;
 
             try
