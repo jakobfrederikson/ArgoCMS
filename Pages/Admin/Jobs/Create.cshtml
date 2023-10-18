@@ -1,0 +1,57 @@
+﻿@page
+@model ArgoCMS.Pages.Jobs.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Job</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Job.EmployeeID" class="control-label"></label>
+                <select asp-for="Job.EmployeeID" class="form-control" asp-items="Model.Employees">
+                    <option selected disabled>Please select an Employee</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Job.JobName" class="control-label"></label>
+                <input asp-for="Job.JobName" class="form-control" />
+                <span asp-validation-for="Job.JobName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Job.JobDescription" class="control-label"></label>
+                <input asp-for="Job.JobDescription" class="form-control" />
+                <span asp-validation-for="Job.JobDescription" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Job.DueDate" class="control-label"></label>
+                <input asp-for="Job.DueDate" class="form-control" />
+                <span asp-validation-for="Job.DueDate" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Job.PriorityLevel" class="control-label"></label>
+                <select asp-for="Job.PriorityLevel" class="form-control" asp-items="Html.GetEnumSelectList<ArgoCMS.Models.PriorityLevel>()">
+                    <option selected disabled>Please select a priority level</option>
+                </select>
+                <span asp-validation-for="Job.PriorityLevel" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
