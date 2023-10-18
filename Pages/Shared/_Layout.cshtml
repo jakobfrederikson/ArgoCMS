@@ -19,7 +19,7 @@
   <!-- Sidebar -->
   <nav
        id="sidebarMenu"
-             class="collapse d-lg-block sidebar collapse bg-dark_blue text-snow-white">
+             class="collapse d-lg-block sidebar collapse bg-dark_blue text-snow-white shadow-lg">
     <div class="position-sticky">
       <div class="list-group list-group-flush mx-3 mt-4">
 
@@ -65,7 +65,16 @@
                         <img src="~/images/users.svg" class="me-1 white-svg-filter" />
             <span>Employees</span>
         </a>
-      </div>
+        @if (User.IsInRole(Authorization.AuthorizationOperations.Constants.AdministratorsRole))
+        {
+            <a asp-area=""
+                asp-page="/Admin/Index"
+                class="list-group-item dashboard-list py-2 bg-dark_blue text-snow-white">
+                <img src="~/images/fingerprint.svg" class="me-1 white-svg-filter" />
+                <span>Admin</span>
+            </a>
+        }
+        </div>
     </div>
   </nav>
   <!-- Sidebar -->
