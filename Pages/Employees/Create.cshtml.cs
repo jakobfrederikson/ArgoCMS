@@ -1,13 +1,12 @@
 using ArgoCMS.Data;
 using ArgoCMS.Models;
-using ArgoCMS.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace CompanyManagementSystem.Pages.Employees
+namespace ArgoCMS.Pages.Employees
 {
     [Authorize(Roles = "Administrators")]
     public class CreateModel : DependencyInjection_BasePageModel

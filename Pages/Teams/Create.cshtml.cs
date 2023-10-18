@@ -3,7 +3,6 @@ using ArgoCMS.Data;
 using ArgoCMS.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using CompanyManagementSystem.Pages;
 
 namespace ArgoCMS.Pages.Teams
 {

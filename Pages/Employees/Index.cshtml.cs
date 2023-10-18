@@ -3,7 +3,7 @@ using ArgoCMS.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
-namespace CompanyManagementSystem.Pages.Employees
+namespace ArgoCMS.Pages.Employees
 {
     public class IndexModel : DependencyInjection_BasePageModel
     {

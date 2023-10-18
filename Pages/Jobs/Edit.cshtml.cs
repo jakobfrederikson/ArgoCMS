@@ -4,7 +4,6 @@ using ArgoCMS.Data;
 using ArgoCMS.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using CompanyManagementSystem.Pages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ArgoCMS.Pages.Jobs

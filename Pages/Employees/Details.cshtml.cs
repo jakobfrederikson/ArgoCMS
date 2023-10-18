@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
-namespace CompanyManagementSystem.Pages.Employees
+namespace ArgoCMS.Pages.Employees
 {
     public class DetailsModel : DependencyInjection_BasePageModel
 	{

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace CompanyManagementSystem.Pages.Employees
+namespace ArgoCMS.Pages.Employees
 {
     public class DeleteModel : PageModel
     {
@@ -17,7 +17,7 @@ namespace CompanyManagementSystem.Pages.Employees
         [BindProperty]
         public Employee Employee { get; set; }
 
-        public async Task<IActionResult> OnGet(string? id)
+        public async Task<IActionResult> OnGet(string id)
         {
             if (id == null || _context.Employees == null)
             {
@@ -37,7 +37,7 @@ namespace CompanyManagementSystem.Pages.Employees
             return Page();
         }
 
-		public async Task<IActionResult> OnPostAsync(string? id)
+		public async Task<IActionResult> OnPostAsync(string id)
 		{
 			if (id == null || _context.Employees == null)
 			{
