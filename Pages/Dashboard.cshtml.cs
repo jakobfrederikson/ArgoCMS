@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
-namespace CompanyManagementSystem.Pages
+namespace ArgoCMS.Pages
 {
     public class DashboardModel : DependencyInjection_BasePageModel
     {
