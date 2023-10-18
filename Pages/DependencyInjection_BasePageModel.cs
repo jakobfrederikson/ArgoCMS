@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace CompanyManagementSystem.Pages
+namespace ArgoCMS.Pages
 {
     public class DependencyInjection_BasePageModel : PageModel
     {
