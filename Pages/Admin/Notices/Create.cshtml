@@ -1,0 +1,49 @@
+﻿@page
+@model ArgoCMS.Pages.Admin.Notices.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Notice</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Notice.OwnerID" class="control-label"></label>
+                <input asp-for="Notice.OwnerID" class="form-control" />
+                <span asp-validation-for="Notice.OwnerID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Notice.NoticeTitle" class="control-label"></label>
+                <input asp-for="Notice.NoticeTitle" class="form-control" />
+                <span asp-validation-for="Notice.NoticeTitle" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Notice.NoticeMessageContent" class="control-label"></label>
+                <textarea asp-for="Notice.NoticeMessageContent" class="form-control"></textarea>
+                <span asp-validation-for="Notice.NoticeMessageContent" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Notice.DateCreated" class="control-label"></label>
+                <input asp-for="Notice.DateCreated" class="form-control" />
+                <span asp-validation-for="Notice.DateCreated" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

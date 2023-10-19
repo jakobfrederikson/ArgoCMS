@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ArgoCMS.Pages.Admin.Jobs
 {
-    [Authorize(Roles = "Administrators")]
     public class EditModel : DependencyInjection_BasePageModel
     {
         public EditModel(

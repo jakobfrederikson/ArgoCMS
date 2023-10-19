@@ -1,0 +1,55 @@
+﻿@page
+@model ArgoCMS.Pages.Admin.Teams.IndexModel
+
+@{
+    ViewData["Title"] = "Admin/Teams";
+}
+<h1>Admin/Teams</h1>
+<partial name="_AdminNavPartial" />
+
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table table-striped table-hover table-light">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Team[0].OwnerID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Team[0].TeamName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Team[0].TeamDescription)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Team[0].DateCreated)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Team) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.OwnerID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TeamName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TeamDescription)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateCreated)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.TeamId">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.TeamId">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.TeamId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

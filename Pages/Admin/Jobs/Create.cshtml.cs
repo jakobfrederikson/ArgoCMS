@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Identity;
 
 namespace ArgoCMS.Pages.Admin.Jobs
 {
-    [Authorize(Roles = "Administrators")]
     public class CreateModel : DependencyInjection_BasePageModel
     {
         public CreateModel(

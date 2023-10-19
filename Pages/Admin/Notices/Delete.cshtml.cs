@@ -2,9 +2,8 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using ArgoCMS.Models;
-using Microsoft.AspNetCore.Authorization;
 
-namespace ArgoCMS.Pages.Admin.Jobs
+namespace ArgoCMS.Pages.Admin.Notices
 {
     public class DeleteModel : PageModel
     {
@@ -16,40 +15,40 @@ namespace ArgoCMS.Pages.Admin.Jobs
         }
 
         [BindProperty]
-      public Job Job { get; set; }
+      public Notice Notice { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Jobs == null)
+            if (id == null || _context.Notices == null)
             {
                 return NotFound();
             }
 
-            var job = await _context.Jobs.FirstOrDefaultAsync(m => m.JobId == id);
+            var notice = await _context.Notices.FirstOrDefaultAsync(m => m.NoticeId == id);
 
-            if (job == null)
+            if (notice == null)
             {
                 return NotFound();
             }
             else 
             {
-                Job = job;
+                Notice = notice;
             }
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(int? id)
         {
-            if (id == null || _context.Jobs == null)
+            if (id == null || _context.Notices == null)
             {
                 return NotFound();
             }
-            var job = await _context.Jobs.FindAsync(id);
+            var notice = await _context.Notices.FindAsync(id);
 
-            if (job != null)
+            if (notice != null)
             {
-                Job = job;
-                _context.Jobs.Remove(Job);
+                Notice = notice;
+                _context.Notices.Remove(Notice);
                 await _context.SaveChangesAsync();
             }
 

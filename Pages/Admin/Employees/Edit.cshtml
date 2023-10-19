@@ -1,0 +1,86 @@
+﻿@page
+@model ArgoCMS.Pages.Admin.Employees.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>User</h4>
+<hr/>
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<div class="form-group">
+				@Html.LabelFor(m => m.Input.FirstName, htmlAttributes: new { @class = "control-label" })
+				<div class="col-md-10">
+					@Html.EditorFor(m => m.Input.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+					@Html.ValidationMessageFor(m => m.Input.FirstName, "", new { @class = "text-danger" })
+				</div>
+			</div>
+			<div class="form-group">
+				@Html.LabelFor(m => m.Input.LastName, htmlAttributes: new { @class = "control-label" })
+				<div class="col-md-10">
+					@Html.EditorFor(m => m.Input.LastName, new { htmlAttributes = new { @class = "form-control" } })
+					@Html.ValidationMessageFor(m => m.Input.LastName, "", new { @class = "text-danger" })
+				</div>
+			</div>
+			<div class="form-group">
+				@Html.LabelFor(m => m.Input.TeamID, htmlAttributes: new { @class = "control-label" })
+				<div class="col-md-10">
+					@Html.DropDownListFor(m => m.Input.TeamID, Model.Teams, new { htmlAttributes = new { @class = "form-control" } })
+					@Html.ValidationMessageFor(m => m.Input.TeamID, "", new { @class = "text-danger" })
+				</div>
+			</div>
+			<div class="form-group">
+				@Html.LabelFor(m => m.Input.EmployeeRole, htmlAttributes: new { @class = "control-label" })
+				<div class="col-md-10">
+					@Html.DropDownListFor(m => m.Input.EmployeeRole, Model.Roles, new { htmlAttributes = new { @class = "form-control"} })
+					@Html.ValidationMessageFor(m => m.Input.EmployeeRole, "", new { @class = "text-danger" })
+				</div>
+			</div>
+			<div class="form-group">
+				@Html.LabelFor(m => m.Input.ReportsToId, htmlAttributes: new { @class = "control-label" })
+				<div class="col-md-10">
+					@Html.DropDownListFor(m => m.Input.ReportsToId, Model.Employees, new { htmlAttributes = new { @class = "form-control" } })
+					@Html.ValidationMessageFor(m => m.Input.ReportsToId, "", new { @class = "text-danger" })
+				</div>
+			</div>
+			<div class="form-group">
+				@Html.LabelFor(m => m.Input.PersonalEmail, htmlAttributes: new { @class = "control-label" })
+				<div class="col-md-10">
+					@Html.EditorFor(m => m.Input.PersonalEmail, new { htmlAttributes = new { @class = "form-control" } })
+					@Html.ValidationMessageFor(m => m.Input.PersonalEmail, "", new { @class = "text-danger" })
+				</div>
+			</div>			
+			<div class="form-group">
+				@Html.LabelFor(m => m.Input.EmploymentDate, htmlAttributes: new { @class = "control-label" })
+				<div class="col-md-10">
+					@Html.EditorFor(m => m.Input.EmploymentDate, new { htmlAttributes = new { @class = "form-control", @readonly="readonly" } })
+					@Html.ValidationMessageFor(m => m.Input.EmploymentDate, "", new { @class = "text-danger" })
+				</div>
+			</div>
+			<div class="form-group mb-3">
+				@Html.LabelFor(m => m.Input.UserName, htmlAttributes: new { @class = "control-label" })
+				<div class="col-md-10">
+					@Html.EditorFor(m => m.Input.UserName, new { htmlAttributes = new { @class = "form-control", @readonly="readonly" }})
+					@Html.ValidationMessageFor(m => m.Input.UserName, "", new { @class = "text-danger" })
+				</div>
+			</div>
+			<div class="form-group">
+				<input type="submit" value="Update" class="btn btn-primary" />
+			</div>
+        </form>
+    </div>
+</div>
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}

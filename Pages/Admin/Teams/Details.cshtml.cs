@@ -1,10 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using ArgoCMS.Data;
 using ArgoCMS.Models;
-using Microsoft.AspNetCore.Authorization;
 
-namespace ArgoCMS.Pages.Admin.Jobs
+namespace ArgoCMS.Pages.Admin.Teams
 {
     public class DetailsModel : PageModel
     {
@@ -15,23 +19,23 @@ namespace ArgoCMS.Pages.Admin.Jobs
             _context = context;
         }
 
-      public Job Job { get; set; }
+      public Team Team { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Jobs == null)
+            if (id == null || _context.Teams == null)
             {
                 return NotFound();
             }
 
-            var job = await _context.Jobs.FirstOrDefaultAsync(m => m.JobId == id);
-            if (job == null)
+            var team = await _context.Teams.FirstOrDefaultAsync(m => m.TeamId == id);
+            if (team == null)
             {
                 return NotFound();
             }
             else 
             {
-                Job = job;
+                Team = team;
             }
             return Page();
         }

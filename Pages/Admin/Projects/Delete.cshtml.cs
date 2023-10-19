@@ -1,10 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using ArgoCMS.Data;
 using ArgoCMS.Models;
-using Microsoft.AspNetCore.Authorization;
 
-namespace ArgoCMS.Pages.Admin.Jobs
+namespace ArgoCMS.Pages.Admin.Projects
 {
     public class DeleteModel : PageModel
     {
@@ -16,40 +20,40 @@ namespace ArgoCMS.Pages.Admin.Jobs
         }
 
         [BindProperty]
-      public Job Job { get; set; }
+      public Project Project { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Jobs == null)
+            if (id == null || _context.Projects == null)
             {
                 return NotFound();
             }
 
-            var job = await _context.Jobs.FirstOrDefaultAsync(m => m.JobId == id);
+            var project = await _context.Projects.FirstOrDefaultAsync(m => m.ProjectId == id);
 
-            if (job == null)
+            if (project == null)
             {
                 return NotFound();
             }
             else 
             {
-                Job = job;
+                Project = project;
             }
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(int? id)
         {
-            if (id == null || _context.Jobs == null)
+            if (id == null || _context.Projects == null)
             {
                 return NotFound();
             }
-            var job = await _context.Jobs.FindAsync(id);
+            var project = await _context.Projects.FindAsync(id);
 
-            if (job != null)
+            if (project != null)
             {
-                Job = job;
-                _context.Jobs.Remove(Job);
+                Project = project;
+                _context.Projects.Remove(Project);
                 await _context.SaveChangesAsync();
             }
 

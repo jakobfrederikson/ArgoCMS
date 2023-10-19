@@ -1,10 +1,8 @@
-using ArgoCMS.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using ArgoCMS.Models;
 
-namespace ArgoCMS.Pages.Admin.Jobs
+namespace ArgoCMS.Pages.Admin.Notices
 {
     public class IndexModel : PageModel
     {
@@ -15,13 +13,13 @@ namespace ArgoCMS.Pages.Admin.Jobs
             _context = context;
         }
 
-        public IList<Job> Job { get; set; } = default!;
+        public IList<Notice> Notice { get;set; } = default!;
 
         public async Task OnGetAsync()
         {
-            if (_context.Jobs != null)
+            if (_context.Notices != null)
             {
-                Job = await _context.Jobs.ToListAsync();
+                Notice = await _context.Notices.ToListAsync();
             }
         }
     }

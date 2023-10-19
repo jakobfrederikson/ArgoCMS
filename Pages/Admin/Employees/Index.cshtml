@@ -1,0 +1,72 @@
+﻿@page
+@model ArgoCMS.Pages.Admin.Employees.IndexModel
+
+@{
+	ViewData["Title"] = "Admin/Employees";
+}
+<h1>Admin/Employees</h1>
+<partial name="_AdminNavPartial" />
+
+<h1>Employees</h1>
+
+@* Add authorization here *@
+<p>
+	<a asp-page="Create">Create New</a>
+</p>
+<table class="table table-striped table-hover table-light">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.Employees[0].Employee.FirstName)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Employees[0].Employee.LastName)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Employees[0].Employee.UserName)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Employees[0].Employee.EmploymentDate)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Employees[0].Role)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Employees[0].Employee.Email)
+			</th>
+			<th>
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+@foreach(var e in Model.Employees)
+{
+		<tr>
+			<td>
+					@Html.DisplayFor(modelItem => e.Employee.FirstName)
+			</td>
+			<td>
+					@Html.DisplayFor(modelItem => e.Employee.LastName)
+			</td>
+			<td>
+					@Html.DisplayFor(modelItem => e.Employee.UserName)
+			</td>
+			<td>
+					@Html.DisplayFor(modelItem => e.Employee.EmploymentDate)
+			</td>
+			<td>
+					@Html.DisplayFor(modelItem => e.Role)
+			</td>
+			<td>
+					@Html.DisplayFor(modelItem => e.Employee.UserName)
+			</td>
+			<td>
+				@* Add authorization here! *@
+					<a asp-page="./Edit" asp-route-id="@e.Employee.Id">Edit</a> |
+					<a asp-page="./Details" asp-route-id="@e.Employee.Id">Details</a> |
+					<a asp-page="./Delete" asp-route-id="@e.Employee.Id">Delete</a>
+			</td>
+		</tr>
+}
+	</tbody>
+</table>
