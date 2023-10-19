@@ -29,6 +29,18 @@ builder.Services.AddAuthorization(options =>
         .Build();
 });
 
+
+// Require admin access for any pages in the admin folder.
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminPolicy", policy => policy.RequireRole("Administrators"));
+});
+
+builder.Services.AddRazorPages(options =>
+{
+    options.Conventions.AuthorizeFolder("/Admin", "AdminPolicy");
+});
+
 // Authorization handlers.
 // Assignments
 builder.Services.AddScoped<IAuthorizationHandler,
