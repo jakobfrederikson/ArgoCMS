@@ -1,5 +1,4 @@
-﻿@using ArgoCMS.Models;
-@inject SignInManager<Employee> SignInManager
+﻿@inject SignInManager<IdentityUser> SignInManager
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
 }
