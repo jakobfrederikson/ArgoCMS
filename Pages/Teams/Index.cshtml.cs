@@ -20,11 +20,13 @@ namespace ArgoCMS.Pages.Teams
         }
 
         public Team Team { get; set; } = default!;
-        public IList<Job> TeamJobs { get; set;} = default!;
-        public IList<Notice> TeamNotices { get; set; } = default!;
+        public IDictionary<Job, string> TeamJobs { get; set;} = default!;
+        public IDictionary<Notice, string> TeamNotices { get; set; } = default!;
+        public IDictionary<Employee, string> EmployeeAndRole { get; set; } = default!;
 
         public async Task OnGetAsync()
         {
+            var employees = Context.Employees;
             var userId = UserManager.GetUserId(User);
 
             var user = await Context.Employees.FirstOrDefaultAsync(e => e.Id == userId);
@@ -39,7 +41,14 @@ namespace ArgoCMS.Pages.Teams
             }
 
             var teamJobs = Context.Jobs
-                .Where(j => j.TeamID == Team.TeamId).ToList();
+                .Where(j => j.TeamID == Team.TeamId)
+                .ToDictionary(
+                j => j,
+                j => Context.Employees
+                        .Where(e => e.Id == j.EmployeeID)
+                        .Single()
+                        .FullName
+                );
 
             if (teamJobs != null)
             {
@@ -47,11 +56,28 @@ namespace ArgoCMS.Pages.Teams
             }
 
             var teamNotices = Context.Notices
-                .Where(n => n.TeamId == Team.TeamId).ToList();
+                .Where(n => n.TeamId == Team.TeamId)
+                .ToDictionary(
+                x => x, 
+                x => Context.Employees.Where(
+                    e => e.Id == x.OwnerID)
+                .Single().FullName);
 
             if (teamNotices != null)
             {
                 TeamNotices = teamNotices;
+            }
+
+            var employeeRole = employees
+                .Where(e => e.TeamID == Team.TeamId)
+                .ToDictionary(
+                e => e,
+                r => string.Join(",", UserManager.GetRolesAsync(r).Result.ToArray())
+                );
+
+            if (employeeRole != null)
+            {
+                EmployeeAndRole = employeeRole;
             }
         }
     }
