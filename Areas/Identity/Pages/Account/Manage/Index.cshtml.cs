@@ -61,8 +61,8 @@ namespace ArgoCMS.Areas.Identity.Pages.Account.Manage
             public string PhoneNumber { get; set; }
         }
 
-        [Display(Name = "Photo")]
-        public IFormFile ProfilePicture { get; set; } = default!;
+        public Employee Employee { get; set; }
+        public string Role { get; set; }
 
         private async Task LoadAsync(Employee user)
         {
@@ -93,7 +93,16 @@ namespace ArgoCMS.Areas.Identity.Pages.Account.Manage
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }   
+            }
+
+            Employee = user;
+
+            var role =  string.Join(",", _userManager.GetRolesAsync(Employee).Result.ToArray());
+
+            if (role != null)
+            {
+                Role = role;
+            }
 
             await LoadAsync(user);
             return Page();
