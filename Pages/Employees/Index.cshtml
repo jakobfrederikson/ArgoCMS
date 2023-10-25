@@ -55,10 +55,7 @@
 					@Html.DisplayFor(modelItem => e.Employee.UserName)
 			</td>
 			<td>
-				@* Add authorization here! *@
-					<a asp-page="./Edit" asp-route-id="@e.Employee.Id">Edit</a> |
 					<a asp-page="./Details" asp-route-id="@e.Employee.Id">Details</a> |
-					<a asp-page="./Delete" asp-route-id="@e.Employee.Id">Delete</a>
 			</td>
 		</tr>
 }
