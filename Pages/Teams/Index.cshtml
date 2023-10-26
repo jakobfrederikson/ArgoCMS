@@ -88,6 +88,7 @@
                                 </div>
                                 <div class="card-body text-black">
                                     <p class="mb-0"> @Html.DisplayFor(modelItem => item.Key.NoticeMessageContent)</p>
+                                    <a class="card-link" asp-page="/Notices/NoticeDetails" asp-route-id="@item.Key.NoticeId">Notice details</a>
                                 </div>
                             </div>
                         </div>

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using ArgoCMS.Data;
 using ArgoCMS.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -24,16 +21,28 @@ namespace ArgoCMS.Pages.Teams
         public IDictionary<Notice, string> TeamNotices { get; set; } = default!;
         public IDictionary<Employee, string> EmployeeAndRole { get; set; } = default!;
 
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(int? id)
         {
             var employees = Context.Employees;
             var userId = UserManager.GetUserId(User);
 
             var user = await Context.Employees.FirstOrDefaultAsync(e => e.Id == userId);
 
-            var team = await Context.Teams
+            var team = new Team();
+
+            if (id != null)
+            {
+                team = await Context.Teams
+                .Include(t => t.Employees.Where(e => e.TeamID == id))
+                .FirstOrDefaultAsync(t => t.TeamId == id);
+            }
+            else
+            {
+                team = await Context.Teams
                 .Include(t => t.Employees.Where(e => e.TeamID == user.TeamID))
                 .FirstOrDefaultAsync(t => t.TeamId == user.TeamID);
+            }
+            
 
             if (team != null)
             {
@@ -44,7 +53,7 @@ namespace ArgoCMS.Pages.Teams
                 .Where(j => j.TeamID == Team.TeamId)
                 .ToDictionary(
                 j => j,
-                j => Context.Employees
+                j => employees
                         .Where(e => e.Id == j.EmployeeID)
                         .Single()
                         .FullName
@@ -59,7 +68,7 @@ namespace ArgoCMS.Pages.Teams
                 .Where(n => n.TeamId == Team.TeamId)
                 .ToDictionary(
                 x => x, 
-                x => Context.Employees.Where(
+                x => employees.Where(
                     e => e.Id == x.OwnerID)
                 .Single().FullName);
 
