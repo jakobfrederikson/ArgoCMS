@@ -33,12 +33,10 @@ namespace ArgoCMS.Pages
 
         public async Task<IActionResult> OnGetAsync()
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var user = await UserManager.FindByIdAsync(userId);
-            if (user == null)
-            {
-                return NotFound($"Could not find user with id of: {userId}");
-            }
+            var userId = UserManager.GetUserId(User);
+
+            var user = await Context.Employees
+                .FirstOrDefaultAsync(e => e.Id == userId);
 
             var teamJobDict = InitializeTeamJobsDictionary(user);
             var colours = InitializeBackgroundColours(teamJobDict.Keys.Count());
