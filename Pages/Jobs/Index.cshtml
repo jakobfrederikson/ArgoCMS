@@ -10,67 +10,76 @@
 <p>
     <a asp-page="Create">Create New</a>
 </p>
-<table class="table table-striped table-hover table-light">
+<table class="table table-light">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Job[0].OwnerID)
+                @Html.DisplayNameFor(model => model.Jobs.Keys.FirstOrDefault().JobName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Job[0].TeamID)
+                @Html.DisplayNameFor(model => model.Jobs.Keys.FirstOrDefault().DateCreated)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Job[0].JobName)
+                @Html.DisplayNameFor(model => model.Jobs.Keys.FirstOrDefault().DueDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Job[0].JobDescription)
+                @Html.DisplayNameFor(model => model.Jobs.Keys.FirstOrDefault().JobStatus)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Job[0].DateCreated)
+                @Html.DisplayNameFor(model => model.Jobs.Keys.FirstOrDefault().PriorityLevel)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Job[0].DueDate)
+                @Html.DisplayNameFor(model => model.Jobs.Keys.FirstOrDefault().OwnerID)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Job[0].JobStatus)
-            </th>
+                @Html.DisplayNameFor(model => model.Jobs.Keys.FirstOrDefault().EmployeeID)
+            </th>            
             <th>
-                @Html.DisplayNameFor(model => model.Job[0].PriorityLevel)
+                @Html.DisplayNameFor(model => model.Jobs.Keys.FirstOrDefault().TeamID)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Job) {
+@foreach (var item in Model.Jobs) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.OwnerID)
+                <a asp-page="./Details" asp-route-id="@item.Key.JobId" class="link-primary">
+                    @Html.DisplayFor(modelItem => item.Key.JobName)
+                </a>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TeamID)
+                @Html.DisplayFor(modelItem => item.Key.DateCreated)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.JobName)
+                @Html.DisplayFor(modelItem => item.Key.DueDate)
+            </td>
+            <td class="@item.Value">
+                @Html.DisplayFor(modelItem => item.Key.JobStatus)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.JobDescription)
+                @Html.DisplayFor(modelItem => item.Key.PriorityLevel)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DateCreated)
+                <a asp-area="Identity" asp-page="/Account/Manage/Index" asp-route-id="@item.Key.OwnerID">
+                    @Model.CreatedByIdToFullName[@item.Key.OwnerID]
+                </a>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DueDate)
+                <a asp-area="Identity" asp-page="/Account/Manage/Index" asp-route-id="@item.Key.EmployeeID">
+                    
+                    @Model.AssignedToIdToFullName[@item.Key.EmployeeID]
+                </a>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.JobStatus)
+                <a asp-page="/Teams/Index" asp-route-id="@item.Key.TeamID">
+                    @Model.TeamsToFullName[item.Key.TeamID]
+                </a>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.PriorityLevel)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.JobId">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.JobId">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.JobId">Delete</a>
+                    <a asp-page="./Edit" asp-route-id="@item.Key.JobId">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.Key.JobId">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.Key.JobId">Delete</a>
             </td>
         </tr>
 }
