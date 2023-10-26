@@ -27,6 +27,7 @@ namespace ArgoCMS.Models
 
         [Required]
         [Display(Name = "Description")]
+        [DataType(DataType.MultilineText)]
         public string JobDescription { get; set; }
 
         [Required]
@@ -39,7 +40,10 @@ namespace ArgoCMS.Models
         [DataType(DataType.Date)]
         public DateTime DueDate { get; set; }
 
+        [Display(Name = "Job status")]
         public JobStatus JobStatus { get; set; }
+
+        [Display(Name = "Priority level")]
         public PriorityLevel PriorityLevel { get; set; }
     }
 
