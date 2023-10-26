@@ -41,7 +41,7 @@
             asp-page="/Teams/Index"
                        class="list-group-item dashboard-list py-2 bg-dark_blue text-snow-white">
                         <img src="~/images/shield-half.svg" class="me-1 white-svg-filter" />
-            <span>Teams</span>
+            <span>Team</span>
         </a>
           
         <a
@@ -107,27 +107,12 @@
       <ul class="navbar-nav ms-auto d-flex flex-row">
         <!-- Notification dropdown -->
         <li class="nav-item dropdown">
-          <a
-             class="nav-link me-3 me-lg-0 dropdown-toggle hidden-arrow"
-             href="#"
-             id="navbarDropdownMenuLink"
-             role="button"
-             data-mdb-toggle="dropdown"
-             aria-expanded="false"
-             >
-            <img src="~/images/bell.svg" class="white-svg-filter" />
-            <span class="badge rounded-pill badge-notification bg-danger"
-                  >1</span>
-          </a>
-          <ul
-              class="dropdown-menu dropdown-menu-end"
-              aria-labelledby="navbarDropdownMenuLink">
-            <li><a class="dropdown-item" href="#">Some news</a></li>
-            <li><a class="dropdown-item" href="#">Another news</a></li>
-            <li>
-              <a class="dropdown-item" href="#">Something else here</a>
-            </li>
-          </ul>
+            <button type="button" class="btn position-relative ">
+                <img src="~/images/bell.svg" class="me-1 white-svg-filter"/>
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    99+
+                </span>
+            </button>
         </li>
         </ul>
 
