@@ -538,6 +538,94 @@ namespace ArgoCMS.Data
             };
             context.Notices.AddRange(notices);
             context.SaveChanges();
+
+            Comment comment1 = new Comment
+            {
+                NoticeId = notice1.NoticeId,
+                OwnerID = empHenryID,
+                CommentText = "I won't be able to attend this Friday's meeting, but I'll catch up with the minutes. Please make sure to discuss the latest project updates and any blockers.",
+                CreationDate = DateTime.Now
+            };
+
+            Comment comment2 = new Comment
+            {
+                NoticeId = notice1.NoticeId,
+                OwnerID = vanahID,
+                CommentText = "Is it possible to consider shifting the meeting time to 2 PM? It would be more convenient for me due to another commitment in the morning.",
+                CreationDate = DateTime.Now
+            };
+
+            Comment comment3 = new Comment
+            {
+                NoticeId = notice1.NoticeId,
+                OwnerID = empLarryID,
+                CommentText = "I'd like to suggest adding a discussion on the new development tools we've been exploring. It might be beneficial for the team's efficiency.",
+                CreationDate = DateTime.Now
+            };
+
+            Comment comment4 = new Comment
+            {
+                NoticeId = notice4.NoticeId,
+                OwnerID = empGeorgeID,
+                CommentText = "Exciting news! I'm eager to contribute to the UI redesign project. Can we schedule an initial brainstorming session to share ideas and set project goals?",
+                CreationDate = DateTime.Now
+            };
+
+            Comment comment5 = new Comment
+            {
+                NoticeId = notice4.NoticeId,
+                OwnerID = empJerryID,
+                CommentText = "I've been researching user experience trends and have some interesting insights to bring to the project. Looking forward to making our designs user-centric!",
+                CreationDate = DateTime.Now
+            };
+
+            Comment comment6 = new Comment
+            {
+                NoticeId = notice4.NoticeId,
+                OwnerID = managerID,
+                CommentText = "It would be great to establish clear design guidelines and a shared design library from the beginning. Let's ensure consistency in our new UI elements.",
+                CreationDate = DateTime.Now
+            };
+
+            Comment comment7 = new Comment
+            {
+                NoticeId = notice7.NoticeId,
+                OwnerID = adminID,
+                CommentText = "This is a fantastic initiative! Let's make sure to recognize the hard work and dedication of our colleagues. I'm excited to see the nominations.",
+                CreationDate = DateTime.Now
+            };
+
+            Comment comment8 = new Comment
+            {
+                NoticeId = notice7.NoticeId,
+                OwnerID = managerID,
+                CommentText = "I've had the privilege to work with some outstanding colleagues. I'll be sure to nominate those who've gone above and beyond. Let's appreciate our fantastic team!",
+                CreationDate = DateTime.Now
+            };
+
+            Comment comment9 = new Comment
+            {
+                NoticeId = notice7.NoticeId,
+                OwnerID = empGeorgeID,
+                CommentText = "As a new member of the team, I'm thrilled to be part of a company that values employee recognition. It sets a positive tone for the workplace, and I can't wait to participate in the process.",
+                CreationDate = DateTime.Now
+            };
+
+            var comments = new Comment[]
+            {
+                comment1,
+                comment2,
+                comment3,
+                comment4,
+                comment5,
+                comment6,
+                comment7,
+                comment8,
+                comment9
+            };
+            context.Comments.AddRange(comments);
+
+            context.SaveChanges();
         }
     }
 }
