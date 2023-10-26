@@ -1,0 +1,22 @@
+﻿@page
+@model ArgoCMS.Pages.Notices.NoticeDetailsModel
+@{
+
+}
+<h1>@Model.Notice.NoticeTitle</h1>
+<p>@Model.Notice.NoticeMessageContent</p>
+
+<h5>Comments</h5>
+<ul>
+@foreach (var item in Model.Notice.Comments)
+{
+	<li><strong>@item.CommentId:</strong> @item.CommentText</li>
+}
+</ul>
+
+<form method="post">
+	<div asp-asp-validation-summary="ModelOnly" class="text-danger"></div>
+	<div class="form-group">
+		<label asp-for=""
+	</div>
+</form>
