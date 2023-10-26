@@ -7,6 +7,7 @@
 <h1>@Model.Employee.FullName</h1>
 <h4>@Model.Role</h4>
 <hr />
+
 <div class="row">
     <div class="col-xl-6">
         <div class="card mb-4 bg-dark_blue">
@@ -14,28 +15,124 @@
                 <h5>Details</h5>
             </div>
             <div class="card-body">
-                <p><strong>Personal Email:</strong> @Model.Employee.PersonalEmail</p>
-                <p><strong>Id:</strong> @Model.Employee.Id</p>
+                <table class="table table-borderless text-white">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <strong>@Html.DisplayNameFor(modelItem => modelItem.Employee.Id)</strong>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => modelItem.Employee.Id)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>@Html.DisplayNameFor(modelItem => modelItem.Employee.TeamID)</strong>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => modelItem.Team.TeamName)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>@Html.DisplayNameFor(modelItem => modelItem.Employee.EmploymentDate)</strong>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => modelItem.Employee.EmploymentDate)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>@Html.DisplayNameFor(modelItem => modelItem.Employee.PersonalEmail)</strong>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => modelItem.Employee.PersonalEmail)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>@Html.DisplayNameFor(modelItem => modelItem.Employee.PhoneNumber)</strong>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => modelItem.Employee.PhoneNumber)
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 
-    <div class="col-xl-3">
+    <div class="col-xl-3 col-md-6">
         <div class="card mb-4 bg-dark_blue">
-            <div class="card-header">
-                <h5>Tasks Completed</h5>
-            </div>
             <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col text-center">
+                        <h3>50</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-warning bg-gradient text-black">
+                <div class="row align-items-center">
+                    <div class="col-9">
+                        <p class="mb-0">Tasks completed</p>
+                    </div>
+                    <div class="col-3">
+                        <img src="~/images/users.svg" />
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="col-xl-3">
+    <div class="col-xl-3 col-md-6">
+        <div class="card mb-4 bg-dark_blue">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col text-center">
+                        <h3>50</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-warning bg-gradient text-black">
+                <div class="row align-items-center">
+                    <div class="col-9">
+                        <p class="mb-0">Team</p>
+                    </div>
+                    <div class="col-3">
+                        <img src="~/images/users.svg" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-6">
         <div class="card mb-4 bg-dark_blue">
             <div class="card-header">
-                <h5>Team</h5>
+                <h5>Reports To</h5>
             </div>
             <div class="card-body">
+                <div class="row">
+                    <div class="col-4 text-center">
+                        <div class="bg-primary bg-gradient rounded-circle">JF</div>
+                        <a class="link link-light" asp-area="Identity" asp-page="/Account/Manage/Index" asp-route-id="@Model.ReportsTo.Id">
+                            <p class="mb-0">@Html.DisplayFor(modelItem => modelItem.ReportsTo.FullName)</p>
+                        </a>
+                        <p class="mb-0">Role</p>
+                    </div>
+                    <div class="col-4 text-center">
+                        <img src="~/images/arrow-square-right.svg" class="white-svg-filter"/>
+                        <p class="mb-0"><small>Reports To</small></p>
+                    </div>
+                    <div class="col-4 text-center">
+                        <div class="bg-primary bg-gradient rounded-circle">JF</div>
+                        <a class="link  link-light" asp-area="Identity" asp-page="/Account/Manage/Index" asp-route-id="@Model.ReportsToBoss.Id">
+                            <p class="mb-0">@Html.DisplayFor(modelItem => modelItem.ReportsToBoss.FullName)</p>
+                        </a>
+                        <p class="mb-0">Role</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

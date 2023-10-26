@@ -62,6 +62,14 @@ namespace ArgoCMS.Areas.Identity.Pages.Account.Manage
         }
 
         public Employee Employee { get; set; }
+
+        // The supervisor of the employee
+        public Employee ReportsTo { get; set; }
+
+        // The supervisor of the supervisor (boss's boss)
+        public Employee ReportsToBoss { get; set; }
+
+        public Team Team { get; set; }
         public string Role { get; set; }
 
         private async Task LoadAsync(Employee user)
@@ -80,7 +88,7 @@ namespace ArgoCMS.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnGetAsync(string id)
         {
-            var user = new Employee();
+            Employee user = new Employee();
             if (id == null)
             {
                 user = await _userManager.GetUserAsync(User);
@@ -96,12 +104,21 @@ namespace ArgoCMS.Areas.Identity.Pages.Account.Manage
             }
 
             Employee = user;
+            ReportsTo = await _userManager.FindByIdAsync(Employee.ReportsToId);
+            ReportsToBoss = await _userManager.FindByIdAsync(ReportsTo.ReportsToId);
 
-            var role =  string.Join(",", _userManager.GetRolesAsync(Employee).Result.ToArray());
+            var role = string.Join(",", _userManager.GetRolesAsync(Employee).Result.ToArray());
 
             if (role != null)
             {
                 Role = role;
+            }
+
+            var team = Context.Teams.FirstOrDefault(t => t.TeamId == Employee.TeamID);
+
+            if (team != null) 
+            { 
+                Team = team;
             }
 
             await LoadAsync(user);
