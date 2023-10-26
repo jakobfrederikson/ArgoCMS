@@ -33,6 +33,8 @@ namespace ArgoCMS.Models
         [Required]
         [Display(Name = "Publicity Status")]
         public PublicityStatus PublicityStatus { get; set; }
+
+        public ICollection<Comment> Comments { get; set; }
     }
 
     public enum PublicityStatus
