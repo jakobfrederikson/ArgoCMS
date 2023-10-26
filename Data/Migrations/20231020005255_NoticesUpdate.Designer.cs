@@ -4,6 +4,7 @@ using ArgoCMS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ArgoCMS.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231020005255_NoticesUpdate")]
+    partial class NoticesUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,35 +24,6 @@ namespace ArgoCMS.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("ArgoCMS.Models.Comment", b =>
-                {
-                    b.Property<int>("CommentId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CommentId"));
-
-                    b.Property<string>("CommentText")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("NoticeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("OwnerID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("CommentId");
-
-                    b.HasIndex("NoticeId");
-
-                    b.ToTable("Comments");
-                });
 
             modelBuilder.Entity("ArgoCMS.Models.Job", b =>
                 {
@@ -93,6 +67,8 @@ namespace ArgoCMS.Data.Migrations
                     b.HasKey("JobId");
 
                     b.HasIndex("EmployeeID");
+
+                    b.HasIndex("TeamID");
 
                     b.ToTable("Jobs");
                 });
@@ -460,20 +436,17 @@ namespace ArgoCMS.Data.Migrations
                     b.HasDiscriminator().HasValue("Employee");
                 });
 
-            modelBuilder.Entity("ArgoCMS.Models.Comment", b =>
-                {
-                    b.HasOne("ArgoCMS.Models.Notice", null)
-                        .WithMany("Comments")
-                        .HasForeignKey("NoticeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("ArgoCMS.Models.Job", b =>
                 {
                     b.HasOne("ArgoCMS.Models.Employee", null)
                         .WithMany("Jobs")
                         .HasForeignKey("EmployeeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ArgoCMS.Models.Team", null)
+                        .WithMany("Jobs")
+                        .HasForeignKey("TeamID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -568,14 +541,11 @@ namespace ArgoCMS.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ArgoCMS.Models.Notice", b =>
-                {
-                    b.Navigation("Comments");
-                });
-
             modelBuilder.Entity("ArgoCMS.Models.Team", b =>
                 {
                     b.Navigation("Employees");
+
+                    b.Navigation("Jobs");
                 });
 
             modelBuilder.Entity("ArgoCMS.Models.Employee", b =>
