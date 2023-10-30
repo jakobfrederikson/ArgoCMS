@@ -2,6 +2,7 @@ using ArgoCMS.Data;
 using ArgoCMS.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ArgoCMS.Pages.Employees
 {
@@ -23,7 +24,7 @@ namespace ArgoCMS.Pages.Employees
 
         public List<EmployeeViewModel> Employees { get; set; }
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
             if (Context.Users != null)
             {
@@ -32,7 +33,13 @@ namespace ArgoCMS.Pages.Employees
                     Employee = u,
                     Role = string.Join(",", UserManager.GetRolesAsync(u).Result.ToArray())
                 }).ToList();
-            }           
+            }
+            else
+            {
+                return NotFound($"Context.Users is null");
+            }
+
+            return Page();
         }
     }
 }
