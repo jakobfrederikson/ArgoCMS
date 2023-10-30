@@ -23,7 +23,7 @@ namespace ArgoCMS.Pages.Employees
 
         public List<EmployeeViewModel> Employees { get; set; }
 
-        public async Task OnGet()
+        public void OnGet()
         {
             if (Context.Users != null)
             {
