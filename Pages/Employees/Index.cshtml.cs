@@ -23,18 +23,33 @@ namespace ArgoCMS.Pages.Employees
             public string Role { get; set; }
         }
 
-        public List<EmployeeViewModel> Employees { get; set; }
+        public List<EmployeeViewModel> Employees { get; set; } = default!;
 
         public async Task OnGetAsync()
         {
-            if (Context.Users != null)
+            var usersList = await UserManager.Users.ToListAsync();
+
+            var employeeRoleList = new List<EmployeeViewModel>();
+            foreach (var user in usersList)
             {
-                Employees = await UserManager.Users.Select(u => new EmployeeViewModel()
+                
+                employeeRoleList.Add(new EmployeeViewModel()
                 {
-                    Employee = u,
-                    Role = string.Join(",", UserManager.GetRolesAsync(u).Result.ToArray())
-                }).ToListAsync();
+                    Employee = user,
+                    Role = string.Join(",", UserManager.GetRolesAsync(user).Result.ToArray())
+                });
             }
+
+            Employees = employeeRoleList;
+
+            //if (Context.Users != null)
+            //{
+            //    Employees = await UserManager.Users.Select(u => new EmployeeViewModel()
+            //    {
+            //        Employee = u,
+            //        Role = string.Join(",", UserManager.GetRolesAsync(u).Result.ToArray())
+            //    }).ToListAsync();
+            //}
         }
     }
 }
