@@ -49,9 +49,9 @@ namespace ArgoCMS.Pages.Teams
                 Team = team;
             }
 
-            var teamJobs = Context.Jobs
+            var teamJobs = await Context.Jobs
                 .Where(j => j.TeamID == Team.TeamId)
-                .ToDictionary(
+                .ToDictionaryAsync(
                 j => j,
                 j => employees
                         .Where(e => e.Id == j.EmployeeID)
@@ -64,9 +64,9 @@ namespace ArgoCMS.Pages.Teams
                 TeamJobs = teamJobs;
             }
 
-            var teamNotices = Context.Notices
+            var teamNotices = await Context.Notices
                 .Where(n => n.TeamId == Team.TeamId)
-                .ToDictionary(
+                .ToDictionaryAsync(
                 x => x, 
                 x => employees.Where(
                     e => e.Id == x.OwnerID)
@@ -77,9 +77,9 @@ namespace ArgoCMS.Pages.Teams
                 TeamNotices = teamNotices;
             }
 
-            var employeeRole = employees
+            var employeeRole = await employees
                 .Where(e => e.TeamID == Team.TeamId)
-                .ToDictionary(
+                .ToDictionaryAsync(
                 e => e,
                 r => string.Join(",", UserManager.GetRolesAsync(r).Result.ToArray())
                 );
