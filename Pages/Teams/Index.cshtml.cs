@@ -23,7 +23,6 @@ namespace ArgoCMS.Pages.Teams
 
         public async Task OnGetAsync(int? id)
         {
-            var employees = Context.Employees;
             var userId = UserManager.GetUserId(User);
 
             var user = await Context.Employees.FirstOrDefaultAsync(e => e.Id == userId);
@@ -53,7 +52,7 @@ namespace ArgoCMS.Pages.Teams
                 .Where(j => j.TeamID == Team.TeamId)
                 .ToDictionaryAsync(
                 j => j,
-                j => employees
+                j => Context.Employees
                         .Where(e => e.Id == j.EmployeeID)
                         .Single()
                         .FullName
@@ -68,7 +67,7 @@ namespace ArgoCMS.Pages.Teams
                 .Where(n => n.TeamId == Team.TeamId)
                 .ToDictionaryAsync(
                 x => x, 
-                x => employees.Where(
+                x => Context.Employees.Where(
                     e => e.Id == x.OwnerID)
                 .Single().FullName);
 
@@ -77,7 +76,7 @@ namespace ArgoCMS.Pages.Teams
                 TeamNotices = teamNotices;
             }
 
-            var employeeRole = await employees
+            var employeeRole = await Context.Employees
                 .Where(e => e.TeamID == Team.TeamId)
                 .ToDictionaryAsync(
                 e => e,
