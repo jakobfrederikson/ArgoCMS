@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using ArgoCMS.Models.JointEntities;
+using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
 namespace ArgoCMS.Models
@@ -31,6 +32,7 @@ namespace ArgoCMS.Models
         [Display(Name = "Employment date")]
         public DateTime EmploymentDate { get; set; }
 
+        [Display(Name = "Full name")]
         public string FullName
         {
             get
@@ -40,6 +42,8 @@ namespace ArgoCMS.Models
         }
 
         public ICollection<Job> Jobs { get; set; }
-        public ICollection<Project> Projects { get; set; }
+        public ICollection<EmployeeProject> EmployeeProjects { get; set; }
+
+        public Team Team { get; set; }
     }
 }
