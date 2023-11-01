@@ -29,8 +29,8 @@ namespace ArgoCMS.Pages
 
         public int TotalEmployees { get; set; }
         public int TotalTeams { get; set; }
-        public int TotalJobs { get; set; }
-        public int TotalProjects { get; set; }
+        public int TotalJobsCompleted { get; set; }
+        public int TotalProjectsCompleted { get; set; }
 
 
         private const string BackgroundColourOpacity = "0.9";
@@ -72,10 +72,12 @@ namespace ArgoCMS.Pages
 
             TotalEmployees = Context.Employees.Count();
             TotalTeams = Context.Teams.Count();
-            TotalJobs = Context.Jobs
+            TotalJobsCompleted = Context.Jobs
                 .Where(j => j.JobStatus == JobStatus.Completed)
                 .Count();
-            TotalProjects = Context.Projects.Count();
+            TotalProjectsCompleted = Context.Projects
+                .Where(p => p.ProjectStatus == ProjectStatus.Completed)
+                .Count();
 
             return Page();
         }
