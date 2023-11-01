@@ -1,6 +1,4 @@
-﻿using ArgoCMS.Models.JointEntities;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ArgoCMS.Models
 {
@@ -8,13 +6,10 @@ namespace ArgoCMS.Models
     {
         public int TeamId { get; set; }
 
-        public string? TeamLeaderId { get; set; } // Team Leader (optional)
-        public Employee TeamLeader { get; set; } // Navigation property for the team leader
+        [Display(Name = "Created by")]
+        public string OwnerID { get; set; }
 
-        public string? CreatedById { get; set; }
-        public Employee CreatedBy { get; set; } // Navigation property for the creator
-
-		[Required]
+        [Required]
         [Display(Name = "Name")]
         public string TeamName { get; set; }
 
@@ -27,7 +22,7 @@ namespace ArgoCMS.Models
         [DataType(DataType.Date)]
         public DateTime DateCreated { get; set; }
 
-        public List<Employee> Members { get; set; } // Collection of team members
-        public ICollection<TeamProject> TeamProjects { get; set; }
+        public ICollection<Employee> Employees { get; set; }
+        public ICollection<Project> Projects { get; set; }
     }
 }

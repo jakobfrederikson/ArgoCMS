@@ -32,7 +32,7 @@
                 @Html.DisplayNameFor(model => model.Jobs.Keys.FirstOrDefault().OwnerID)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Jobs.Keys.FirstOrDefault().AssignedEmployeeID)
+                @Html.DisplayNameFor(model => model.Jobs.Keys.FirstOrDefault().EmployeeID)
             </th>            
             <th>
                 @Html.DisplayNameFor(model => model.Jobs.Keys.FirstOrDefault().TeamID)
@@ -66,9 +66,9 @@
                 </a>
             </td>
             <td>
-                <a asp-area="Identity" asp-page="/Account/Manage/Index" asp-route-id="@item.Key.AssignedEmployeeID">
+                <a asp-area="Identity" asp-page="/Account/Manage/Index" asp-route-id="@item.Key.EmployeeID">
                     
-                    @Model.AssignedToIdToFullName[@item.Key.AssignedEmployeeID]
+                    @Model.AssignedToIdToFullName[@item.Key.EmployeeID]
                 </a>
             </td>
             <td>

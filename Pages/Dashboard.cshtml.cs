@@ -44,14 +44,15 @@ namespace ArgoCMS.Pages
 
             foreach (var job in Context.Jobs)
             {
-                if (job.AssignedEmployeeID == userId)
+                if (job.EmployeeID == userId)
                 {
                     jobDict[job.JobStatus.ToString()]++;
                 }
             }
 
             var projects = await Context.Projects
-                                .Where(p => p.EmployeeProjects.Any(ep => ep.Employee == user))
+                                .Include(e => e.Employees)
+                                .Where(e => e.Employees.Contains(user))
                                 .ToListAsync();
             var team = Context.Teams
                         .FirstOrDefault(t => t.TeamId == user.TeamID);
@@ -120,18 +121,19 @@ namespace ArgoCMS.Pages
 
         private Dictionary<string, int> InitializeTeamJobsDictionary(Employee currentUser)
         {
+            Employee[] teamMembers = Context.Employees
+                                    .Where(e => e.TeamID == currentUser.TeamID)
+                                    .Include(e => e.Jobs.Where(j => j.JobStatus == JobStatus.Completed))
+                                    .ToArray();
 
-            var teamMemberJobsCompleted = Context.Employees
-                .Where(e => e.TeamID == currentUser.TeamID)
-                .Select(teamMember => new
-                {
-                    Name = teamMember.FullName,
-                    JobCount = teamMember.Jobs.Count(j => j.JobStatus == JobStatus.Completed)
-                })
-                .ToDictionary(e => e.Name, e => e.JobCount);
+            var teamMemberJobsCompleted = new Dictionary<string, int>();
+
+            foreach (Employee teamMember in teamMembers)
+            {
+                teamMemberJobsCompleted[teamMember.FullName] = teamMember.Jobs.Count();
+            }            
 
             return teamMemberJobsCompleted;
-
         }
 
         private List<string> InitializeBackgroundColours(int count)
