@@ -33,7 +33,6 @@ namespace ArgoCMS.Pages.Admin.Teams
                 return Page();
             }
 
-            Team.OwnerID = UserManager.GetUserId(User);
             Team.DateCreated = DateTime.Now;
 
             Context.Teams.Add(Team);

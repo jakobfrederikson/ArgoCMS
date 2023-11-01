@@ -53,52 +53,56 @@ namespace ArgoCMS.Pages.Teams
         private async Task<Team> AcquireTeam(int? id)
         {
 
-				if (id != null)
-				{
-					var team = await Context.Teams
-					.Include(t => t.Employees.Where(e => e.TeamID == id))
-					.FirstOrDefaultAsync(t => t.TeamId == id);
+            var query = Context.Teams.
+                Include(t => t.Members)
+                .Include(t => t.CreatedBy)
+                .Include(t=> t.TeamLeader)
+                .AsQueryable();
 
-                    return team;
-				}
-				else
-				{
-					var userId = UserManager.GetUserId(User);
-					var user = await Context.Employees.FirstOrDefaultAsync(e => e.Id == userId);
-					var team = await Context.Teams
-					.Include(t => t.Employees.Where(e => e.TeamID == user.TeamID))
-					.FirstOrDefaultAsync(t => t.TeamId == user.TeamID);
+			if (id != null) // Looking at team for another user
+			{
+				var team = await query.FirstOrDefaultAsync(t => t.TeamId == id);
+                return team;
+			}
+			else // Looking at team for current user
+			{
+				var userId = UserManager.GetUserId(User);
+				var user = await Context.Employees.FirstOrDefaultAsync(e => e.Id == userId);
+                var team = await query.FirstOrDefaultAsync(t => t.TeamId == user.TeamID);
 
-                    return team;
-				}
+                return team;
+			}
 
         }
 
         private async Task<Dictionary<Job, string>> AcquireTeamsJobs()
         {
 
-            var jobsList = await Context.Jobs.Where(j => j.TeamID == Team.TeamId).ToListAsync();
-            var result = new Dictionary<Job, string>();
+			var jobsList = await Context.Jobs
+		        .Include(j => j.AssignedEmployee) // Eager load the related Employee
+		        .Where(j => j.TeamID == Team.TeamId)
+		        .ToListAsync();
 
-            foreach (var job in jobsList)
-            {
-                result[job] = Context.Employees.Where(e => e.Id == job.EmployeeID).FirstOrDefault().FullName;
-            }
+			var result = new Dictionary<Job, string>();
 
-            return result;
+			foreach (var job in jobsList)
+			{
+				result[job] = job.AssignedEmployee?.FullName;
+			}
 
-        }
+			return result;
+
+		}
 
         private async Task<Dictionary<Notice, string>> AcquireTeamNotices()
         {
 
-			var result = await Context.Notices
-				.Where(n => n.TeamId == Team.TeamId)
-				.ToDictionaryAsync(
-				x => x,
-				x => Context.Employees.Where(
-					e => e.Id == x.OwnerID)
-				.Single().FullName);
+            var result = await Context.Notices
+                .Where(n => n.TeamId == Team.TeamId)
+                .Include(n => n.Owner) // Eager loading to retrieve owner data
+                .ToDictionaryAsync(
+                    x => x,
+                    x => x.Owner.FullName);
 
             return result;
 
@@ -107,12 +111,17 @@ namespace ArgoCMS.Pages.Teams
         private async Task<Dictionary<Employee, string>> AcquireEmployeesAndRoles()
         {
 
-            var result = await Context.Employees
-				.Where(e => e.TeamID == Team.TeamId)
-				.ToDictionaryAsync(
-				e => e,
-				r => string.Join(",", UserManager.GetRolesAsync(r).Result.ToArray())
-				);
+            var employees = await Context.Employees
+                .Where(e => e.TeamID == Team.TeamId)
+                .ToListAsync();
+
+            var result = new Dictionary<Employee, string>();
+
+            foreach (var employee in  employees)
+            {
+                var roles = await UserManager.GetRolesAsync(employee);
+                result[employee] = string.Join(",", roles);
+            }
 
             return result;
 
