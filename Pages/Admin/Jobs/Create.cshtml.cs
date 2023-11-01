@@ -44,7 +44,7 @@ namespace ArgoCMS.Pages.Admin.Jobs
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-            if (Job.AssignedEmployeeID == null
+            if (Job.EmployeeID == null
              || Job.JobName == null
              || Job.JobDescription == null)
             {
@@ -55,7 +55,7 @@ namespace ArgoCMS.Pages.Admin.Jobs
             Job.DateCreated = DateTime.Now;
             Job.JobStatus = JobStatus.Unread;
             Job.TeamID = Context.Employees.FirstOrDefault(
-                e => e.Id == Job.AssignedEmployeeID).TeamID;
+                e => e.Id == Job.EmployeeID).TeamID;
 
             Context.Jobs.Add(Job);
             await Context.SaveChangesAsync();

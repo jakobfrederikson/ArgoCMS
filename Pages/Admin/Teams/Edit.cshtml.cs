@@ -32,7 +32,7 @@ namespace ArgoCMS.Pages.Admin.Teams
                 return NotFound();
             }
             Team = team;
-            createdById = Team.CreatedById;
+            createdById = Team.OwnerID;
             return Page();
         }
 
@@ -53,7 +53,7 @@ namespace ArgoCMS.Pages.Admin.Teams
             }
 
 
-            Team.CreatedById = team.CreatedById;
+            Team.OwnerID = team.OwnerID;
             _context.Attach(Team).State = EntityState.Modified;
 
             try
