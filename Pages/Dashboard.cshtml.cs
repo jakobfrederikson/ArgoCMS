@@ -18,81 +18,57 @@ namespace ArgoCMS.Pages
         {
         }
 
-        public IDictionary<string, JobStatus> UserJobStatus { get; set; }
-        public IDictionary<string, int> TeamMemberJobCompletion { get; set; }
+        public Dictionary<string, int> UserJobStatus { get; set; }
+        public Dictionary<string, int> TeamMemberJobCompletion { get; set; }
         public List<Project> Projects { get; set; }
-        public Team Team { get; set; }
-        public Employee ReportsTo { get; set; }
-        public IList<Notice> Notices { get; set; }
+        public List<Team> Teams { get; set; }        
+        public List<Notice> Notices { get; set; }
         public List<string> BackgroundColours { get; set; }
+        public Employee ReportsTo { get; set; }
+
 
         public int TotalEmployees { get; set; }
         public int TotalTeams { get; set; }
         public int TotalJobs { get; set; }
         public int TotalProjects { get; set; }
 
+
+        private const string BackgroundColourOpacity = "0.9";
+        private readonly string[] Colours = new string[]
+        {
+            $"rgba(199, 255, 69, {BackgroundColourOpacity})",
+            $"rgba(134, 255, 69, {BackgroundColourOpacity})",
+            $"rgba(69, 255, 122, {BackgroundColourOpacity})",
+            $"rgba(69, 255, 227, {BackgroundColourOpacity})",
+            $"rgba(69, 171, 255, {BackgroundColourOpacity})",
+            $"rgba(69, 75, 255, {BackgroundColourOpacity})",
+            $"rgba(150, 69, 255, {BackgroundColourOpacity})",
+            $"rgba(230, 69, 255, {BackgroundColourOpacity})"
+        };
+
         public async Task<IActionResult> OnGetAsync()
         {
             var userId = UserManager.GetUserId(User);
 
-            var user = await Context.Employees
+            var currentUser = await Context.Employees
                 .FirstOrDefaultAsync(e => e.Id == userId);
 
-            var teamJobDict = InitializeTeamJobsDictionary(user);
-            var colours = InitializeBackgroundColours(teamJobDict.Keys.Count());
-            var jobDict = InitializeUserJobsDictionary();
-
-            foreach (var job in Context.Jobs)
+            if (currentUser != null)
             {
-                if (job.AssignedEmployeeID == userId)
-                {
-                    jobDict[job.JobStatus.ToString()]++;
-                }
+                TeamMemberJobCompletion = await GetTeamMemberJobCompletion(currentUser);
+                UserJobStatus = GetUserJobStatus(currentUser);
+
+                Projects = await GetProjects(currentUser);
+                Teams = await GetTeams(currentUser);
+                ReportsTo = await GetReportsTo(currentUser);
+                Notices = await GetNotices();
+            }
+            else
+            {
+                return RedirectToPage("/Error");
             }
 
-            var projects = await Context.Projects
-                                .Where(p => p.EmployeeProjects.Any(ep => ep.Employee == user))
-                                .ToListAsync();
-            var team = Context.Teams
-                        .FirstOrDefault(t => t.TeamId == user.TeamID);
-            var reportsTo = await UserManager.FindByIdAsync(user.ReportsToId);
-
-            var notices = Context.Notices.ToList();
-
-            if (teamJobDict != null)
-            {
-                TeamMemberJobCompletion = teamJobDict;
-            }
-
-            if (colours != null)
-            {
-                BackgroundColours = colours;
-            }
-
-            if (jobDict != null)
-            {
-                UserJobStatus = jobDict;
-            }
-
-            if (projects != null)
-            {
-                Projects = projects;
-            }
-
-            if (team != null)
-            {
-                Team = team;
-            }
-
-            if (reportsTo != null)
-            {
-                ReportsTo = reportsTo;
-            }
-
-            if (notices != null)
-            {
-                Notices = notices;
-            }
+            BackgroundColours = InitializeBackgroundColours(TeamMemberJobCompletion.Keys.Count());
 
             TotalEmployees = Context.Employees.Count();
             TotalTeams = Context.Teams.Count();
@@ -104,9 +80,37 @@ namespace ArgoCMS.Pages
             return Page();
         }
 
-        private Dictionary<string, JobStatus> InitializeUserJobsDictionary()
+        private async Task<Dictionary<string, int>> GetTeamMemberJobCompletion(Employee currentUser)
         {
-            var jobDict = new Dictionary<string, JobStatus>();
+            return await Context.Employees
+                    .Include(e => e.Jobs)
+                    .Where(e => e.TeamID == currentUser.TeamID)
+                    .ToDictionaryAsync(
+                        teamMember => teamMember.FullName,
+                        teamMember => teamMember.Jobs.Count(j => j.JobStatus == JobStatus.Completed));
+        }
+
+        private Dictionary<string, int> GetUserJobStatus(Employee currentUser)
+        {
+            var jobDict = InitializeUserJobsDictionary();
+
+            jobDict["Unread"] = GetUserJobCountByStatus(currentUser, JobStatus.Unread);
+            jobDict["Read"] = GetUserJobCountByStatus(currentUser, JobStatus.Read);
+            jobDict["Working"] = GetUserJobCountByStatus(currentUser, JobStatus.Working);
+            jobDict["Submitted"] = GetUserJobCountByStatus(currentUser, JobStatus.Submitted);
+            jobDict["Completed"] = GetUserJobCountByStatus(currentUser, JobStatus.Completed);
+
+            return jobDict;
+        }
+
+        private int GetUserJobCountByStatus(Employee currentUser, JobStatus status)
+        {
+            return Context.Jobs.Count(job => job.AssignedEmployeeID == currentUser.Id && job.JobStatus == status);
+        }
+
+        private Dictionary<string, int> InitializeUserJobsDictionary()
+        {
+            var jobDict = new Dictionary<string, int>();
 
             jobDict["Unread"] = 0;
             jobDict["Read"] = 0;
@@ -114,53 +118,48 @@ namespace ArgoCMS.Pages
             jobDict["Submitted"] = 0;
             jobDict["Completed"] = 0;
 
-
             return jobDict;
-        }
-
-        private Dictionary<string, int> InitializeTeamJobsDictionary(Employee currentUser)
-        {
-
-            var teamMemberJobsCompleted = Context.Employees
-                .Where(e => e.TeamID == currentUser.TeamID)
-                .Select(teamMember => new
-                {
-                    Name = teamMember.FullName,
-                    JobCount = teamMember.Jobs.Count(j => j.JobStatus == JobStatus.Completed)
-                })
-                .ToDictionary(e => e.Name, e => e.JobCount);
-
-            return teamMemberJobsCompleted;
-
         }
 
         private List<string> InitializeBackgroundColours(int count)
         {
-            List<string> listOfColours = new List<string>();
-            string opacity = "0.9";
+            List<string> listOfColours = new List<string>();         
 
-            string[] colours = new string[]
-            {
-                $"rgba(199, 255, 69, {opacity})",
-                $"rgba(134, 255, 69, {opacity})",
-                $"rgba(69, 255, 122, {opacity})",
-                $"rgba(69, 255, 227, {opacity})",
-                $"rgba(69, 171, 255, {opacity})",
-                $"rgba(69, 75, 255, {opacity})",
-                $"rgba(150, 69, 255, {opacity})",
-                $"rgba(230, 69, 255, {opacity})"
-            };
-
-            int counter = 0;
             for (int i = 0; i < count; i++)
             {
-                if (counter >= colours.Length) counter = 0;
-
-                listOfColours.Add(colours[counter]);
-                counter++;
+                string colour = Colours[i % Colours.Length];
+                listOfColours.Add(colour);
             }
 
             return listOfColours;
+        }
+
+        private async Task<List<Project>> GetProjects(Employee currentUser)
+        {
+            return await Context.Projects
+                .Where(p => p.EmployeeProjects.Any(ep => ep.Employee == currentUser))
+                .ToListAsync();
+        }
+
+        private async Task<List<Team>> GetTeams(Employee currentUser)
+        {
+            return await Context.Teams
+                .Where(t => t.Members.Any(m => m.Id == currentUser.Id))
+                .ToListAsync();
+        }
+
+        private async Task<Employee> GetReportsTo(Employee currentUser)
+        {
+            return await Context.Employees
+                .Where(e => e.Id == currentUser.ReportsToId)
+                .FirstOrDefaultAsync();
+        }
+
+        private async Task<List<Notice>> GetNotices()
+        {
+            return await Context.Notices
+                .Where(n => n.PublicityStatus == PublicityStatus.Everyone)
+                .ToListAsync();
         }
     }    
 }
