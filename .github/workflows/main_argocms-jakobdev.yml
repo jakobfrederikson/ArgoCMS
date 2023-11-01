@@ -35,7 +35,8 @@ jobs:
         run: dotnet-ef migrations bundle --runtime linux-x64 -p ArgoCMS.csproj -o ${{env.DOTNET_ROOT}}/myapp/migrate
 
       - name: Copy appsettings.json
-        run: cp ./appsettings.json ${{env.DOTNET_ROOT}}/myapp/migrate
+        run: |
+          cp ./appsettings.json ${{env.DOTNET_ROOT}}/myapp/migrate/
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
