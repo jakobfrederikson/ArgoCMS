@@ -28,7 +28,7 @@ namespace ArgoCMS.Pages.Jobs
             {
                 Jobs = await Context.Jobs
                     .Where(j => j.JobStatus != JobStatus.Completed)
-                    .Where(j => j.OwnerID == userId || j.EmployeeID == userId)
+                    .Where(j => j.OwnerID == userId || j.AssignedEmployeeID == userId)
                     .OrderByDescending(j => (int) (j.PriorityLevel))
                     .ToDictionaryAsync
                     (
@@ -64,10 +64,10 @@ namespace ArgoCMS.Pages.Jobs
                                 .FirstOrDefault(j => j.Id == job.OwnerID).FullName;
                 }
 
-                if (!assignedToIdToFullName.ContainsKey(job.EmployeeID))
+                if (!assignedToIdToFullName.ContainsKey(job.AssignedEmployeeID))
                 {
-                    assignedToIdToFullName[job.EmployeeID] = Context.Employees
-                                .FirstOrDefault(j => j.Id == job.EmployeeID).FullName;
+                    assignedToIdToFullName[job.AssignedEmployeeID] = Context.Employees
+                                .FirstOrDefault(j => j.Id == job.AssignedEmployeeID).FullName;
                 }
 
                 if (!teamsToFullName.ContainsKey(job.TeamID))
