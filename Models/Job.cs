@@ -12,10 +12,12 @@ namespace ArgoCMS.Models
         [Required]
         [Display(Name = "Created by")]
         public string OwnerID { get; set; }
+        public Employee Owner { get; set; }
 
         [Required]
         [Display(Name = "Assigned to")]
-        public string EmployeeID { get; set; }
+        public string AssignedEmployeeID { get; set; }
+        public Employee AssignedEmployee { get; set; }
 
         [Required]
         [Display(Name = "Team")]
@@ -44,7 +46,8 @@ namespace ArgoCMS.Models
         public JobStatus JobStatus { get; set; }
 
         [Display(Name = "Priority level")]
-        public PriorityLevel PriorityLevel { get; set; }
+        public PriorityLevel PriorityLevel { get; set; }       
+        
     }
 
     public enum JobStatus
