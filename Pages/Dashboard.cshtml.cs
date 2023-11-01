@@ -24,7 +24,6 @@ namespace ArgoCMS.Pages
         public List<Team> Teams { get; set; }        
         public List<Notice> Notices { get; set; }
         public List<string> BackgroundColours { get; set; }
-        public Employee ReportsTo { get; set; }
 
 
         public int TotalEmployees { get; set; }
@@ -60,7 +59,6 @@ namespace ArgoCMS.Pages
 
                 Projects = await GetProjects(currentUser);
                 Teams = await GetTeams(currentUser);
-                ReportsTo = await GetReportsTo(currentUser);
                 Notices = await GetNotices();
             }
             else
@@ -139,6 +137,7 @@ namespace ArgoCMS.Pages
         private async Task<List<Project>> GetProjects(Employee currentUser)
         {
             return await Context.Projects
+                .Include(p => p.TeamProjects)
                 .Where(p => p.EmployeeProjects.Any(ep => ep.Employee == currentUser))
                 .ToListAsync();
         }
@@ -146,15 +145,9 @@ namespace ArgoCMS.Pages
         private async Task<List<Team>> GetTeams(Employee currentUser)
         {
             return await Context.Teams
+                .Include(t => t.TeamProjects)
                 .Where(t => t.Members.Any(m => m.Id == currentUser.Id))
                 .ToListAsync();
-        }
-
-        private async Task<Employee> GetReportsTo(Employee currentUser)
-        {
-            return await Context.Employees
-                .Where(e => e.Id == currentUser.ReportsToId)
-                .FirstOrDefaultAsync();
         }
 
         private async Task<List<Notice>> GetNotices()
