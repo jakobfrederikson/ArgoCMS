@@ -36,7 +36,7 @@ jobs:
 
       - name: Copy appsettings.json
         run: |
-          cp ./appsettings.json ${{env.DOTNET_ROOT}}/myapp/migrate/
+          cp ./appsettings.json ${{env.DOTNET_ROOT}}/myapp/
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
