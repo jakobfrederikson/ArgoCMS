@@ -24,5 +24,7 @@ namespace ArgoCMS.Models
         [Display(Name = "Time of post")]
         [DataType(DataType.DateTime)] 
         public DateTime CreationDate { get; set; }
+
+        public Notice Notice;
     }
 }
