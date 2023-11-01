@@ -2,7 +2,8 @@
 using Constants = ArgoCMS.Authorization.AuthorizationOperations.Constants;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-
+using ArgoCMS.Models.JointEntities;
+using Newtonsoft.Json.Linq;
 
 namespace ArgoCMS.Data
 {
@@ -166,10 +167,10 @@ namespace ArgoCMS.Data
             Team devTeam = context.Teams.FirstOrDefault(t => t.TeamId == 1);
             Team pdTeam = context.Teams.FirstOrDefault(t => t.TeamId == 2);
 
-            devTeam.OwnerID = jakob.Id;
-            pdTeam.OwnerID = nathan.Id;
-            devTeam.Employees = new List<Employee> { jakob, vanah, henry, larry };
-            pdTeam.Employees = new List<Employee> { nathan, george, jerry };
+            devTeam.TeamLeaderId = jakob.Id;
+            pdTeam.TeamLeaderId = nathan.Id;
+            devTeam.Members = new List<Employee> { jakob, vanah, henry, larry };
+            pdTeam.Members = new List<Employee> { nathan, george, jerry };
 
             // update ReportTo IDs
             jakob.ReportsToId = vanahID;
@@ -186,11 +187,12 @@ namespace ArgoCMS.Data
                 OwnerID = vanahID,
                 ProjectDescription = "Introduce a new internal pay system, replacing the old Java backend with .NET",
                 DateCreated = DateTime.Now,
-                Employees = new List<Employee>
+                DueDate = DateTime.Now.AddDays(3),
+                EmployeeProjects = new List<EmployeeProject>
                 {
-                    jakob,
-                    vanah
-                }
+					new EmployeeProject { Employee = jakob, IsCompleted = false },
+                    new EmployeeProject { Employee = vanah, IsCompleted = false }
+				}
             };
 
             Project websiteUIRefactor = new Project
@@ -199,12 +201,13 @@ namespace ArgoCMS.Data
                 OwnerID = adminID,
                 ProjectDescription = "Implement a modern frontend framework to the website, replacing old basic HTML code with React and magical frotend stuff.",
                 DateCreated = DateTime.Now,
-                Employees = new List<Employee>
+				DueDate = DateTime.Now.AddDays(3),
+				EmployeeProjects = new List<EmployeeProject>
                 {
-                    jakob,
-                    jerry,
-                    george
-                }
+					new EmployeeProject { Employee = jakob, IsCompleted = true },
+		            new EmployeeProject { Employee = jerry, IsCompleted = false },
+		            new EmployeeProject { Employee = george, IsCompleted = true }
+				}
             };
 
             var projects = new Project[] { paySys, websiteUIRefactor };
@@ -213,7 +216,7 @@ namespace ArgoCMS.Data
             Job paySysJob1 = new Job
             {
                 OwnerID = adminID,
-                EmployeeID = vanahID,
+                AssignedEmployeeID = vanahID,
                 TeamID = 1,
                 JobName = "Withdraw System",
                 JobDescription = "Convert the old withdraw function in Java to the new C# version.",
@@ -226,7 +229,7 @@ namespace ArgoCMS.Data
             Job paySysJob2 = new Job
             {
                 OwnerID = vanahID,
-                EmployeeID = adminID,
+                AssignedEmployeeID = adminID,
                 TeamID = 1,
                 JobName = "Define Pay System Requirements",
                 JobDescription = "Gather and document the specific requirements for the new pay system, including features, calculations, and reporting.",
@@ -239,7 +242,7 @@ namespace ArgoCMS.Data
             Job paySysJob3 = new Job
             {
                 OwnerID = vanahID,
-                EmployeeID = adminID,
+                AssignedEmployeeID = adminID,
                 TeamID = 1,
                 JobName = "Research Payroll Regulations",
                 JobDescription = "Research and compile information on local and federal payroll regulations to ensure compliance in the new pay system.",
@@ -252,7 +255,7 @@ namespace ArgoCMS.Data
             Job paySysJob4 = new Job
             {
                 OwnerID = vanahID,
-                EmployeeID = adminID,
+                AssignedEmployeeID = adminID,
                 TeamID = 1,
                 JobName = "Develop Payroll Database Schema",
                 JobDescription = "Design the database structure for storing payroll data within the new pay system.",
@@ -265,7 +268,7 @@ namespace ArgoCMS.Data
             Job paySysJob5 = new Job
             {
                 OwnerID = vanahID,
-                EmployeeID = adminID,
+                AssignedEmployeeID = adminID,
                 TeamID = 1,
                 JobName = "Create Payroll Calculation Algorithms",
                 JobDescription = "Develop algorithms to calculate employee salaries, taxes, and deductions in the new pay system.",
@@ -278,7 +281,7 @@ namespace ArgoCMS.Data
             Job paySysJob6 = new Job
             {
                 OwnerID = adminID,
-                EmployeeID = vanahID,
+                AssignedEmployeeID = vanahID,
                 TeamID = 1,
                 JobName = "Design User Interface",
                 JobDescription = "Create a user-friendly interface for the new pay system, allowing easy navigation and data input.",
@@ -291,7 +294,7 @@ namespace ArgoCMS.Data
             Job paySysJob7 = new Job
             {
                 OwnerID = adminID,
-                EmployeeID = vanahID,
+                AssignedEmployeeID = vanahID,
                 TeamID = 1,
                 JobName = "Test Payroll Calculations",
                 JobDescription = "Conduct testing to verify the accuracy of payroll calculations in the new pay system.",
@@ -304,7 +307,7 @@ namespace ArgoCMS.Data
             Job paySysJob8 = new Job
             {
                 OwnerID = adminID,
-                EmployeeID = vanahID,
+                AssignedEmployeeID = vanahID,
                 TeamID = 1,
                 JobName = "Set Up Employee Benefits",
                 JobDescription = "Configure and implement employee benefits programs within the new pay system.",
@@ -317,7 +320,7 @@ namespace ArgoCMS.Data
             Job paySysJob9 = new Job
             {
                 OwnerID = vanahID,
-                EmployeeID = adminID,
+                AssignedEmployeeID = adminID,
                 TeamID = 1,
                 JobName = "Develop Training Materials",
                 JobDescription = "Create training materials and documentation to educate users on using the new pay system.",
@@ -330,7 +333,7 @@ namespace ArgoCMS.Data
             Job paySysJob10 = new Job
             {
                 OwnerID = vanahID,
-                EmployeeID = adminID,
+                AssignedEmployeeID = adminID,
                 TeamID = 1,
                 JobName = "Perform User Acceptance Testing",
                 JobDescription = "Engage users in testing the new pay system to ensure it meets their needs and expectations.",
@@ -343,7 +346,7 @@ namespace ArgoCMS.Data
             Job paySysJob11 = new Job
             {
                 OwnerID = vanahID,
-                EmployeeID = adminID,
+                AssignedEmployeeID = adminID,
                 TeamID = 1,
                 JobName = "Plan System Rollout",
                 JobDescription = "Develop a strategy for the smooth rollout of the new pay system, including employee training and communication plans.",
@@ -356,7 +359,7 @@ namespace ArgoCMS.Data
             Job paySysJob12 = new Job
             {
                 OwnerID = adminID,
-                EmployeeID = henry.Id,
+                AssignedEmployeeID = henry.Id,
                 TeamID = 1,
                 JobName = "Data Migration and Integration",
                 JobDescription = "Plan and execute the migration of existing payroll data into the new pay system while ensuring data integrity and system integration.",
@@ -369,7 +372,7 @@ namespace ArgoCMS.Data
             Job paySysJob13 = new Job
             {
                 OwnerID = adminID,
-                EmployeeID = henry.Id,
+                AssignedEmployeeID = henry.Id,
                 TeamID = 1,
                 JobName = "Security and Access Control",
                 JobDescription = "Implement robust security measures and access controls to safeguard sensitive payroll information within the new pay system.",
@@ -382,7 +385,7 @@ namespace ArgoCMS.Data
             Job paySysJob14 = new Job
             {
                 OwnerID = vanahID,
-                EmployeeID = larry.Id,
+                AssignedEmployeeID = larry.Id,
                 TeamID = 1,
                 JobName = "Generate Payroll Reports",
                 JobDescription = "Develop reporting functionalities in the pay system to generate various payroll reports for management and auditing purposes.",
@@ -395,7 +398,7 @@ namespace ArgoCMS.Data
             Job paySysJob15 = new Job
             {
                 OwnerID = vanahID,
-                EmployeeID = larry.Id,
+                AssignedEmployeeID = larry.Id,
                 TeamID = 1,
                 JobName = "Documentation and Knowledge Transfer",
                 JobDescription = "Create comprehensive documentation for the new pay system, facilitating knowledge transfer among team members and future maintenance.",
@@ -408,7 +411,7 @@ namespace ArgoCMS.Data
             Job createSeedClass = new Job
             {
                 OwnerID = adminID,
-                EmployeeID = empJerryID,
+                AssignedEmployeeID = empJerryID,
                 TeamID = 2,
                 JobName = "Create DB seed data",
                 JobDescription = "Create a seed object that can be called in Program.cs",
