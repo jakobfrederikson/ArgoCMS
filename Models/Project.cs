@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ArgoCMS.Models.JointEntities;
+using System.ComponentModel.DataAnnotations;
 
 namespace ArgoCMS.Models
 {
@@ -9,6 +10,7 @@ namespace ArgoCMS.Models
         [Required]
         [Display(Name = "Created by")]
         public string OwnerID { get; set; }
+        public Employee Owner { get; set; }
 
         [Required]
         [Display(Name = "Name")]
@@ -23,7 +25,23 @@ namespace ArgoCMS.Models
         [DataType(DataType.Date)]
         public DateTime DateCreated { get; set; }
 
-        public ICollection<Employee> Employees { get; set; }
-        public ICollection<Team> Teams { get; set; }
+		[Required]
+		[Display(Name = "Due Date")]
+		[DataType(DataType.Date)]
+		public DateTime DueDate { get; set; }
+
+		[Required]
+        [Display(Name = "Project status")]
+        public ProjectStatus ProjectStatus { get; set; }
+
+        public ICollection<EmployeeProject> EmployeeProjects { get; set; }
+        public ICollection<TeamProject> TeamProjects { get; set; }
+    }
+
+    public enum ProjectStatus
+    {
+        NotStarted,
+        InProgress,
+        Completed
     }
 }
