@@ -36,6 +36,10 @@ body {
     background: #262A39;
 }
 
+.bg-team_dashboard_blue {
+    background: #3B4158;
+}
+
 .text-snow-white {
     color: #F3F5F7 !important;
 }
@@ -90,4 +94,20 @@ body {
     padding-top: 0.5rem;
     overflow-x: hidden;
     overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+}
+
+.accordion-item {
+    background: #262A39;
+}
+
+.accordion-button {
+    background: #262A39;
+}
+
+.accordion-button:not(.collapsed) {
+    background: #262A39;
+}
+
+.accordion-body {
+    background: #3B4158;
 }
