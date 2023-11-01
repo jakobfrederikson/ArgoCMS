@@ -23,6 +23,7 @@ namespace ArgoCMS.Pages.Teams
 
         public async Task OnGetAsync(int? id)
         {
+
             var team = await AcquireTeam(id);
             if (team != null)
             {
@@ -46,10 +47,12 @@ namespace ArgoCMS.Pages.Teams
             {
                 EmployeeAndRole = employeeRole;
             }
+
         }
 
         private async Task<Team> AcquireTeam(int? id)
         {
+
 				if (id != null)
 				{
 					var team = await Context.Teams
@@ -68,22 +71,21 @@ namespace ArgoCMS.Pages.Teams
 
                     return team;
 				}
+
         }
 
         private async Task<Dictionary<Job, string>> AcquireTeamsJobs()
         {
 
-                var result = await Context.Jobs
-				.Where(j => j.TeamID == Team.TeamId)
-				.ToDictionaryAsync(
-				j => j,
-				j => Context.Employees
-						.Where(e => e.Id == j.EmployeeID)
-						.Single()
-						.FullName
-				);
+            var jobsList = await Context.Jobs.Where(j => j.TeamID == Team.TeamId).ToListAsync();
+            var result = new Dictionary<Job, string>();
 
-                return result;
+            foreach (var job in jobsList)
+            {
+                result[job] = Context.Employees.Where(e => e.Id == job.EmployeeID).FirstOrDefault().FullName;
+            }
+
+            return result;
 
         }
 
