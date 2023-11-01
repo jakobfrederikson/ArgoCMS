@@ -153,6 +153,7 @@ namespace ArgoCMS.Pages
         private async Task<List<Notice>> GetNotices()
         {
             return await Context.Notices
+                .Include(n => n.Owner)
                 .Where(n => n.PublicityStatus == PublicityStatus.Everyone)
                 .ToListAsync();
         }
