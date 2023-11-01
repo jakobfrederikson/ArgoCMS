@@ -10,6 +10,45 @@
 
 <div class="row">
     
+    <div class="col-xl-12 col-md-12 mb-4">
+        <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button text-snow-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        Company Wide Notices
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <div class="row">
+
+                        @foreach (var item in Model.Notices)
+                        {                            
+                            <div class="col-xl-12 m-1">
+                                <div class="card bg-dark_blue text-snow-white">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@item.NoticeTitle</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted">Posted by 
+                                            <a asp-area="Identity" asp-page="/Account/Manage/Index" asp-route-id="@item.Owner.Id">
+                                                @item.Owner.FullName
+                                            </a>
+                                            on 
+                                            @item.DateCreated
+                                        </h6>
+                                        <p class="card-text">@item.NoticeMessageContent</p>
+                                        <a asp-page="/Notices/NoticeDetails" asp-route-id="@item.NoticeId" class="card-link">View more</a>
+                                    </div>
+                                </div>
+                            </div>                            
+                        }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Column 1 -->
     <div class="col-xl-3 col-md-6">
         <div class="card mb-4 bg-dark_blue">
@@ -69,7 +108,7 @@
                         <h5>Jobs</h5>
                     </div>
                     <div class="col-4 text-right text-center">
-                        <h3>@Model.TotalJobs</h3>
+                        <h3>@Model.TotalJobsCompleted</h3>
                     </div>
                 </div>
             </div>
@@ -94,7 +133,7 @@
                         <h5>Projects</h5>
                     </div>
                     <div class="col-4 text-right text-center">
-                        <h3>@Model.TotalProjects</h3>
+                        <h3>@Model.TotalProjectsCompleted</h3>
                     </div>
                 </div>
             </div>
@@ -143,71 +182,80 @@
     <div class="col-xl-6">
         <div class="card mb-4 bg-dark_blue">
             <div class="card-header">
-                <h5>Teams</h5>
+                <h5>Your Projects</h5>
             </div>
             <div class="card-body">
-                <p class="card-text"><strong>@Model.Team.TeamName</strong></p>
-            </div>
-     
-            <div class="card-footer bg-primary bg-gradient">
-                <div class="row align-items-center">
-                    <div class="col-9">
-                        <p class="mb-0">Total tasks completed</p>
+                @foreach (var item in Model.Projects)
+                {
+                    <div class="bg-team_dashboard_blue p-1 rounded mb-1">
+                        <dl class="row">
+                            <dt class="col-sm-3">Project Name</dt>
+                            <dd class="col-sm-9">
+                                <a asp-page="/Projects/Index" asp-route-itemid="@item.ProjectId" class="text-white">
+                                    @item.ProjectName
+                                </a>
+                            </dd>
+
+                            <dt class="col-sm-3">Desc</dt>
+                            <dd class="col-sm-9">@item.ProjectDescription</dd>
+
+                            <dt class="col-sm-3">Finish Date</dt>
+                            <dd class="col-sm-9">@item.DueDate</dd>
+
+                            <dt class="col-sm-3">Teams Involved</dt>
+                            @foreach (var t in item.TeamProjects)
+                            {
+                                <dd class="col-sm-9">
+                                    <a asp-page="/Teams/Index" asp-route-itemid="@t.TeamId" class="text-white">
+                                        @t.Team.TeamName
+                                    </a>
+                                </dd>
+                            }
+                        </dl>
                     </div>
-                    <div class="col-3 text-right">
-                        <p class="mb-0">2</p>
-                    </div>
-                </div>
+                }
             </div>
         </div>
     </div>
+
 
     <div class="col-xl-6">
         <div class="card mb-4 bg-dark_blue">
             <div class="card-header">
-                <h5>Projects</h5>
+                <h5>Your Teams</h5>
             </div>
             <div class="card-body">
-                @foreach (var project in Model.Projects)
+                @foreach (var item in Model.Teams)
                 {
-                    <div class="notice-block">
-                        <p class="card-text"><strong>@project.ProjectName</strong></p>
-                        <h6 class="card-subtitle mb-2 text-muted">Posted on @project.DateCreated</h6>
-                        <p class="card-text">@project.ProjectDescription</p>
-                    </div>
-                    <br />
-                }
-            </div>           
-        </div>
-    </div>
+                    <div class="bg-team_dashboard_blue p-1 rounded mb-1">
+                        <dl class="row">
+                            <dt class="col-sm-3">Team Name</dt>
+                            <dd class="col-sm-9">
+                                <a asp-page="/Teams/Index" asp-route-itemid="@item.TeamId" class="text-white">
+                                    @item.TeamName
+                                </a>                            
+                            </dd>
 
-    <div class="col-xl-6">
-        <div class="card mb-4 bg-dark_blue">
-            <div class="card-header">
-                <h5>Reports to</h5>
-            </div>
-            <div class="card-body">
-                <p class="card-text">@Model.ReportsTo.FullName</p>
-                <p class="card-text">@Model.ReportsTo.UserName</p>
-            </div>
-        </div>
-    </div>
+                            <dt class="col-sm-3">Desc</dt>
+                            <dd class="col-sm-9">@item.TeamDescription</dd>
 
-    <div class="col-xl-12">
-        <div class="card mb-4 bg-dark_blue">
-            <div class="card-header">
-                <h5>Notices</h5>
-            </div>
-            <div class="card-body">
-                @foreach(var notice in Model.Notices)
-                {
-                    <div class="notice-block">
-                        <p class="card-text"><strong>@notice.NoticeTitle</strong></p>
-                        <h6 class="card-subtitle mb-2 text-muted">Posted on @notice.DateCreated</h6>
-                        <p class="card-text">@notice.NoticeMessageContent</p>
+                            <dt class="col-sm-3">Team Leader</dt>
+                            <dd class="col-sm-9">
+                                <a asp-area="Identity" asp-page="/Account/Manage/Index" asp-route-itemid="@item.TeamLeader.Id" class="text-white">
+                                    @item.TeamLeader.FullName
+                                </a>
+                            </dd>
+
+                            <dt class="col-sm-3">Team Projects</dt>
+                            @foreach(var p in item.TeamProjects)
+                            {
+                                <dd class="col-sm-9">
+                                    @p.Project.ProjectName
+                                </dd>
+                            }
+                        </dl>
                     </div>
-                    <br />
-                }
+                }                
             </div>
         </div>
     </div>
@@ -240,7 +288,7 @@
         data: {
             labels: Object.keys(teamJobs),
             datasets: [{
-                label: "Tasks Completed",
+                label: "Total Jobs Completed",
                 data: Object.values(teamJobs),
                 backgroundColor: colours
             }]
