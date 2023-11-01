@@ -13,7 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 var azureSQLConnectionString = builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(azureSQLConnectionString));
+    options.UseSqlServer(connectionString));
 
 builder.Services.AddStackExchangeRedisCache(options =>
 {
@@ -77,7 +77,7 @@ using (var scope = app.Services.CreateScope())
     var context = services.GetRequiredService<ApplicationDbContext>();
     context.Database.EnsureDeleted();
     context.Database.EnsureCreated();
-    context.Database.Migrate();
+    //context.Database.Migrate();
     // requires using Microsoft.Extensions.Configuration;
     // Set password with the Secret Manager tool.
     // dotnet user-secrets set SeedUserPW <pw>
