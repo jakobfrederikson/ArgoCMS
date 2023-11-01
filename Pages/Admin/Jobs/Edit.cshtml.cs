@@ -57,7 +57,7 @@ namespace ArgoCMS.Pages.Admin.Jobs
                             (j => j.JobId == Job.JobId);
 
             Job.TeamID = Context.Employees
-                .Where(e => e.Id == Job.EmployeeID)
+                .Where(e => e.Id == Job.AssignedEmployeeID)
                 .Select(e => e.TeamID)
                 .Single();
 
