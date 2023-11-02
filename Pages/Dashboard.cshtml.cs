@@ -138,6 +138,7 @@ namespace ArgoCMS.Pages
         {
             return await Context.Projects
                 .Include(p => p.TeamProjects)
+                .ThenInclude(tp => tp.Team)
                 .Where(p => p.EmployeeProjects.Any(ep => ep.Employee == currentUser))
                 .ToListAsync();
         }

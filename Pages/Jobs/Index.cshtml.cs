@@ -16,70 +16,87 @@ namespace ArgoCMS.Pages.Jobs
         {
         }
 
-        public IDictionary<Job, string> Jobs { get;set; } = default!;
-        public IDictionary<string, string> CreatedByIdToFullName { get; set; } = default!;
-        public IDictionary<string, string> AssignedToIdToFullName { get; set; } = default!;
-        public IDictionary<int, string> TeamsToFullName { get; set; } = default!;
+        public Dictionary<Job, string> Jobs { get;set; } = default!;
+        public Dictionary<string, string> CreatedByIdToFullName { get; set; } = default!;
+        public Dictionary<string, string> AssignedToIdToFullName { get; set; } = default!;
+        public Dictionary<int, string> TeamsToFullName { get; set; } = default!;
 
         public async Task OnGetAsync()
         {
             var userId = UserManager.GetUserId(User);
             if (Context.Jobs != null)
             {
-                Jobs = await Context.Jobs
+                var jobsQuery = Context.Jobs
                     .Where(j => j.JobStatus != JobStatus.Completed)
                     .Where(j => j.OwnerID == userId || j.AssignedEmployeeID == userId)
-                    .OrderByDescending(j => (int) (j.PriorityLevel))
-                    .ToDictionaryAsync
-                    (
-                        j => j,
-                        j =>
-                        {
-                            switch (j.JobStatus)
-                            {
-                                case JobStatus.Unread:
-                                    return "table-primary";
-                                case JobStatus.Read:
-                                    return "table-danger";
-                                case JobStatus.Working:
-                                    return "table-warning";
-                                case JobStatus.Submitted:
-                                    return "table-success";
-                                default:
-                                    return "";
-                            }
+                    .OrderByDescending(j => (int)j.PriorityLevel);
 
-                        }
-                    );
+                Jobs = await GetJobsWithStatusCssClassAsync(jobsQuery);
             }
+
+            var createdByIds = Jobs.Keys.Select(job => job.OwnerID).Distinct();
+            var assignedToIds = Jobs.Keys.Select(job => job.AssignedEmployeeID).Distinct();
+            var teamIds = Jobs.Keys.Select(job => job.TeamID).Distinct();
+
+            var employees = await Context.Employees
+                .Where(e => createdByIds.Contains(e.Id) || assignedToIds.Contains(e.Id))
+                .ToDictionaryAsync(e => e.Id, e => e.FullName);
+
+            var teams = await Context.Teams
+                .Where(t => teamIds.Contains(t.TeamId))
+                .ToDictionaryAsync(t => t.TeamId, t => t.TeamName);
 
             var createdByIdToFullName = new Dictionary<string, string>();
             var assignedToIdToFullName = new Dictionary<string, string>();
             var teamsToFullName = new Dictionary<int, string>();
+
             foreach (var job in Jobs.Keys)
             {
-                if (!createdByIdToFullName.ContainsKey(job.OwnerID))
+                if (employees.ContainsKey(job.OwnerID))
                 {
-                    createdByIdToFullName[job.OwnerID] = Context.Employees
-                                .FirstOrDefault(j => j.Id == job.OwnerID).FullName;
+                    createdByIdToFullName[job.OwnerID] = employees[job.OwnerID];
                 }
 
-                if (!assignedToIdToFullName.ContainsKey(job.AssignedEmployeeID))
+                if (employees.ContainsKey(job.AssignedEmployeeID))
                 {
-                    assignedToIdToFullName[job.AssignedEmployeeID] = Context.Employees
-                                .FirstOrDefault(j => j.Id == job.AssignedEmployeeID).FullName;
+                    assignedToIdToFullName[job.AssignedEmployeeID] = employees[job.AssignedEmployeeID];
                 }
 
-                if (!teamsToFullName.ContainsKey(job.TeamID))
+                if (teams.ContainsKey(job.TeamID))
                 {
-                    teamsToFullName[job.TeamID] = Context.Teams
-                                .FirstOrDefault(t => t.TeamId == job.TeamID).TeamName;
+                    teamsToFullName[job.TeamID] = teams[job.TeamID];
                 }
             }
 
-            CreatedByIdToFullName = createdByIdToFullName;       
+            CreatedByIdToFullName = createdByIdToFullName;
             AssignedToIdToFullName = assignedToIdToFullName;
             TeamsToFullName = teamsToFullName;
+        }
+
+        private async Task<Dictionary<Job, string>> GetJobsWithStatusCssClassAsync(IQueryable<Job> query)
+        {
+            return await query
+                .ToDictionaryAsync(
+                    j => j,
+                    GetJobStatusCssClass
+                );
+        }
+
+        private string GetJobStatusCssClass(Job job)
+        {
+            switch (job.JobStatus)
+            {
+                case JobStatus.Unread:
+                    return "table-primary";
+                case JobStatus.Read:
+                    return "table-danger";
+                case JobStatus.Working:
+                    return "table-warning";
+                case JobStatus.Submitted:
+                    return "table-success";
+                default:
+                    return "";
+            }
         }
     }
 }

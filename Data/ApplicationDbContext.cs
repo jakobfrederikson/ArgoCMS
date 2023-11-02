@@ -31,6 +31,11 @@ namespace ArgoCMS.Data
                 .WithMany()
                 .HasForeignKey(j => j.AssignedEmployeeID);
 
+            builder.Entity<Job>()
+                .HasMany(j => j.Comments)
+                .WithOne(jc => jc.Job)
+                .HasForeignKey(jc => jc.ParentId);
+
             // Employees
             builder.Entity<Employee>()
                 .HasOne(e => e.Team)
@@ -86,8 +91,8 @@ namespace ArgoCMS.Data
 
             builder.Entity<Notice>()
                 .HasMany(n => n.Comments)
-                .WithOne(c => c.Notice)
-                .HasForeignKey(c => c.NoticeId);
+                .WithOne(nc => nc.Notice)
+                .HasForeignKey(nc => nc.ParentId);
 
             // Join Entities
 
@@ -119,6 +124,23 @@ namespace ArgoCMS.Data
 				.WithMany(p => p.EmployeeProjects)
 				.HasForeignKey(ep => ep.ProjectId);
 
+            // Comments
+            builder.Entity<JobComment>()
+            .HasKey(jc => jc.CommentId);
+
+            builder.Entity<JobComment>()
+                .HasOne(jc => jc.Job)
+                .WithMany(j => j.Comments)
+                .HasForeignKey(jc => jc.ParentId);
+
+            builder.Entity<NoticeComment>()
+            .HasKey(nc => nc.CommentId);
+
+            builder.Entity<NoticeComment>()
+                .HasOne(nc => nc.Notice)
+                .WithMany(n => n.Comments)
+                .HasForeignKey(nc => nc.ParentId);
+
             base.OnModelCreating(builder);
 		}
 
@@ -127,6 +149,9 @@ namespace ArgoCMS.Data
         public DbSet<Team> Teams { get; set; } = default!;
         public DbSet<Project> Projects { get; set; } = default!;
         public DbSet<Notice> Notices { get; set; } = default!;
-        public DbSet<Comment> Comments { get; set; } = default!;
+        public DbSet<TeamProject> TeamProjects { get; set; } = default!;
+        public DbSet<EmployeeProject> EmployeesProjects { get; set; } = default!;
+        public DbSet<JobComment> JobComments { get; set; } = default!;
+        public DbSet<NoticeComment> NoticeComments { get; set; } = default!;
     }
 }

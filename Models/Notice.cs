@@ -37,7 +37,7 @@ namespace ArgoCMS.Models
         [Display(Name = "Publicity Status")]
         public PublicityStatus PublicityStatus { get; set; }
 
-        public IList<Comment> Comments { get; set; }
+        public List<NoticeComment> Comments { get; set; } // Navigation property
     }
 
     [Flags]

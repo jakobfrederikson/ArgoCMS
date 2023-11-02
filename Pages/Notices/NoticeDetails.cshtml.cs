@@ -19,7 +19,7 @@ namespace ArgoCMS.Pages.Notices
 
         public Notice Notice { get; set; }
 
-        public Comment Comment { get; set; }
+        public NoticeComment Comment { get; set; }
 
         public async Task<IActionResult> OnGet(int? id)
         {

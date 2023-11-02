@@ -144,7 +144,7 @@ namespace ArgoCMS.Data
 
             var teams = new Team[] { devTeam, pdTeam };
             context.Teams.AddRange(teams);
-            await context.SaveChangesAsync();
+            context.SaveChanges();
         }
 
         public static async void SeedDB(IServiceProvider serviceProvider, ApplicationDbContext context,
@@ -168,7 +168,9 @@ namespace ArgoCMS.Data
             Team pdTeam = context.Teams.FirstOrDefault(t => t.TeamId == 2);
 
             devTeam.TeamLeaderId = jakob.Id;
+            devTeam.CreatedById = jakob.Id;
             pdTeam.TeamLeaderId = nathan.Id;
+            pdTeam.CreatedById = nathan.Id;
             devTeam.Members = new List<Employee> { jakob, vanah, henry, larry };
             pdTeam.Members = new List<Employee> { nathan, george, jerry };
 
@@ -202,432 +204,586 @@ namespace ArgoCMS.Data
                 ProjectDescription = "Implement a modern frontend framework to the website, replacing old basic HTML code with React and magical frotend stuff.",
                 DateCreated = DateTime.Now,
 				DueDate = DateTime.Now.AddDays(3),
+                ProjectStatus = ProjectStatus.InProgress,
 				EmployeeProjects = new List<EmployeeProject>
                 {
-					new EmployeeProject { Employee = jakob, IsCompleted = true },
+					new EmployeeProject { Employee = jakob, IsCompleted = false },
 		            new EmployeeProject { Employee = jerry, IsCompleted = false },
-		            new EmployeeProject { Employee = george, IsCompleted = true }
+		            new EmployeeProject { Employee = george, IsCompleted = false }
 				}
             };
 
-            var projects = new Project[] { paySys, websiteUIRefactor };
+            Project devTeamProject = new Project
+            {
+                OwnerID = adminID,
+                ProjectName = "Dev Team Project 1",
+                ProjectDescription = "Develop new features for the software",
+                DateCreated = DateTime.Now,
+                DueDate = DateTime.Now.AddMonths(3),
+                ProjectStatus = ProjectStatus.InProgress,
+                EmployeeProjects = new List< EmployeeProject>
+                {
+                    new EmployeeProject { Employee = jakob, IsCompleted = false },
+                    new EmployeeProject { Employee = vanah, IsCompleted = false },
+                    new EmployeeProject { Employee = henry, IsCompleted = false },
+                    new EmployeeProject { Employee = larry, IsCompleted = false }
+                }
+            };
+
+            Project designTeamProject = new Project
+            {
+                OwnerID = managerID,
+                ProjectName = "Design Team Project 1",
+                ProjectDescription = "Create user interface designs for the new product",
+                DateCreated = DateTime.Now,
+                DueDate = DateTime.Now.AddMonths(2),
+                ProjectStatus = ProjectStatus.NotStarted,
+                EmployeeProjects = new List<EmployeeProject>
+                {
+                    new EmployeeProject { Employee = nathan, IsCompleted = false },
+                    new EmployeeProject { Employee = george, IsCompleted = false },
+                    new EmployeeProject { Employee = jerry, IsCompleted = false }
+                }
+            };
+
+            var crossTeamProject = new Project
+            {
+                OwnerID = adminID,
+                ProjectName = "Cross-Team Collaboration Project",
+                ProjectDescription = "A project that involves both development and design teams working together.",
+                DateCreated = DateTime.Now,
+                DueDate = DateTime.Now.AddMonths(4),
+                ProjectStatus = ProjectStatus.NotStarted,
+                EmployeeProjects = new List<EmployeeProject>
+                {
+                    new EmployeeProject { Employee = jakob, IsCompleted = false },
+                    new EmployeeProject { Employee = vanah, IsCompleted = false },
+                    new EmployeeProject { Employee = henry, IsCompleted = false },
+                    new EmployeeProject { Employee = larry, IsCompleted = false },
+                    new EmployeeProject { Employee = nathan, IsCompleted = false },
+                    new EmployeeProject { Employee = george, IsCompleted = false },
+                    new EmployeeProject { Employee = jerry, IsCompleted = false }
+                }
+            };
+
+            var finishedProject = new Project
+            {
+                OwnerID = adminID,
+                ProjectName = "Finished Project",
+                ProjectDescription = "Testing to see if this project comes up as completed",
+                DateCreated = DateTime.Now.AddDays(-3),
+                DueDate = DateTime.Now,
+                ProjectStatus = ProjectStatus.Completed,
+                EmployeeProjects = new List<EmployeeProject>
+                {
+                    new EmployeeProject { Employee = jakob, IsCompleted = true},
+                    new EmployeeProject { Employee = vanah, IsCompleted = true},
+                    new EmployeeProject { Employee = henry, IsCompleted = true},
+                    new EmployeeProject { Employee = larry, IsCompleted = true},
+                    new EmployeeProject { Employee = nathan, IsCompleted = true },
+                    new EmployeeProject { Employee = george, IsCompleted = true },
+                    new EmployeeProject { Employee = jerry, IsCompleted = true}
+                }
+            };
+
+            var projects = new Project[] { devTeamProject, designTeamProject, paySys, websiteUIRefactor, crossTeamProject, finishedProject };
             context.Projects.AddRange(projects);
+            context.SaveChanges();
 
-            Job paySysJob1 = new Job
+            var teamProject1 = new TeamProject
             {
-                OwnerID = adminID,
-                AssignedEmployeeID = vanahID,
-                TeamID = 1,
-                JobName = "Withdraw System",
-                JobDescription = "Convert the old withdraw function in Java to the new C# version.",
-                DateCreated = DateTime.Now,
-                DueDate = DateTime.Now.AddDays(2),
-                JobStatus = JobStatus.Submitted,
-                PriorityLevel = PriorityLevel.High
+                TeamId = devTeam.TeamId,
+                ProjectId = crossTeamProject.ProjectId
             };
+            context.TeamProjects.Add(teamProject1);
 
-            Job paySysJob2 = new Job
+            var teamProject2 = new TeamProject
             {
-                OwnerID = vanahID,
-                AssignedEmployeeID = adminID,
-                TeamID = 1,
-                JobName = "Define Pay System Requirements",
-                JobDescription = "Gather and document the specific requirements for the new pay system, including features, calculations, and reporting.",
-                DateCreated = DateTime.Now,
-                DueDate = DateTime.Now.AddDays(2),
-                JobStatus = JobStatus.Submitted,
-                PriorityLevel = PriorityLevel.High
+                TeamId = pdTeam.TeamId,
+                ProjectId = crossTeamProject.ProjectId
             };
+            context.TeamProjects.Add(teamProject2);
 
-            Job paySysJob3 = new Job
+            var teamProject3 = new TeamProject
             {
-                OwnerID = vanahID,
-                AssignedEmployeeID = adminID,
-                TeamID = 1,
-                JobName = "Research Payroll Regulations",
-                JobDescription = "Research and compile information on local and federal payroll regulations to ensure compliance in the new pay system.",
-                DateCreated = DateTime.Now,
-                DueDate = DateTime.Now.AddDays(2),
-                JobStatus = JobStatus.Completed,
-                PriorityLevel = PriorityLevel.High
+                TeamId = devTeam.TeamId,
+                ProjectId = devTeamProject.ProjectId
             };
+            context.TeamProjects.Add(teamProject3);
 
-            Job paySysJob4 = new Job
+            var teamProject4 = new TeamProject
             {
-                OwnerID = vanahID,
-                AssignedEmployeeID = adminID,
-                TeamID = 1,
-                JobName = "Develop Payroll Database Schema",
-                JobDescription = "Design the database structure for storing payroll data within the new pay system.",
-                DateCreated = DateTime.Now,
-                DueDate = DateTime.Now.AddDays(2),
-                JobStatus = JobStatus.Completed,
-                PriorityLevel = PriorityLevel.High
+                TeamId = devTeam.TeamId,
+                ProjectId = websiteUIRefactor.ProjectId
             };
+            context.TeamProjects.Add(teamProject4);
 
-            Job paySysJob5 = new Job
+            var teamProject5 = new TeamProject
             {
-                OwnerID = vanahID,
-                AssignedEmployeeID = adminID,
-                TeamID = 1,
-                JobName = "Create Payroll Calculation Algorithms",
-                JobDescription = "Develop algorithms to calculate employee salaries, taxes, and deductions in the new pay system.",
-                DateCreated = DateTime.Now,
-                DueDate = DateTime.Now.AddDays(2),
-                JobStatus = JobStatus.Unread,
-                PriorityLevel = PriorityLevel.High
+                TeamId = pdTeam.TeamId,
+                ProjectId = websiteUIRefactor.ProjectId
             };
+            context.TeamProjects.Add(teamProject5);
 
-            Job paySysJob6 = new Job
+            context.SaveChanges();
+
+
+            var jobs = new Job[]
             {
-                OwnerID = adminID,
-                AssignedEmployeeID = vanahID,
-                TeamID = 1,
-                JobName = "Design User Interface",
-                JobDescription = "Create a user-friendly interface for the new pay system, allowing easy navigation and data input.",
-                DateCreated = DateTime.Now,
-                DueDate = DateTime.Now.AddDays(2),
-                JobStatus = JobStatus.Completed,
-                PriorityLevel = PriorityLevel.High
+                new Job
+                {
+                    OwnerID = adminID,
+                    AssignedEmployeeID = vanahID,
+                    TeamID = 1,
+                    JobName = "Code Review",
+                    JobDescription = "Conduct a code review for the recent feature implementation. Ensure adherence to coding standards.",
+                    DateCreated = DateTime.Now,
+                    DueDate = DateTime.Now.AddDays(7),
+                    JobStatus = JobStatus.Unread,
+                    PriorityLevel = PriorityLevel.Medium
+                },
+                new Job
+                {
+                    OwnerID = empHenryID,
+                    AssignedEmployeeID = empLarryID,
+                    TeamID = 1,
+                    JobName = "Documentation Update",
+                    JobDescription = "Update the project documentation with the latest changes and improvements made to the application.",
+                    DateCreated = DateTime.Now,
+                    DueDate = DateTime.Now.AddDays(10),
+                    JobStatus = JobStatus.Unread,
+                    PriorityLevel = PriorityLevel.Low
+                },
+                new Job
+                {
+                    OwnerID = vanahID,
+                    AssignedEmployeeID = adminID,
+                    TeamID = 1,
+                    JobName = "Documentation Review",
+                    JobDescription = "Review the project documentation and ensure accuracy and completeness.",
+                    DateCreated = DateTime.Now,
+                    DueDate = DateTime.Now.AddDays(5),
+                    JobStatus = JobStatus.Working,
+                    PriorityLevel = PriorityLevel.Low
+                },
+                new Job
+                {
+                    OwnerID = vanahID,
+                    AssignedEmployeeID = adminID,
+                    TeamID = 1,
+                    JobName = "Code Cleanup",
+                    JobDescription = "Clean up and optimize the codebase by removing unused code and improving code quality.",
+                    DateCreated = DateTime.Now,
+                    DueDate = DateTime.Now.AddDays(7),
+                    JobStatus = JobStatus.Working,
+                    PriorityLevel = PriorityLevel.Normal
+                },
+                new Job
+                {
+                    OwnerID = adminID,
+                    AssignedEmployeeID = empHenryID,
+                    TeamID = 1,
+                    JobName = "Bug Fixing",
+                    JobDescription = "Investigate and fix reported bugs in the application. Ensure thorough testing.",
+                    DateCreated = DateTime.Now,
+                    DueDate = DateTime.Now.AddDays(10),
+                    JobStatus = JobStatus.Unread,
+                    PriorityLevel = PriorityLevel.Medium
+                },
+                new Job
+                {
+                    OwnerID = empLarryID,
+                    AssignedEmployeeID = vanahID,
+                    TeamID = 1,
+                    JobName = "Feature Testing",
+                    JobDescription = "Perform comprehensive testing of the new feature to identify and report any issues.",
+                    DateCreated = DateTime.Now,
+                    DueDate = DateTime.Now.AddDays(8),
+                    JobStatus = JobStatus.Unread,
+                    PriorityLevel = PriorityLevel.Normal
+                },
+                new Job
+                {
+                    OwnerID = adminID,
+                    AssignedEmployeeID = empHenryID,
+                    TeamID = 1,
+                    JobName = "Performance Optimization",
+                    JobDescription = "Optimize application performance by identifying and resolving bottlenecks.",
+                    DateCreated = DateTime.Now,
+                    DueDate = DateTime.Now.AddDays(15),
+                    JobStatus = JobStatus.Unread,
+                    PriorityLevel = PriorityLevel.High
+                },
+                new Job
+                {
+                    OwnerID = empLarryID,
+                    AssignedEmployeeID = vanahID,
+                    TeamID = 1,
+                    JobName = "Documentation Updates",
+                    JobDescription = "Update the project documentation with new information and recent changes.",
+                    DateCreated = DateTime.Now,
+                    DueDate = DateTime.Now.AddDays(9),
+                    JobStatus = JobStatus.Unread,
+                    PriorityLevel = PriorityLevel.Normal
+                },
+                new Job
+                {
+                    OwnerID = empHenryID,
+                    AssignedEmployeeID = adminID,
+                    TeamID = 1,
+                    JobName = "User Training",
+                    JobDescription = "Conduct a training session for end-users to explain new features and best practices.",
+                    DateCreated = DateTime.Now,
+                    DueDate = DateTime.Now.AddDays(12),
+                    JobStatus = JobStatus.Unread,
+                    PriorityLevel = PriorityLevel.Medium
+                },
+                new Job
+                {
+                    OwnerID = managerID,
+                    AssignedEmployeeID = empGeorgeID,
+                    TeamID = 2,
+                    JobName = "Feature Implementation",
+                    JobDescription = "Implement a new feature based on the client's requirements. Ensure functionality and performance.",
+                    DateCreated = DateTime.Now,
+                    DueDate = DateTime.Now.AddDays(21),
+                    JobStatus = JobStatus.Unread,
+                    PriorityLevel = PriorityLevel.High
+                },
+                new Job
+                {
+                    OwnerID = empJerryID,
+                    AssignedEmployeeID = managerID,
+                    TeamID = 2,
+                    JobName = "Database Schema Changes",
+                    JobDescription = "Make necessary changes to the database schema to accommodate new features. Ensure data migration.",
+                    DateCreated = DateTime.Now,
+                    DueDate = DateTime.Now.AddDays(14),
+                    JobStatus = JobStatus.Unread,
+                    PriorityLevel = PriorityLevel.Normal
+                },
+                new Job
+                {
+                    OwnerID = empGeorgeID,
+                    AssignedEmployeeID = managerID,
+                    TeamID = 2,
+                    JobName = "Product Strategy Meeting",
+                    JobDescription = "Schedule and prepare for a product strategy meeting to discuss future product directions.",
+                    DateCreated = DateTime.Now,
+                    DueDate = DateTime.Now.AddDays(7),
+                    JobStatus = JobStatus.Unread,
+                    PriorityLevel = PriorityLevel.Normal
+                },
+                new Job
+                {
+                    OwnerID = managerID,
+                    AssignedEmployeeID = empJerryID,
+                    TeamID = 2,
+                    JobName = "Market Research",
+                    JobDescription = "Conduct market research to identify trends and opportunities in the industry.",
+                    DateCreated = DateTime.Now,
+                    DueDate = DateTime.Now.AddDays(14),
+                    JobStatus = JobStatus.Unread,
+                    PriorityLevel = PriorityLevel.Medium
+                },
+                new Job
+                {
+                    OwnerID = empGeorgeID,
+                    AssignedEmployeeID = managerID,
+                    TeamID = 2,
+                    JobName = "Product Design Review",
+                    JobDescription = "Review and provide feedback on the latest product design concepts.",
+                    DateCreated = DateTime.Now,
+                    DueDate = DateTime.Now.AddDays(10),
+                    JobStatus = JobStatus.Unread,
+                    PriorityLevel = PriorityLevel.Normal
+                },
+                new Job
+                {
+                    OwnerID = empJerryID,
+                    AssignedEmployeeID = managerID,
+                    TeamID = 2,
+                    JobName = "Development Task Assignment",
+                    JobDescription = "Assign development tasks to team members for upcoming projects.",
+                    DateCreated = DateTime.Now,
+                    DueDate = DateTime.Now.AddDays(7),
+                    JobStatus = JobStatus.Unread,
+                    PriorityLevel = PriorityLevel.Low
+                },
+                new Job
+                {
+                    OwnerID = empGeorgeID,
+                    AssignedEmployeeID = empJerryID,
+                    TeamID = 2,
+                    JobName = "User Experience Workshop",
+                    JobDescription = "Organize a workshop to enhance the team's understanding of user experience principles.",
+                    DateCreated = DateTime.Now,
+                    DueDate = DateTime.Now.AddDays(12),
+                    JobStatus = JobStatus.Unread,
+                    PriorityLevel = PriorityLevel.High
+                },
+                new Job
+                {
+                    OwnerID = managerID,
+                    AssignedEmployeeID = empJerryID,
+                    TeamID = 2,
+                    JobName = "Development Progress Report",
+                    JobDescription = "Create a progress report summarizing the status of ongoing development projects.",
+                    DateCreated = DateTime.Now,
+                    DueDate = DateTime.Now.AddDays(9),
+                    JobStatus = JobStatus.Unread,
+                    PriorityLevel = PriorityLevel.Normal
+                },
+                new Job
+                {
+                    OwnerID = empJerryID,
+                    AssignedEmployeeID = empGeorgeID,
+                    TeamID = 2,
+                    JobName = "Design Prototyping",
+                    JobDescription = "Work on design prototypes for the upcoming product features and improvements.",
+                    DateCreated = DateTime.Now,
+                    DueDate = DateTime.Now.AddDays(11),
+                    JobStatus = JobStatus.Unread,
+                    PriorityLevel = PriorityLevel.Medium
+                },
+                new Job
+                {
+                    OwnerID = managerID,
+                    AssignedEmployeeID = empGeorgeID,
+                    TeamID = 2,
+                    JobName = "Market Analysis Report",
+                    JobDescription = "Prepare a comprehensive analysis report of the current market landscape.",
+                    DateCreated = DateTime.Now,
+                    DueDate = DateTime.Now.AddDays(14),
+                    JobStatus = JobStatus.Unread,
+                    PriorityLevel = PriorityLevel.Normal
+                }
             };
-
-            Job paySysJob7 = new Job
-            {
-                OwnerID = adminID,
-                AssignedEmployeeID = vanahID,
-                TeamID = 1,
-                JobName = "Test Payroll Calculations",
-                JobDescription = "Conduct testing to verify the accuracy of payroll calculations in the new pay system.",
-                DateCreated = DateTime.Now,
-                DueDate = DateTime.Now.AddDays(2),
-                JobStatus = JobStatus.Completed,
-                PriorityLevel = PriorityLevel.High
-            };
-
-            Job paySysJob8 = new Job
-            {
-                OwnerID = adminID,
-                AssignedEmployeeID = vanahID,
-                TeamID = 1,
-                JobName = "Set Up Employee Benefits",
-                JobDescription = "Configure and implement employee benefits programs within the new pay system.",
-                DateCreated = DateTime.Now,
-                DueDate = DateTime.Now.AddDays(2),
-                JobStatus = JobStatus.Working,
-                PriorityLevel = PriorityLevel.High
-            };
-
-            Job paySysJob9 = new Job
-            {
-                OwnerID = vanahID,
-                AssignedEmployeeID = adminID,
-                TeamID = 1,
-                JobName = "Develop Training Materials",
-                JobDescription = "Create training materials and documentation to educate users on using the new pay system.",
-                DateCreated = DateTime.Now,
-                DueDate = DateTime.Now.AddDays(2),
-                JobStatus = JobStatus.Completed,
-                PriorityLevel = PriorityLevel.High
-            };
-
-            Job paySysJob10 = new Job
-            {
-                OwnerID = vanahID,
-                AssignedEmployeeID = adminID,
-                TeamID = 1,
-                JobName = "Perform User Acceptance Testing",
-                JobDescription = "Engage users in testing the new pay system to ensure it meets their needs and expectations.",
-                DateCreated = DateTime.Now,
-                DueDate = DateTime.Now.AddDays(2),
-                JobStatus = JobStatus.Read,
-                PriorityLevel = PriorityLevel.High
-            };
-
-            Job paySysJob11 = new Job
-            {
-                OwnerID = vanahID,
-                AssignedEmployeeID = adminID,
-                TeamID = 1,
-                JobName = "Plan System Rollout",
-                JobDescription = "Develop a strategy for the smooth rollout of the new pay system, including employee training and communication plans.",
-                DateCreated = DateTime.Now,
-                DueDate = DateTime.Now.AddDays(2),
-                JobStatus = JobStatus.Submitted,
-                PriorityLevel = PriorityLevel.High
-            };
-
-            Job paySysJob12 = new Job
-            {
-                OwnerID = adminID,
-                AssignedEmployeeID = henry.Id,
-                TeamID = 1,
-                JobName = "Data Migration and Integration",
-                JobDescription = "Plan and execute the migration of existing payroll data into the new pay system while ensuring data integrity and system integration.",
-                DateCreated = DateTime.Now,
-                DueDate = DateTime.Now.AddDays(2),
-                JobStatus = JobStatus.Completed,
-                PriorityLevel = PriorityLevel.High
-            };
-
-            Job paySysJob13 = new Job
-            {
-                OwnerID = adminID,
-                AssignedEmployeeID = henry.Id,
-                TeamID = 1,
-                JobName = "Security and Access Control",
-                JobDescription = "Implement robust security measures and access controls to safeguard sensitive payroll information within the new pay system.",
-                DateCreated = DateTime.Now,
-                DueDate = DateTime.Now.AddDays(2),
-                JobStatus = JobStatus.Unread,
-                PriorityLevel = PriorityLevel.High
-            };
-
-            Job paySysJob14 = new Job
-            {
-                OwnerID = vanahID,
-                AssignedEmployeeID = larry.Id,
-                TeamID = 1,
-                JobName = "Generate Payroll Reports",
-                JobDescription = "Develop reporting functionalities in the pay system to generate various payroll reports for management and auditing purposes.",
-                DateCreated = DateTime.Now,
-                DueDate = DateTime.Now.AddDays(2),
-                JobStatus = JobStatus.Completed,
-                PriorityLevel = PriorityLevel.High
-            };
-
-            Job paySysJob15 = new Job
-            {
-                OwnerID = vanahID,
-                AssignedEmployeeID = larry.Id,
-                TeamID = 1,
-                JobName = "Documentation and Knowledge Transfer",
-                JobDescription = "Create comprehensive documentation for the new pay system, facilitating knowledge transfer among team members and future maintenance.",
-                DateCreated = DateTime.Now,
-                DueDate = DateTime.Now.AddDays(2),
-                JobStatus = JobStatus.Working,
-                PriorityLevel = PriorityLevel.High
-            };
-
-            Job createSeedClass = new Job
-            {
-                OwnerID = adminID,
-                AssignedEmployeeID = empJerryID,
-                TeamID = 2,
-                JobName = "Create DB seed data",
-                JobDescription = "Create a seed object that can be called in Program.cs",
-                DateCreated = DateTime.Now,
-                DueDate = DateTime.Now.AddDays(2),
-                JobStatus = JobStatus.Submitted,
-                PriorityLevel = PriorityLevel.Medium
-            };
-
-            var jobs = new Job[] { 
-                paySysJob1, 
-                paySysJob2, 
-                paySysJob3,
-                paySysJob4,
-                paySysJob5,
-                paySysJob6,
-                paySysJob7,
-                paySysJob8,
-                paySysJob9,
-                paySysJob10,
-                paySysJob11,
-                paySysJob12,
-                paySysJob13,
-                paySysJob14,
-                paySysJob15,
-                createSeedClass };
             context.Jobs.AddRange(jobs);
+            context.SaveChanges();
 
-            Notice notice1 = new Notice
+            var jobComments = new JobComment[]
             {
-                TeamId = 1,
-                OwnerID = adminID,
-                NoticeTitle = "New Software Release",
-                NoticeMessageContent = "The latest version of our software is now available for testing. Please review the release notes and report any issues.",
-                DateCreated = DateTime.Now,
-                PublicityStatus = PublicityStatus.OnlyTeam
+                new JobComment
+                {
+                    ParentId = 1,
+                    OwnerID = adminID,
+                    CommentText = "I've reviewed the code, and it looks great! Just a minor suggestion for improvement.",
+                    CreationDate = DateTime.Now.AddDays(-2)
+                },
+                new JobComment
+                {
+                    ParentId = 1,
+                    OwnerID = vanahID,
+                    CommentText = "Thank you for the review, Jakob! I've addressed your suggestion and updated the code.",
+                    CreationDate = DateTime.Now.AddDays(-1)
+                },
+                new JobComment
+                {
+                    ParentId = 1,
+                    OwnerID = adminID,
+                    CommentText = "Excellent! The code now looks perfect. Let's mark this code review as completed.",
+                    CreationDate = DateTime.Now.AddDays(-1)
+                },
+                new JobComment
+                {
+                    ParentId = 3,
+                    OwnerID = vanahID,
+                    CommentText = "Jakob, I've assigned you to review the latest documentation updates. Please provide your feedback when you can.",
+                    CreationDate = DateTime.Now.AddDays(-3)
+                },
+                new JobComment
+                {
+                    ParentId = 3,
+                    OwnerID = adminID,
+                    CommentText = "Sure, I'll start reviewing the documentation right away and provide feedback soon.",
+                    CreationDate = DateTime.Now.AddDays(-2)
+                },
+                new JobComment
+                {
+                    ParentId = 3,
+                    OwnerID = vanahID,
+                    CommentText = "Thank you, admin! I appreciate your prompt response.",
+                    CreationDate = DateTime.Now.AddDays(-2)
+                },
+                new JobComment
+                {
+                    ParentId = 4,
+                    OwnerID = vanahID,
+                    CommentText = "Jakob, I've assigned you to handle the Code Cleanup task. The goal is to clean up and optimize the codebase by removing any unused code.",
+                    CreationDate = DateTime.Now.AddDays(-3)
+                },
+                new JobComment
+                {
+                    ParentId = 4,
+                    OwnerID = adminID,
+                    CommentText = "Understood, I'll start the code cleanup process. I'll analyze the codebase and remove any redundant or unused code to optimize it.",
+                    CreationDate = DateTime.Now.AddDays(-2)
+                },
+                new JobComment
+                {
+                    ParentId = 4,
+                    OwnerID = vanahID,
+                    CommentText = "Great, Jakob! Let me know if you need any assistance or have any questions during the code cleanup.",
+                    CreationDate = DateTime.Now.AddDays(-2)
+                }
             };
 
-            Notice notice2 = new Notice
-            {
-                TeamId = 1,
-                OwnerID = adminID,
-                NoticeTitle = "Coding Standards Update",
-                NoticeMessageContent = "We've updated our coding standards document. All developers should familiarize themselves with the changes and apply them in their work.",
-                DateCreated = DateTime.Now,
-                PublicityStatus = PublicityStatus.OnlyTeam
-            };
-
-            Notice notice3 = new Notice
-            {
-                TeamId = 1,
-                OwnerID = adminID,
-                NoticeTitle = "Development Team Meeting",
-                NoticeMessageContent = "Reminder of the development team meeting scheduled for Friday at 10 AM to discuss project progress and upcoming tasks.",
-                DateCreated = DateTime.Now,
-                PublicityStatus = PublicityStatus.OnlyTeam
-            };
-
-            Notice notice4 = new Notice
-            {
-                TeamId = 2,
-                OwnerID = managerID,
-                NoticeTitle = "User Interface Redesign Project Kickoff",
-                NoticeMessageContent = "We're excited to announce the kickoff of the UI redesign project. Let's collaborate and bring fresh ideas to the table!",
-                DateCreated = DateTime.Now,
-                PublicityStatus = PublicityStatus.OnlyTeam
-            };
-
-            Notice notice5 = new Notice
-            {
-                TeamId = 2,
-                OwnerID = managerID,
-                NoticeTitle = "Design Review Meeting",
-                NoticeMessageContent = "There will be a design review meeting on Wednesday at 2 PM to ensure consistency and quality in our design work.",
-                DateCreated = DateTime.Now,
-                PublicityStatus = PublicityStatus.OnlyTeam
-            };
-
-            Notice notice6 = new Notice
-            {
-                TeamId = 2,
-                OwnerID = managerID,
-                NoticeTitle = "Creative Inspiration Workshop",
-                NoticeMessageContent = "Join us for a creative inspiration workshop next week to explore new design trends and brainstorm innovative ideas.",
-                DateCreated = DateTime.Now,
-                PublicityStatus = PublicityStatus.OnlyTeam
-            };
-
-            Notice notice7 = new Notice
-            {
-                OwnerID = vanahID,
-                NoticeTitle = "Employee Recognition Awards",
-                NoticeMessageContent = "It's time to nominate outstanding colleagues for our Employee Recognition Awards. Let's celebrate and appreciate our team members.",
-                DateCreated = DateTime.Now,
-                PublicityStatus = PublicityStatus.Everyone
-            };
-
-            Notice notice8 = new Notice
-            {
-                OwnerID = managerID,
-                NoticeTitle = "Company Quarterly Update",
-                NoticeMessageContent = "Join us for our quarterly company-wide update meeting on [Date] to get insights on our progress and upcoming initiatives.",
-                DateCreated = DateTime.Now,
-                PublicityStatus = PublicityStatus.Everyone
-            };
-
-            Notice notice9 = new Notice
-            {
-                OwnerID = managerID,
-                NoticeTitle = "Upcoming Holiday Office Closure",
-                NoticeMessageContent = "Our offices will be closed on the 25th of December for Christmas. Please plan your work accordingly, and enjoy the holiday!",
-                DateCreated = DateTime.Now,
-                PublicityStatus = PublicityStatus.Everyone
-            };
+            context.JobComments.AddRange(jobComments);
+            context.SaveChanges();
 
             var notices = new Notice[]
             {
-                notice1,
-                notice2,
-                notice3,
-                notice4,
-                notice5,
-                notice6,
-                notice7,
-                notice8,
-                notice9
+                new Notice
+                {
+                    TeamId = 1,
+                    OwnerID = adminID,
+                    NoticeTitle = "New Software Release",
+                    NoticeMessageContent = "The latest version of our software is now available for testing. Please review the release notes and report any issues.",
+                    DateCreated = DateTime.Now,
+                    PublicityStatus = PublicityStatus.OnlyTeam
+                },
+                new Notice
+                {
+                    TeamId = 1,
+                    OwnerID = adminID,
+                    NoticeTitle = "Coding Standards Update",
+                    NoticeMessageContent = "We've updated our coding standards document. All developers should familiarize themselves with the changes and apply them in their work.",
+                    DateCreated = DateTime.Now,
+                    PublicityStatus = PublicityStatus.OnlyTeam
+                },
+                new Notice
+                {
+                    TeamId = 1,
+                    OwnerID = adminID,
+                    NoticeTitle = "Development Team Meeting",
+                    NoticeMessageContent = "Reminder of the development team meeting scheduled for Friday at 10 AM to discuss project progress and upcoming tasks.",
+                    DateCreated = DateTime.Now,
+                    PublicityStatus = PublicityStatus.OnlyTeam
+                },
+                new Notice
+                {
+                    TeamId = 2,
+                    OwnerID = managerID,
+                    NoticeTitle = "User Interface Redesign Project Kickoff",
+                    NoticeMessageContent = "We're excited to announce the kickoff of the UI redesign project. Let's collaborate and bring fresh ideas to the table!",
+                    DateCreated = DateTime.Now,
+                    PublicityStatus = PublicityStatus.OnlyTeam
+                },
+                new Notice
+                {
+                    TeamId = 2,
+                    OwnerID = managerID,
+                    NoticeTitle = "Design Review Meeting",
+                    NoticeMessageContent = "There will be a design review meeting on Wednesday at 2 PM to ensure consistency and quality in our design work.",
+                    DateCreated = DateTime.Now,
+                    PublicityStatus = PublicityStatus.OnlyTeam
+                },
+                new Notice
+                {
+                    TeamId = 2,
+                    OwnerID = managerID,
+                    NoticeTitle = "Creative Inspiration Workshop",
+                    NoticeMessageContent = "Join us for a creative inspiration workshop next week to explore new design trends and brainstorm innovative ideas.",
+                    DateCreated = DateTime.Now,
+                    PublicityStatus = PublicityStatus.OnlyTeam
+                },
+                new Notice
+                {
+                    OwnerID = vanahID,
+                    NoticeTitle = "Employee Recognition Awards",
+                    NoticeMessageContent = "It's time to nominate outstanding colleagues for our Employee Recognition Awards. Let's celebrate and appreciate our team members.",
+                    DateCreated = DateTime.Now,
+                    PublicityStatus = PublicityStatus.Everyone
+                },
+                new Notice
+                {
+                    OwnerID = managerID,
+                    NoticeTitle = "Company Quarterly Update",
+                    NoticeMessageContent = "Join us for our quarterly company-wide update meeting on [Date] to get insights on our progress and upcoming initiatives.",
+                    DateCreated = DateTime.Now,
+                    PublicityStatus = PublicityStatus.Everyone
+                },
+                new Notice
+                {
+                    OwnerID = managerID,
+                    NoticeTitle = "Upcoming Holiday Office Closure",
+                    NoticeMessageContent = "Our offices will be closed on the 25th of December for Christmas. Please plan your work accordingly, and enjoy the holiday!",
+                    DateCreated = DateTime.Now,
+                    PublicityStatus = PublicityStatus.Everyone
+                },
             };
             context.Notices.AddRange(notices);
             context.SaveChanges();
 
-            Comment comment1 = new Comment
+            var comments = new NoticeComment[]
             {
-                NoticeId = notice1.NoticeId,
-                OwnerID = empHenryID,
-                CommentText = "I won't be able to attend this Friday's meeting, but I'll catch up with the minutes. Please make sure to discuss the latest project updates and any blockers.",
-                CreationDate = DateTime.Now
+                new NoticeComment
+                {
+                    ParentId = 1,
+                    OwnerID = empHenryID,
+                    CommentText = "I won't be able to attend this Friday's meeting, but I'll catch up with the minutes. Please make sure to discuss the latest project updates and any blockers.",
+                    CreationDate = DateTime.Now,
+                },
+                new NoticeComment
+                {
+                    ParentId = 1,
+                    OwnerID = vanahID,
+                    CommentText = "Is it possible to consider shifting the meeting time to 2 PM? It would be more convenient for me due to another commitment in the morning.",
+                    CreationDate = DateTime.Now,
+                },
+                new NoticeComment
+                {
+                    ParentId = 1,
+                    OwnerID = empLarryID,
+                    CommentText = "I'd like to suggest adding a discussion on the new development tools we've been exploring. It might be beneficial for the team's efficiency.",
+                    CreationDate = DateTime.Now,
+                },
+                new NoticeComment
+                {
+                    ParentId = 4,
+                    OwnerID = empGeorgeID,
+                    CommentText = "Exciting news! I'm eager to contribute to the UI redesign project. Can we schedule an initial brainstorming session to share ideas and set project goals?",
+                    CreationDate = DateTime.Now,
+                },
+                new NoticeComment
+                {
+                    ParentId = 4,
+                    OwnerID = empJerryID,
+                    CommentText = "I've been researching user experience trends and have some interesting insights to bring to the project. Looking forward to making our designs user-centric!",
+                    CreationDate = DateTime.Now,
+                },
+                new NoticeComment
+                {
+                    ParentId = 4,
+                    OwnerID = managerID,
+                    CommentText = "It would be great to establish clear design guidelines and a shared design library from the beginning. Let's ensure consistency in our new UI elements.",
+                    CreationDate = DateTime.Now,
+                },
+                new NoticeComment
+                {
+                    ParentId = 7,
+                    OwnerID = adminID,
+                    CommentText = "This is a fantastic initiative! Let's make sure to recognize the hard work and dedication of our colleagues. I'm excited to see the nominations.",
+                    CreationDate = DateTime.Now,
+                },
+                new NoticeComment
+                {
+                    ParentId = 7,
+                    OwnerID = managerID,
+                    CommentText = "I've had the privilege to work with some outstanding colleagues. I'll be sure to nominate those who've gone above and beyond. Let's appreciate our fantastic team!",
+                    CreationDate = DateTime.Now,
+                },
+                new NoticeComment
+                {
+                    ParentId = 7,
+                    OwnerID = empGeorgeID,
+                    CommentText = "As a new member of the team, I'm thrilled to be part of a company that values employee recognition. It sets a positive tone for the workplace, and I can't wait to participate in the process.",
+                    CreationDate = DateTime.Now,
+                },
             };
 
-            Comment comment2 = new Comment
-            {
-                NoticeId = notice1.NoticeId,
-                OwnerID = vanahID,
-                CommentText = "Is it possible to consider shifting the meeting time to 2 PM? It would be more convenient for me due to another commitment in the morning.",
-                CreationDate = DateTime.Now
-            };
-
-            Comment comment3 = new Comment
-            {
-                NoticeId = notice1.NoticeId,
-                OwnerID = empLarryID,
-                CommentText = "I'd like to suggest adding a discussion on the new development tools we've been exploring. It might be beneficial for the team's efficiency.",
-                CreationDate = DateTime.Now
-            };
-
-            Comment comment4 = new Comment
-            {
-                NoticeId = notice4.NoticeId,
-                OwnerID = empGeorgeID,
-                CommentText = "Exciting news! I'm eager to contribute to the UI redesign project. Can we schedule an initial brainstorming session to share ideas and set project goals?",
-                CreationDate = DateTime.Now
-            };
-
-            Comment comment5 = new Comment
-            {
-                NoticeId = notice4.NoticeId,
-                OwnerID = empJerryID,
-                CommentText = "I've been researching user experience trends and have some interesting insights to bring to the project. Looking forward to making our designs user-centric!",
-                CreationDate = DateTime.Now
-            };
-
-            Comment comment6 = new Comment
-            {
-                NoticeId = notice4.NoticeId,
-                OwnerID = managerID,
-                CommentText = "It would be great to establish clear design guidelines and a shared design library from the beginning. Let's ensure consistency in our new UI elements.",
-                CreationDate = DateTime.Now
-            };
-
-            Comment comment7 = new Comment
-            {
-                NoticeId = notice7.NoticeId,
-                OwnerID = adminID,
-                CommentText = "This is a fantastic initiative! Let's make sure to recognize the hard work and dedication of our colleagues. I'm excited to see the nominations.",
-                CreationDate = DateTime.Now
-            };
-
-            Comment comment8 = new Comment
-            {
-                NoticeId = notice7.NoticeId,
-                OwnerID = managerID,
-                CommentText = "I've had the privilege to work with some outstanding colleagues. I'll be sure to nominate those who've gone above and beyond. Let's appreciate our fantastic team!",
-                CreationDate = DateTime.Now
-            };
-
-            Comment comment9 = new Comment
-            {
-                NoticeId = notice7.NoticeId,
-                OwnerID = empGeorgeID,
-                CommentText = "As a new member of the team, I'm thrilled to be part of a company that values employee recognition. It sets a positive tone for the workplace, and I can't wait to participate in the process.",
-                CreationDate = DateTime.Now
-            };
-
-            var comments = new Comment[]
-            {
-                comment1,
-                comment2,
-                comment3,
-                comment4,
-                comment5,
-                comment6,
-                comment7,
-                comment8,
-                comment9
-            };
-            context.Comments.AddRange(comments);
-
+            context.NoticeComments.AddRange(comments);
             context.SaveChanges();
         }
     }

@@ -48,6 +48,7 @@ namespace ArgoCMS.Models
         [Display(Name = "Priority level")]
         public PriorityLevel PriorityLevel { get; set; }       
         
+        public List<JobComment> Comments { get; set; } // Navigation property
     }
 
     public enum JobStatus
