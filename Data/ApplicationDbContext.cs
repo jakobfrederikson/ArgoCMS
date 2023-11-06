@@ -1,5 +1,7 @@
 ﻿using ArgoCMS.Models;
+using ArgoCMS.Models.Comments;
 using ArgoCMS.Models.JointEntities;
+using ArgoCMS.Models.Notifications;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Emit;
@@ -38,17 +40,6 @@ namespace ArgoCMS.Data
 
             // Employees
             builder.Entity<Employee>()
-                .HasOne(e => e.Team)
-                .WithMany()
-                .HasForeignKey(e => e.TeamID);
-
-            builder.Entity<Employee>()
-                .HasOne(e => e.Team)
-                .WithMany(t => t.Members)
-                .HasForeignKey(e => e.TeamID)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            builder.Entity<Employee>()
                 .HasMany(e => e.Jobs)
                 .WithOne(j => j.AssignedEmployee)
                 .HasForeignKey(e => e.AssignedEmployeeID);
@@ -57,12 +48,14 @@ namespace ArgoCMS.Data
             builder.Entity<Team>()
                 .HasOne(t => t.CreatedBy)
                 .WithMany()
-                .HasForeignKey(t => t.CreatedById);
+                .HasForeignKey(t => t.CreatedById)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<Team>()
                 .HasOne(t => t.TeamLeader)
                 .WithMany()
-                .HasForeignKey(t => t.TeamLeaderId);
+                .HasForeignKey(t => t.TeamLeaderId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Projects
             builder.Entity<Project>()
@@ -124,6 +117,20 @@ namespace ArgoCMS.Data
 				.WithMany(p => p.EmployeeProjects)
 				.HasForeignKey(ep => ep.ProjectId);
 
+            // EmployeeTeam
+            builder.Entity<EmployeeTeam>()
+                .HasKey(et => new {et.EmployeeId, et.TeamId });
+
+            builder.Entity<EmployeeTeam>()
+                .HasOne(et => et.Employee)
+                .WithMany(e => e.EmployeeTeams)
+                .HasForeignKey(et => et.EmployeeId);
+
+            builder.Entity<EmployeeTeam>()
+                .HasOne(et => et.Team)
+                .WithMany(t => t.EmployeeTeams)
+                .HasForeignKey(et => et.TeamId);
+
             // Comments
             builder.Entity<JobComment>()
             .HasKey(jc => jc.CommentId);
@@ -133,6 +140,12 @@ namespace ArgoCMS.Data
                 .WithMany(j => j.Comments)
                 .HasForeignKey(jc => jc.ParentId);
 
+            builder.Entity<JobComment>()
+                .HasOne(jc => jc.Owner)
+                .WithMany()
+                .HasForeignKey(jc => jc.OwnerID)
+                .OnDelete(DeleteBehavior.Restrict);
+
             builder.Entity<NoticeComment>()
             .HasKey(nc => nc.CommentId);
 
@@ -140,6 +153,15 @@ namespace ArgoCMS.Data
                 .HasOne(nc => nc.Notice)
                 .WithMany(n => n.Comments)
                 .HasForeignKey(nc => nc.ParentId);
+
+            builder.Entity<NoticeComment>()
+                .HasOne(nc => nc.Owner)
+                .WithMany()
+                .HasForeignKey(nc => nc.OwnerID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Notification
+
 
             base.OnModelCreating(builder);
 		}
@@ -151,7 +173,11 @@ namespace ArgoCMS.Data
         public DbSet<Notice> Notices { get; set; } = default!;
         public DbSet<TeamProject> TeamProjects { get; set; } = default!;
         public DbSet<EmployeeProject> EmployeesProjects { get; set; } = default!;
+        public DbSet<EmployeeTeam> EmployeeTeams { get; set; } = default!;
         public DbSet<JobComment> JobComments { get; set; } = default!;
         public DbSet<NoticeComment> NoticeComments { get; set; } = default!;
+        public DbSet<Notification> Notifications { get; set;} = default!;
+        public DbSet<NoticeNotification> NoticeNotifications { get; set; } = default!;
+        public DbSet<NotificationGroup> NotificationGroups { get; set; } = default!;
     }
 }

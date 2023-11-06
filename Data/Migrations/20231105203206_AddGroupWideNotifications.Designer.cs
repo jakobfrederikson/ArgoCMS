@@ -4,6 +4,7 @@ using ArgoCMS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ArgoCMS.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231105203206_AddGroupWideNotifications")]
+    partial class AddGroupWideNotifications
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -150,21 +153,6 @@ namespace ArgoCMS.Data.Migrations
                     b.ToTable("EmployeesProjects");
                 });
 
-            modelBuilder.Entity("ArgoCMS.Models.JointEntities.EmployeeTeam", b =>
-                {
-                    b.Property<string>("EmployeeId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("TeamId")
-                        .HasColumnType("int");
-
-                    b.HasKey("EmployeeId", "TeamId");
-
-                    b.HasIndex("TeamId");
-
-                    b.ToTable("EmployeeTeams");
-                });
-
             modelBuilder.Entity("ArgoCMS.Models.JointEntities.TeamProject", b =>
                 {
                     b.Property<int>("TeamId")
@@ -265,23 +253,6 @@ namespace ArgoCMS.Data.Migrations
                     b.UseTphMappingStrategy();
                 });
 
-            modelBuilder.Entity("ArgoCMS.Models.Notifications.NotificationGroup", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("GroupName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("NotificationGroups");
-                });
-
             modelBuilder.Entity("ArgoCMS.Models.Project", b =>
                 {
                     b.Property<int>("ProjectId")
@@ -327,7 +298,6 @@ namespace ArgoCMS.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TeamId"));
 
                     b.Property<string>("CreatedById")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("DateCreated")
@@ -338,7 +308,6 @@ namespace ArgoCMS.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TeamLeaderId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("TeamName")
@@ -352,21 +321,6 @@ namespace ArgoCMS.Data.Migrations
                     b.HasIndex("TeamLeaderId");
 
                     b.ToTable("Teams");
-                });
-
-            modelBuilder.Entity("EmployeeNotificationGroup", b =>
-                {
-                    b.Property<string>("EmployeesId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("NotificationGroupsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("EmployeesId", "NotificationGroupsId");
-
-                    b.HasIndex("NotificationGroupsId");
-
-                    b.ToTable("EmployeeNotificationGroup");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -614,19 +568,14 @@ namespace ArgoCMS.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ProjectId")
-                        .HasColumnType("int");
-
                     b.Property<string>("ReportsToId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("TeamId")
+                    b.Property<int>("TeamID")
                         .HasColumnType("int");
 
-                    b.HasIndex("ProjectId");
-
-                    b.HasIndex("TeamId");
+                    b.HasIndex("TeamID");
 
                     b.HasDiscriminator().HasValue("Employee");
                 });
@@ -707,25 +656,6 @@ namespace ArgoCMS.Data.Migrations
                     b.Navigation("Project");
                 });
 
-            modelBuilder.Entity("ArgoCMS.Models.JointEntities.EmployeeTeam", b =>
-                {
-                    b.HasOne("ArgoCMS.Models.Employee", "Employee")
-                        .WithMany("EmployeeTeams")
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ArgoCMS.Models.Team", "Team")
-                        .WithMany("EmployeeTeams")
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
-
-                    b.Navigation("Team");
-                });
-
             modelBuilder.Entity("ArgoCMS.Models.JointEntities.TeamProject", b =>
                 {
                     b.HasOne("ArgoCMS.Models.Project", "Project")
@@ -785,34 +715,15 @@ namespace ArgoCMS.Data.Migrations
                 {
                     b.HasOne("ArgoCMS.Models.Employee", "CreatedBy")
                         .WithMany()
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("CreatedById");
 
                     b.HasOne("ArgoCMS.Models.Employee", "TeamLeader")
                         .WithMany()
-                        .HasForeignKey("TeamLeaderId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("TeamLeaderId");
 
                     b.Navigation("CreatedBy");
 
                     b.Navigation("TeamLeader");
-                });
-
-            modelBuilder.Entity("EmployeeNotificationGroup", b =>
-                {
-                    b.HasOne("ArgoCMS.Models.Employee", null)
-                        .WithMany()
-                        .HasForeignKey("EmployeesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ArgoCMS.Models.Notifications.NotificationGroup", null)
-                        .WithMany()
-                        .HasForeignKey("NotificationGroupsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -868,13 +779,13 @@ namespace ArgoCMS.Data.Migrations
 
             modelBuilder.Entity("ArgoCMS.Models.Employee", b =>
                 {
-                    b.HasOne("ArgoCMS.Models.Project", null)
+                    b.HasOne("ArgoCMS.Models.Team", "Team")
                         .WithMany("Members")
-                        .HasForeignKey("ProjectId");
+                        .HasForeignKey("TeamID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("ArgoCMS.Models.Team", null)
-                        .WithMany("Members")
-                        .HasForeignKey("TeamId");
+                    b.Navigation("Team");
                 });
 
             modelBuilder.Entity("ArgoCMS.Models.Job", b =>
@@ -891,15 +802,11 @@ namespace ArgoCMS.Data.Migrations
                 {
                     b.Navigation("EmployeeProjects");
 
-                    b.Navigation("Members");
-
                     b.Navigation("TeamProjects");
                 });
 
             modelBuilder.Entity("ArgoCMS.Models.Team", b =>
                 {
-                    b.Navigation("EmployeeTeams");
-
                     b.Navigation("Members");
 
                     b.Navigation("TeamProjects");
@@ -908,8 +815,6 @@ namespace ArgoCMS.Data.Migrations
             modelBuilder.Entity("ArgoCMS.Models.Employee", b =>
                 {
                     b.Navigation("EmployeeProjects");
-
-                    b.Navigation("EmployeeTeams");
 
                     b.Navigation("Jobs");
                 });
