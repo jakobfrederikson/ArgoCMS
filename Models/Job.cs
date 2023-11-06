@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using ArgoCMS.Models.Comments;
 
 namespace ArgoCMS.Models
 {
