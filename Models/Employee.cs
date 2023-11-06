@@ -1,4 +1,5 @@
 ﻿using ArgoCMS.Models.JointEntities;
+using ArgoCMS.Models.Notifications;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
@@ -10,10 +11,6 @@ namespace ArgoCMS.Models
         [Required]
         [Display(Name = "Reports to")]
         public string ReportsToId { get; set; }
-
-        [Required]
-        [Display(Name = "Team ID")]
-        public int TeamID { get; set; }
 
         [Required]
         [Display(Name = "First name")]
@@ -41,9 +38,9 @@ namespace ArgoCMS.Models
             }
         }
 
-        public ICollection<Job> Jobs { get; set; }
-        public ICollection<EmployeeProject> EmployeeProjects { get; set; }
-
-        public Team Team { get; set; }
+        public List<Job> Jobs { get; set; }
+        public List<EmployeeProject> EmployeeProjects { get; set; }
+        public List<EmployeeTeam> EmployeeTeams { get; set; }
+        public List<NotificationGroup> NotificationGroups { get; set; }
     }
 }
