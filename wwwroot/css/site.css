@@ -111,3 +111,7 @@ body {
 .accordion-body {
     background: #3B4158;
 }
+
+.select2-container--default {
+    color: black;
+}
