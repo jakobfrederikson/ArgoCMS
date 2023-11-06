@@ -24,7 +24,9 @@ namespace ArgoCMS.Areas.Identity.Pages.Account
         private readonly SignInManager<Employee> _signInManager;
         private readonly ILogger<LoginModel> _logger;
 
-        public LoginModel(SignInManager<Employee> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(
+            SignInManager<Employee> signInManager,
+            ILogger<LoginModel> logger)
         {
             _signInManager = signInManager;
             _logger = logger;
@@ -117,6 +119,7 @@ namespace ArgoCMS.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
