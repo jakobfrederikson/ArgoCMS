@@ -1,8 +1,10 @@
 using ArgoCMS.Data;
+using ArgoCMS.Hubs;
 using ArgoCMS.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
@@ -10,16 +12,22 @@ namespace ArgoCMS.Pages
 {
     public class DashboardModel : DependencyInjection_BasePageModel
     {
+        private readonly IHubContext<NotificationHub> _notificationHub;
         public DashboardModel(
             ApplicationDbContext context,
             IAuthorizationService authorizationService,
+            IHubContext<NotificationHub> notificationHub,
             UserManager<Employee> userManager)
             : base(context, authorizationService, userManager)
         {
+            _notificationHub = notificationHub; 
         }
 
+        public int theId { get; set; }
+        public Employee CurrentUser { get; set; }
         public Dictionary<string, int> UserJobStatus { get; set; }
         public Dictionary<string, int> TeamMemberJobCompletion { get; set; }
+        public Dictionary<string, int> Test { get; set; }
         public List<Project> Projects { get; set; }
         public List<Team> Teams { get; set; }        
         public List<Notice> Notices { get; set; }
@@ -32,41 +40,29 @@ namespace ArgoCMS.Pages
         public int TotalProjectsCompleted { get; set; }
 
 
-        private const string BackgroundColourOpacity = "0.9";
-        private readonly string[] Colours = new string[]
-        {
-            $"rgba(199, 255, 69, {BackgroundColourOpacity})",
-            $"rgba(134, 255, 69, {BackgroundColourOpacity})",
-            $"rgba(69, 255, 122, {BackgroundColourOpacity})",
-            $"rgba(69, 255, 227, {BackgroundColourOpacity})",
-            $"rgba(69, 171, 255, {BackgroundColourOpacity})",
-            $"rgba(69, 75, 255, {BackgroundColourOpacity})",
-            $"rgba(150, 69, 255, {BackgroundColourOpacity})",
-            $"rgba(230, 69, 255, {BackgroundColourOpacity})"
-        };
-
         public async Task<IActionResult> OnGetAsync()
         {
             var userId = UserManager.GetUserId(User);
 
             var currentUser = await Context.Employees
+                .Include(e => e.EmployeeTeams)
+                .ThenInclude(et => et.Team)
+                .Include(e => e.EmployeeProjects)
                 .FirstOrDefaultAsync(e => e.Id == userId);
-
+                        
             if (currentUser != null)
             {
-                TeamMemberJobCompletion = await GetTeamMemberJobCompletion(currentUser);
                 UserJobStatus = GetUserJobStatus(currentUser);
-
                 Projects = await GetProjects(currentUser);
                 Teams = await GetTeams(currentUser);
                 Notices = await GetNotices();
+
+                CurrentUser = currentUser;
             }
             else
             {
                 return RedirectToPage("/Error");
             }
-
-            BackgroundColours = InitializeBackgroundColours(TeamMemberJobCompletion.Keys.Count());
 
             TotalEmployees = Context.Employees.Count();
             TotalTeams = Context.Teams.Count();
@@ -78,16 +74,6 @@ namespace ArgoCMS.Pages
                 .Count();
 
             return Page();
-        }
-
-        private async Task<Dictionary<string, int>> GetTeamMemberJobCompletion(Employee currentUser)
-        {
-            return await Context.Employees
-                    .Include(e => e.Jobs)
-                    .Where(e => e.TeamID == currentUser.TeamID)
-                    .ToDictionaryAsync(
-                        teamMember => teamMember.FullName,
-                        teamMember => teamMember.Jobs.Count(j => j.JobStatus == JobStatus.Completed));
         }
 
         private Dictionary<string, int> GetUserJobStatus(Employee currentUser)
@@ -119,20 +105,7 @@ namespace ArgoCMS.Pages
             jobDict["Completed"] = 0;
 
             return jobDict;
-        }
-
-        private List<string> InitializeBackgroundColours(int count)
-        {
-            List<string> listOfColours = new List<string>();         
-
-            for (int i = 0; i < count; i++)
-            {
-                string colour = Colours[i % Colours.Length];
-                listOfColours.Add(colour);
-            }
-
-            return listOfColours;
-        }
+        }   
 
         private async Task<List<Project>> GetProjects(Employee currentUser)
         {
@@ -147,6 +120,7 @@ namespace ArgoCMS.Pages
         {
             return await Context.Teams
                 .Include(t => t.TeamProjects)
+                .ThenInclude(p => p.Project)
                 .Where(t => t.Members.Any(m => m.Id == currentUser.Id))
                 .ToListAsync();
         }
@@ -158,5 +132,18 @@ namespace ArgoCMS.Pages
                 .Where(n => n.PublicityStatus == PublicityStatus.Everyone)
                 .ToListAsync();
         }
-    }    
+
+        public Dictionary<string, int> GetTeamJobStatistics(int teamId)
+        {
+            var teamJobStatistics = Context.EmployeeTeams
+                .Where(et => et.TeamId == teamId)
+                .Include(et => et.Employee)
+                .ThenInclude(e => e.Jobs)
+                .ToDictionary(
+                    et => et.Employee.FullName,
+                    et => et.Employee.Jobs.Count(job => job.JobStatus == JobStatus.Completed)
+                );
+            return teamJobStatistics;
+        }
+    }
 }
