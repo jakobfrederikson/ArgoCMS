@@ -2,10 +2,10 @@ using ArgoCMS.Authorization.Jobs;
 using ArgoCMS.Authorization.Employees;
 using ArgoCMS.Data;
 using ArgoCMS.Models;
+using ArgoCMS.Hubs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +31,8 @@ builder.Services.AddDefaultIdentity<Employee>(
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddRazorPages();
+
+builder.Services.AddSignalR();
 
 // Require authorization unless specified.
 builder.Services.AddAuthorization(options =>
@@ -107,5 +109,7 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapRazorPages();
+
+app.MapHub<NotificationHub>("/notificationHub");
 
 app.Run();
