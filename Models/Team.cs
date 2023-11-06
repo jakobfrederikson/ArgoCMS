@@ -27,7 +27,8 @@ namespace ArgoCMS.Models
         [DataType(DataType.Date)]
         public DateTime DateCreated { get; set; }
 
-        public List<Employee> Members { get; set; } // Collection of team members
-        public ICollection<TeamProject> TeamProjects { get; set; }
+        public List<Employee> Members { get; set; }
+        public List<EmployeeTeam> EmployeeTeams { get; set; } // Collection of team members
+        public List<TeamProject> TeamProjects { get; set; }
     }
 }
