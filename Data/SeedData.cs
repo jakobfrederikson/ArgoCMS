@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ArgoCMS.Models.JointEntities;
 using Newtonsoft.Json.Linq;
+using ArgoCMS.Models.Comments;
 
 namespace ArgoCMS.Data
 {
@@ -19,35 +20,33 @@ namespace ArgoCMS.Data
                 // dotnet user-secrets set SeedUserPW <pw>
                 // The admin user can do anything
 
-                EnsureTeams(context);
-
                 // Create Users
                 var adminID = await EnsureUser(serviceProvider, testUserPw, "admin@argo.com",
-                                        "Jakob", "Frederikson", 1);
+                                        "Jakob", "Frederikson");
                 await EnsureRole(serviceProvider, adminID, Constants.AdministratorsRole);
 
                 var vanahID = await EnsureUser(serviceProvider, testUserPw, "vanah@argo.com",
-                                        "Lavanah", "Holsted", 1);
+                                        "Lavanah", "Holsted");
                 await EnsureRole(serviceProvider, vanahID, Constants.AdministratorsRole);
 
                 var managerID = await EnsureUser(serviceProvider, testUserPw, "manager@argo.com",
-                                        "Nathan", "Contoso", 2);
+                                        "Nathan", "Contoso");
                 await EnsureRole(serviceProvider, managerID, Constants.ManagersRole);
 
                 var empGeorgeID = await EnsureUser(serviceProvider, testUserPw, "george@argo.com",
-                                        "George", "Foreman", 2);
+                                        "George", "Foreman");
                 await EnsureRole(serviceProvider, empGeorgeID, Constants.EmployeesRole);
 
                 var empJerryID = await EnsureUser(serviceProvider, testUserPw, "jerry@argo.com",
-                                        "Jerry", "Thompson", 2);
+                                        "Jerry", "Thompson");
                 await EnsureRole(serviceProvider, empJerryID, Constants.EmployeesRole);
 
                 var empHenryID = await EnsureUser(serviceProvider, testUserPw, "henry@argo.com",
-                                        "Henry", "Callaghan", 1);
+                                        "Henry", "Callaghan");
                 await EnsureRole(serviceProvider, empHenryID, Constants.EmployeesRole);
 
                 var empLarryID = await EnsureUser(serviceProvider, testUserPw, "larry@argo.com",
-                                        "Larry", "GPT", 1);
+                                        "Larry", "GPT");
                 await EnsureRole(serviceProvider, empLarryID, Constants.EmployeesRole);
 
                 SeedDB(serviceProvider, context, adminID, vanahID, 
@@ -57,8 +56,7 @@ namespace ArgoCMS.Data
 
         private static async Task<string> EnsureUser(IServiceProvider serviceProvider,
                                             string testUserPw, string UserName,
-                                            string firstName, string lastName,
-                                            int teamID)
+                                            string firstName, string lastName)
         {
             var userManager = serviceProvider.GetService<UserManager<Employee>>();
 
@@ -69,7 +67,6 @@ namespace ArgoCMS.Data
                 {
                     FirstName = firstName,
                     LastName = lastName,
-                    TeamID = teamID,
                     EmploymentDate = DateTime.Now,
                     UserName = UserName,
                     EmailConfirmed = true,
@@ -121,32 +118,6 @@ namespace ArgoCMS.Data
             return IR;
         }
 
-        private static async void EnsureTeams(ApplicationDbContext context)
-        {
-            if (context.Teams.Any())
-            {
-                return; // Teams already been seeded
-            }
-
-            Team devTeam = new Team
-            {
-                TeamName = "Development Team",
-                TeamDescription = "Consists of a few developers in the fake company.",
-                DateCreated = DateTime.Now
-            };
-
-            Team pdTeam = new Team
-            {
-                TeamName = "Product Design Team",
-                TeamDescription = "For those of the more creative side.",
-                DateCreated = DateTime.Now
-            };
-
-            var teams = new Team[] { devTeam, pdTeam };
-            context.Teams.AddRange(teams);
-            context.SaveChanges();
-        }
-
         public static async void SeedDB(IServiceProvider serviceProvider, ApplicationDbContext context,
             string adminID, string vanahID, string managerID, string empGeorgeID, string empJerryID,
             string empHenryID, string empLarryID)
@@ -164,15 +135,76 @@ namespace ArgoCMS.Data
             Employee henry = context.Employees.FirstOrDefault(e => e.Id == empHenryID);
             Employee larry = context.Employees.FirstOrDefault(e => e.Id == empLarryID);
 
-            Team devTeam = context.Teams.FirstOrDefault(t => t.TeamId == 1);
-            Team pdTeam = context.Teams.FirstOrDefault(t => t.TeamId == 2);
+            Team devTeam = new Team
+            {
+                CreatedBy = jakob,
+                TeamLeader = jakob,
+                TeamName = "Development Team",
+                TeamDescription = "Consists of a few developers in the fake company.",
+                DateCreated = DateTime.Now
+            };
 
-            devTeam.TeamLeaderId = jakob.Id;
-            devTeam.CreatedById = jakob.Id;
-            pdTeam.TeamLeaderId = nathan.Id;
-            pdTeam.CreatedById = nathan.Id;
+            Team pdTeam = new Team
+            {
+                CreatedBy = vanah,
+                TeamLeader = nathan,
+                TeamName = "Product Design Team",
+                TeamDescription = "For those of the more creative side.",
+                DateCreated = DateTime.Now
+            };
+
             devTeam.Members = new List<Employee> { jakob, vanah, henry, larry };
-            pdTeam.Members = new List<Employee> { nathan, george, jerry };
+            pdTeam.Members = new List<Employee> { jakob, nathan, george, jerry };
+
+            context.Teams.AddRange(new Team[] { devTeam, pdTeam });
+            context.SaveChanges();
+            
+            var ets = new EmployeeTeam[]
+            {
+                new EmployeeTeam
+                {
+                    Employee = jakob,
+                    Team = devTeam
+                },
+                new EmployeeTeam
+                {
+                    Employee = vanah,
+                    Team = devTeam
+                },
+                new EmployeeTeam
+                {
+                    Employee = henry,
+                    Team = devTeam
+                },
+                new EmployeeTeam
+                {
+                    Employee = larry,
+                    Team = devTeam
+                },
+                new EmployeeTeam
+                {
+                    Employee = jerry,
+                    Team = pdTeam
+                },
+                new EmployeeTeam
+                {
+                    Employee = george,
+                    Team = pdTeam
+                },
+                new EmployeeTeam
+                {
+                    Employee = nathan,
+                    Team = pdTeam
+                },
+                new EmployeeTeam
+                {
+                    Employee = jakob,
+                    Team = pdTeam
+                }
+        };
+
+            context.EmployeeTeams.AddRange(ets);
+            context.SaveChanges(); 
 
             // update ReportTo IDs
             jakob.ReportsToId = vanahID;
@@ -339,7 +371,7 @@ namespace ArgoCMS.Data
                     JobDescription = "Conduct a code review for the recent feature implementation. Ensure adherence to coding standards.",
                     DateCreated = DateTime.Now,
                     DueDate = DateTime.Now.AddDays(7),
-                    JobStatus = JobStatus.Unread,
+                    JobStatus = JobStatus.Working,
                     PriorityLevel = PriorityLevel.Medium
                 },
                 new Job
@@ -556,6 +588,78 @@ namespace ArgoCMS.Data
                     DateCreated = DateTime.Now,
                     DueDate = DateTime.Now.AddDays(14),
                     JobStatus = JobStatus.Unread,
+                    PriorityLevel = PriorityLevel.Normal
+                },
+                new Job
+                {
+                    OwnerID = vanahID,
+                    AssignedEmployeeID = adminID,
+                    TeamID = 1,
+                    JobName = "Meet with Product Design",
+                    JobDescription = "Please meet with the product design team and discuss some new features for the app.",
+                    DateCreated = DateTime.Now.AddDays(-3),
+                    DueDate = DateTime.Now.AddDays(-2),
+                    JobStatus = JobStatus.Completed,
+                    PriorityLevel = PriorityLevel.Normal
+                },
+                new Job
+                {
+                    OwnerID = vanahID,
+                    AssignedEmployeeID = adminID,
+                    TeamID = 1,
+                    JobName = "Get Coffee for the Team",
+                    JobDescription = "Get some coffee for development team tomorrow morning :)",
+                    DateCreated = DateTime.Now.AddDays(-1),
+                    DueDate = DateTime.Now,
+                    JobStatus = JobStatus.Completed,
+                    PriorityLevel = PriorityLevel.Normal
+                },
+                new Job
+                {
+                    OwnerID = managerID,
+                    AssignedEmployeeID = adminID,
+                    TeamID = 1,
+                    JobName = "Dashboard UI Meeting",
+                    JobDescription = "Hi Jakob, come meet me at some point and we'll have a meeting to discuss implementing the new UI.",
+                    DateCreated = DateTime.Now.AddDays(-5),
+                    DueDate = DateTime.Now.AddDays(-4),
+                    JobStatus = JobStatus.Completed,
+                    PriorityLevel = PriorityLevel.Normal
+                },
+                new Job
+                {
+                    OwnerID = adminID,
+                    AssignedEmployeeID = vanahID,
+                    TeamID = 1,
+                    JobName = "Get us Coffee!",
+                    JobDescription = "We need some coffee tomorrow, thanks!",
+                    DateCreated = DateTime.Now.AddDays(-5),
+                    DueDate = DateTime.Now.AddDays(-4),
+                    JobStatus = JobStatus.Completed,
+                    PriorityLevel = PriorityLevel.Normal
+                },
+                new Job
+                {
+                    OwnerID = adminID,
+                    AssignedEmployeeID = vanahID,
+                    TeamID = 1,
+                    JobName = "Design New Feature",
+                    JobDescription = "There's a feature that needs implementing, can you design it?",
+                    DateCreated = DateTime.Now.AddDays(-7),
+                    DueDate = DateTime.Now.AddDays(-5),
+                    JobStatus = JobStatus.Completed,
+                    PriorityLevel = PriorityLevel.Normal
+                },
+                new Job
+                {
+                    OwnerID = adminID,
+                    AssignedEmployeeID = vanahID,
+                    TeamID = 1,
+                    JobName = "New Project Meeting",
+                    JobDescription = "Let's discuss creating a new project.",
+                    DateCreated = DateTime.Now.AddDays(-8),
+                    DueDate = DateTime.Now.AddDays(-7),
+                    JobStatus = JobStatus.Completed,
                     PriorityLevel = PriorityLevel.Normal
                 }
             };
