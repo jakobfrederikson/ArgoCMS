@@ -104,6 +104,14 @@
 
 
       <!-- Right links -->
+        <div class="dropdown">
+                <button class="btn btn-success dropdown-toggle" type="button" id="notificationButton" data-bs-toggle="dropdown" aria-expanded="false">
+                <img src="~/images/bell.svg" class="white-svg-filter"/>
+                <span class="badge badge-danger" id="notificationBadge" style="display: none;">0</span>
+            </button>
+                <ul class="dropdown-menu" aria-labelledby="notificationButton" id="notificationList">
+            </ul>
+        </div>
 
         <!-- Avatar -->
         <partial name="_LoginPartial" />
@@ -124,6 +132,8 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/notification.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
