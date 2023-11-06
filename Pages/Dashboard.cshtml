@@ -172,7 +172,17 @@
                     <h5>Team Job Statistics</h5>
                 </div>
             </a>
-            <div class="card-body justify-content-between align-content-between">
+            <div class="card-body justify-content-between align-content-between" id="teamJobChart">
+                <div class="form-group">
+                    <label for="teamSelector">Select a Team:</label>
+                    <select id="teamSelector" class="form-control">
+                        <option value="">All Teams</option>
+                        @foreach (var team in Model.CurrentUser.EmployeeTeams)
+                        {
+                            <option value="@team.Team.TeamId">@team.Team.TeamName</option>
+                        }
+                    </select>
+                </div>
                 <canvas id="companyWideChart" class="text-snow-white"></canvas>
             </div>
         </div>
@@ -261,45 +271,94 @@
     </div>
 
 </div>
+@section scripts
+{
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<script>
-    Chart.defaults.color = "#F3F5F7";
-    let jobs = @Html.Raw(JsonConvert.SerializeObject(Model.UserJobStatus));
-    const jobsChart = document.getElementById('userJobsChart');
-    new Chart(jobsChart, {
-        type: 'doughnut',
-        data: {
-            labels: Object.keys(jobs),
-            datasets: [{
-                data: Object.values(jobs)
-            }]
-        }
-    });    
-
-    Chart.defaults.color = "#F3F5F7";
-    let teamJobs = @Html.Raw(JsonConvert.SerializeObject(Model.TeamMemberJobCompletion));
-    let colours = @Html.Raw(JsonConvert.SerializeObject(Model.BackgroundColours));
-
-    const companyWideChart = document.getElementById('companyWideChart');
-    let test = new Chart(companyWideChart, {
-        type: 'bar',
-        data: {
-            labels: Object.keys(teamJobs),
-            datasets: [{
-                label: "Total Jobs Completed",
-                data: Object.values(teamJobs),
-                backgroundColor: colours
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
+    <script>
+        Chart.defaults.color = "#F3F5F7";
+        let jobs = @Html.Raw(JsonConvert.SerializeObject(Model.UserJobStatus));
+        const jobsChart = document.getElementById('userJobsChart');
+        new Chart(jobsChart, {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(jobs),
+                datasets: [{
+                    data: Object.values(jobs)
+                }]
             }
-        }
-    });
+        });
+    </script>
 
-</script>
+    <script>
+        Chart.defaults.color = "#F3F5F7";
+        $(document).ready(function () {
+            const teamSelector = document.getElementById('teamSelector');
+
+            // Add a change event listener to the teamSelector dropdown
+            teamSelector.addEventListener('change', function () {
+                // Get the selected team ID from the dropdown
+                let selectedTeamId = teamSelector.value;
+
+                // Perform an AJAX request to fetch job statistics when a team is selected
+                if (selectedTeamId !== '') {
+                    fetchTeamJobStatistics(selectedTeamId);
+                }
+            });
+
+            function fetchTeamJobStatistics(teamId) {
+                
+                $.getJSON(`api/Dashboard/GetTeamJobStatistics?teamId=${teamId}`, function (data) {
+                    fetchBackgroundColours(Object.keys(data).length, function (colours) {
+                        updateChart(data, colours);
+                    });
+                })
+                .fail(function (error) {
+                    console.error('Error fetching team job statistics:', error);
+                });
+            }
+
+            function fetchBackgroundColours(count, callback) {
+                var bgColours;
+                console.log("starting background colour fetch");
+                $.getJSON(`api/Dashboard/GetBackgroundColours?count=${count}`, function (colours) {
+                    callback(colours);
+                })
+                .fail(function (error) {
+                    console.error('Error fetching team background colours:', error);
+                });
+            }
+
+            // Define a function to update the chart with new data
+            function updateChart(data, colours) {
+                console.log("in update chart" + colours);
+                let teamJobChart = document.getElementById("teamJobChart");
+                document.getElementById("companyWideChart").remove();
+                let canvas = document.createElement("canvas");
+                canvas.setAttribute('id', 'companyWideChart');
+                teamJobChart.appendChild(canvas);
+                companyWideChart = document.getElementById("companyWideChart");
+
+                companyWideChart = new Chart(companyWideChart, {
+                    type: 'bar',
+                    data: {
+                        labels: Object.keys(data),
+                        datasets: [{
+                            label: "Total Jobs Completed",
+                            data: Object.values(data),
+                            backgroundColor: colours
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+        });          
+
+    </script>
+}
