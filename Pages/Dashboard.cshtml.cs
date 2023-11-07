@@ -129,7 +129,7 @@ namespace ArgoCMS.Pages
         {
             return await Context.Notices
                 .Include(n => n.Owner)
-                .Where(n => n.PublicityStatus == PublicityStatus.Everyone)
+                .Where(n => n.PublicityStatus == PublicityStatus.Company)
                 .ToListAsync();
         }
 
