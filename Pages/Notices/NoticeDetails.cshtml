@@ -3,20 +3,36 @@
 @{
 
 }
+
 <h1>@Model.Notice.NoticeTitle</h1>
+<p>Posted by 
+    <a asp-area="Identity" asp-page="/Account/Manage/Index" asp-route-id="@Model.Notice.Owner.Id">@Model.Notice.Owner.FullName</a> on @Model.Notice.DateCreated
+</p>
 <p>@Model.Notice.NoticeMessageContent</p>
 
 <h5>Comments</h5>
-<ul>
-@foreach (var item in Model.Notice.Comments)
-{
-	<li><strong>@item.CommentId:</strong> @item.CommentText</li>
-}
-</ul>
-
-@* <form method="post">
-	<div asp-asp-validation-summary="ModelOnly" class="text-danger"></div>
-	<div class="form-group">
-		
-	</div>
-</form> *@
+<div>
+    @foreach (var item in Model.Notice.Comments)
+    {
+        <div class="card bg-dark_blue text-snow-white mb-2">
+            <div class="card-body">
+                <h5 class="card-title">@item.Owner.FullName</h5>
+                <h6 class="card-subtitle mb-2 text-muted">@item.CreationDate</h6>
+                <p class="card-text">@item.CommentText</p>
+            </div>
+        </div>
+    }
+    <h3>Post a comment</h3>
+    <form method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <textarea asp-for="NoticeComment.CommentText" type="text" class="form-control"></textarea>
+        </div>
+        <input asp-for="NoticeComment.ParentId" type="hidden" value="@Model.Notice.NoticeId" />
+        <input asp-for="NoticeComment.OwnerID" type="hidden" value="" />
+        <input asp-for="NoticeComment.CreationDate" type="hidden" value="" />
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary mt-1">Post Comment</button>
+        </div>
+    </form>
+</div>

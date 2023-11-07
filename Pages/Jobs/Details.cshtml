@@ -61,7 +61,33 @@
         </dd>
     </dl>
 </div>
-<div>
+<div class="mb-1">
     <a asp-page="./Edit" asp-route-id="@Model.Job?.JobId">Edit</a> |
     <a asp-page="./Index">Back to List</a>
+</div>
+
+<div>
+    @foreach(var item in Model.Job.Comments)
+    {
+        <div class="card bg-dark_blue text-snow-white mb-2">
+            <div class="card-body">
+                <h5 class="card-title">@item.Owner.FullName</h5>
+                <h6 class="card-subtitle mb-2 text-muted">@item.CreationDate</h6>
+                <p class="card-text">@item.CommentText</p>
+            </div>
+        </div>
+    }
+    <h3>Post a comment</h3>
+    <form method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <textarea asp-for="JobComment.CommentText" type="text" class="form-control"></textarea>
+        </div>
+        <input asp-for="JobComment.ParentId" type="hidden" value="@Model.Job.JobId" />
+        <input asp-for="JobComment.OwnerID" type="hidden" value="" />        
+        <input asp-for="JobComment.CreationDate" type="hidden" value="" />
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary mt-1">Post Comment</button>
+        </div>        
+    </form>
 </div>
