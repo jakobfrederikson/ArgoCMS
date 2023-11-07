@@ -5,14 +5,15 @@
 using System.ComponentModel.DataAnnotations;
 using ArgoCMS.Data;
 using ArgoCMS.Models;
+using ArgoCMS.Models.JointEntities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ArgoCMS.Areas.Identity.Pages.Account.Manage
 {
     public class IndexModel : DbContextPageModel
     {
-        private readonly ApplicationDbContext _context;
         private readonly UserManager<Employee> _userManager;
         private readonly SignInManager<Employee> _signInManager;
 
@@ -69,14 +70,13 @@ namespace ArgoCMS.Areas.Identity.Pages.Account.Manage
         // The supervisor of the supervisor (boss's boss)
         public Employee ReportsToBoss { get; set; }
 
-        public Team Team { get; set; }
+        public List<Team> Teams { get; set; }
         public string Role { get; set; }
 
         private async Task LoadAsync(Employee user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-            //var profilePicture = user.Photo(user.Id, _context);
 
             Username = userName;
 
@@ -114,12 +114,13 @@ namespace ArgoCMS.Areas.Identity.Pages.Account.Manage
                 Role = role;
             }
 
-            var team = Context.Teams.FirstOrDefault(t => t.TeamId == Employee.TeamID);
+            var employeeTeams = await Context.EmployeeTeams
+                .Include(et => et.Team)
+                .Where(et => et.EmployeeId == Employee.Id)
+                .ToListAsync();
 
-            if (team != null) 
-            { 
-                Team = team;
-            }
+            if (employeeTeams != null)
+                Teams = employeeTeams.Select(et => et.Team).ToList();
 
             await LoadAsync(user);
             return Page();

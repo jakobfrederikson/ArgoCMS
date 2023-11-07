@@ -22,11 +22,16 @@
                 <span asp-validation-for="Job.OwnerID" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Job.AssignedEmployeeID" class="control-label"></label>
-                <select asp-for="Job.AssignedEmployeeID" class="form-control" asp-items="Model.Employees">
-                    <option selected disabled>Please select an Employee</option>
+                <label for="teamSelect" class="control-label">Select a Team</label>
+                <select id="teamSelect" class="form-control" asp-for="Job.TeamID" asp-items="Model.Teams">
+                    <option selected disabled>-- Select Team --</option>
                 </select>
-                <span asp-validation-for="Job.AssignedEmployeeID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="employeeSelect" class="control-label">Select an Employee</label>
+                <select id="employeeSelect" asp-for="Job.AssignedEmployeeID" class="form-control" asp-items="Model.Employees">
+                    <option selected disabled>-- Select Employee --</option>
+                </select>
             </div>
             <div class="form-group">
                 <label asp-for="Job.JobName" class="control-label"></label>
@@ -57,6 +62,7 @@
                 </select>
                 <span asp-validation-for="Job.PriorityLevel" class="text-danger"></span>
             </div>
+            <input asp-for="Job.DateCreated" type="hidden" value="@Model.Job.DateCreated" />
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
@@ -70,4 +76,30 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $('#teamSelect').change(function () {
+            var selectedTeamId = $(this).val();
+
+            $.getJSON(`../api/Job/GetEmployeesByTeam?teamId=${selectedTeamId}`, function (data) {
+                $('#employeeSelect').empty();
+
+                $.each(data, function (index, employee) {
+                    $('#employeeSelect').append($('<option>', {
+                        value: employee.value,
+                        text: employee.text
+                    }));
+                });
+            });
+        });
+    </script>
+
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        // Use the Select2 library to create a searchable dropdown
+        $("#teamSelect").select2();
+        $("#employeeSelect").select2();
+    </script>
 }

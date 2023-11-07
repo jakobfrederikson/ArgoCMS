@@ -27,10 +27,16 @@
                         </tr>
                         <tr>
                             <td>
-                                <strong>@Html.DisplayNameFor(modelItem => modelItem.Employee.TeamID)</strong>
+                                <strong>Teams</strong>
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => modelItem.Team.TeamName)
+                                @foreach (var item in Model.Teams)
+                                {
+                                    <a asp-page="/Teams/Index" asp-route-teamId="@item.TeamId">
+                                        @Html.DisplayFor(modelItem => item.TeamName)
+                                    </a>
+                                    <br/>
+                                }
                             </td>
                         </tr>
                         <tr>

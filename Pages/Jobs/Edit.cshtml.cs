@@ -21,6 +21,7 @@ namespace ArgoCMS.Pages.Jobs
         [BindProperty]
         public Job Job { get; set; } = default!;
         public IEnumerable<SelectListItem> Employees { get; set; }
+        public IEnumerable<SelectListItem> Teams { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -39,6 +40,9 @@ namespace ArgoCMS.Pages.Jobs
             Employees = Context.Employees.Select(
                 e => new SelectListItem { Text = e.FullName, Value = e.Id });
 
+            Teams = Context.Teams.Select(
+                t => new SelectListItem { Text = t.TeamName, Value = t.TeamId.ToString() });
+
             return Page();
         }
 
@@ -46,20 +50,10 @@ namespace ArgoCMS.Pages.Jobs
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
             var job = await Context.Jobs
                         .AsNoTracking()
                         .FirstOrDefaultAsync
                             (j => j.JobId == Job.JobId);
-
-            Job.TeamID = Context.Employees
-                .Where(e => e.Id == Job.AssignedEmployeeID)
-                .Select(e => e.TeamID)
-                .Single();
 
             Context.Attach(Job).State = EntityState.Modified;
 

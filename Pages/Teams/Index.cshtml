@@ -5,97 +5,22 @@
     ViewData["Title"] = "Team";
 }
 
-<h2>@Model.Team.TeamName</h2>
+<h2>Your Teams</h2>
 <div class="row">
-
-    <div class="col-xl-4">
-        <div class="card mb-4 bg-dark_blue">
-            <div class="card-header">
-                <h5>Team Task's</h5>
-            </div>
-            <div class="card-body">
-                <table class="table table-striped table-hover table-light">
-                    <thead>
-                        <tr>
-                            <th>
-                                @Html.DisplayNameFor(model => model.TeamJobs.Keys.FirstOrDefault().JobName)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.TeamJobs.Keys.FirstOrDefault().AssignedEmployeeID)
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.TeamJobs)
-                        {
-                            <tr>
-                                <td>
-                                    @Html.DisplayFor(model => item.Key.JobName)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(model => item.Value)
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        
-    </div>
-
-    <div class="col-xl-4">
-        <div class="card mb-4 bg-dark_blue">
-            <div class="card-header">
-                <h5>Team Members</h5>
-            </div>
-            <div class="card-body">
-                @foreach (var item in Model.EmployeeAndRole)
-                {
-                    <div class="row mb-1">
-                        <div class="col-2">
-                            <span class="badge rounded-pill bg-success">@item.Key.FirstName[0]@item.Key.LastName[0]</span>
-                        </div>
-                        <div class="col-5">
-                            <a class="link-light link" asp-area="Identity" asp-page="/Account/Manage/Index" asp-route-id="@item.Key.Id">
-                                <p class="mb-0"><strong>@item.Key.FullName</strong></p>
-                            </a>
-                        </div>
-                        <div class="col-5">
-                            <p class="mb-0">@item.Value</p>
-                        </div>
-                    </div>
-                }
-            </div>
-        </div>
-
-    </div>
-
-    <div class="col-xl-4">
-        <div class="card mb-4 bg-dark_blue">
-            <div class="card-header">
-                <h5>Team Notices</h5>
-            </div>
-            <div class="card-body">
-                @foreach (var item in Model.TeamNotices)
-                {
-                    <div class="row">
-                        <div class="col">
-                            <div class="card mb-1">
-                                <div class="card-header text-black">
-                                    <h5>@Html.DisplayFor(modelItem => item.Key.NoticeTitle)</h5>
-                                    <p class="text-muted mb-0">Created by <a asp-page="/Account/Manage/Index" asp-area="Identity" asp-route-id="@item.Key.OwnerID">@Html.DisplayFor(modelItem => item.Value)</a> on @Html.DisplayFor(modelItem => item.Key.DateCreated)</p>
-                                </div>
-                                <div class="card-body text-black">
-                                    <p class="mb-0"> @Html.DisplayFor(modelItem => item.Key.NoticeMessageContent)</p>
-                                    <a class="card-link" asp-page="/Notices/NoticeDetails" asp-route-id="@item.Key.NoticeId">Notice details</a>
-                                </div>
+    @foreach (var item in Model.EmployeeTeams)
+    {
+        <div class="col-xl-3 col-md-6">
+            <a asp-page="TeamHome/Index" asp-route-teamId="@item.TeamId">
+                <div class="card mb-4 bg-dark_blue hover-shadow">
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col text-snow-white text-decoration-none">
+                                <h5>@item.Team.TeamName</h5>
                             </div>
                         </div>
                     </div>
-                }
-            </div>
+                </div>
+            </a>            
         </div>
-    </div>
-
+    }
 </div>
