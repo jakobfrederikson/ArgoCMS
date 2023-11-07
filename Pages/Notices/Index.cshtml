@@ -38,6 +38,7 @@
                 </div>
                 <div class="card-footer">
                     <a asp-page="./Edit" asp-route-id="@item.NoticeId" class="card-link">Edit</a>
+                    <a asp-page="./NoticeDetails" asp-route-id="@item.NoticeId" class="card-link link-warning">Go to posted page</a>
                     <a asp-page="./Delete" asp-route-id="@item.NoticeId" class="card-link link-danger">Delete</a>
                 </div>
             </div>
