@@ -14,27 +14,45 @@
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Notice.OwnerID" class="control-label"></label>
-                <input asp-for="Notice.OwnerID" class="form-control" />
-                <span asp-validation-for="Notice.OwnerID" class="text-danger"></span>
+                <label for="publicityStatusDropdown" class="control-label">Publicity Status</label>
+                <select asp-for="Notice.PublicityStatus" id="publicityStatusDropdown" class="form-control">
+                    @foreach (PublicityStatus value in Enum.GetValues(typeof(PublicityStatus)))
+                    {
+                        <option value="@value">@value</option>
+                    }
+                </select>
+                <span asp-validation-for="Notice.PublicityStatus" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="Notice.NoticeTitle" class="control-label"></label>
                 <input asp-for="Notice.NoticeTitle" class="form-control" />
                 <span asp-validation-for="Notice.NoticeTitle" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="Notice.NoticeMessageContent" class="control-label"></label>
                 <textarea asp-for="Notice.NoticeMessageContent" class="form-control"></textarea>
                 <span asp-validation-for="Notice.NoticeMessageContent" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Notice.DateCreated" class="control-label"></label>
-                <input asp-for="Notice.DateCreated" class="form-control" />
-                <span asp-validation-for="Notice.DateCreated" class="text-danger"></span>
+
+            <div class="form-group" id="team-group">
+                <label asp-for="Notice.TeamId"></label>
+                <select asp-for="Notice.TeamId" asp-items="Model.TeamItems" class="form-control">
+                    <option value="">Select a Team</option>
+                </select>
             </div>
+
+            <div class="form-group" id="project-group">
+                <label asp-for="Notice.ProjectId"></label>
+                <select asp-for="Notice.ProjectId" asp-items="Model.ProjectItems" class="form-control">
+                    <option value="">Select a Project</option>
+                </select>
+            </div>
+
+                <input asp-for="Notice.DateCreated" class="form-control" value="@DateTime.Now" type="hidden"/>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Create" class="btn btn-primary mt-2" />
             </div>
         </form>
     </div>
@@ -46,4 +64,5 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/js/publicitystatus-listener.js"></script>
 }
