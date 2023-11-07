@@ -173,10 +173,9 @@
                 </div>
             </a>
             <div class="card-body justify-content-between align-content-between" id="teamJobChart">
-                <div class="form-group">
-                    <label for="teamSelector">Select a Team:</label>
+                <div class="form-group mt-0">
+                    <label for="teamSelector" class="mt-0">Select a Team:</label>
                     <select id="teamSelector" class="form-control">
-                        <option value="">All Teams</option>
                         @foreach (var team in Model.CurrentUser.EmployeeTeams)
                         {
                             <option value="@team.Team.TeamId">@team.Team.TeamName</option>
@@ -294,6 +293,7 @@
         Chart.defaults.color = "#F3F5F7";
         $(document).ready(function () {
             const teamSelector = document.getElementById('teamSelector');
+            fetchTeamJobStatistics(teamSelector.value);
 
             // Add a change event listener to the teamSelector dropdown
             teamSelector.addEventListener('change', function () {
