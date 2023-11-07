@@ -1,0 +1,23 @@
+﻿@page
+@model ArgoCMS.Pages.Projects.ProjectHome.Members.IndexModel
+@{
+}
+
+<h1>Project Members</h1>
+<p>
+    <a asp-page="AddMember" asp-route-projectId="@Model.Id" class="btn btn-primary">Add Member</a>
+</p>
+
+<dl class="row">
+    @foreach (var member in Model.ProjectMembers)
+    {
+        <dt class="col-sm-4">
+            @member.FullName
+        </dt>
+        <dd class="col-sm-8">
+            <a asp-page="RemoveMember" asp-route-projectId="@Model.Id" asp-route-memberId="@member.Id" class="btn btn-danger">Remove</a>
+        </dd>
+    }
+</dl>
+
+<a asp-page="/Projects/ProjectHome/Index" asp-route-projectId="@Model.Id">Back to project home</a>

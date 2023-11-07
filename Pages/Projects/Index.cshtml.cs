@@ -7,25 +7,40 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using ArgoCMS.Data;
 using ArgoCMS.Models;
+using ArgoCMS.Models.JointEntities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ArgoCMS.Pages.Projects
 {
-    public class IndexModel : PageModel
+    public class IndexModel : DependencyInjection_BasePageModel
     {
-        private readonly ArgoCMS.Data.ApplicationDbContext _context;
-
-        public IndexModel(ArgoCMS.Data.ApplicationDbContext context)
+        public IndexModel(
+        ApplicationDbContext context,
+        IAuthorizationService authorizationService,
+        UserManager<Employee> userManager)
+        : base(context, authorizationService, userManager)
         {
-            _context = context;
         }
 
-        public IList<Project> Project { get;set; } = default!;
+        public List<EmployeeProject> EmployeeProjects { get; set; }
+            = new List<EmployeeProject>();
 
         public async Task OnGetAsync()
         {
-            if (_context.Projects != null)
+            if (Context.Projects != null)
             {
-                Project = await _context.Projects.ToListAsync();
+                var employeeId = UserManager.GetUserId(User);
+
+                var employeeProjects = await Context.EmployeesProjects
+                    .Include(et => et.Project)
+                    .Where(et => et.EmployeeId == employeeId)
+                    .ToListAsync();
+
+                if (employeeProjects != null)
+                {
+                    EmployeeProjects = employeeProjects;
+                }
             }
         }
     }

@@ -1,12 +1,11 @@
 using ArgoCMS.Data;
-using ArgoCMS.Models;
 using ArgoCMS.Models.JointEntities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
-namespace ArgoCMS.Pages.Teams.TeamHome.Members
+namespace ArgoCMS.Pages.Projects.ProjectHome.Members
 {
     public class AddMemberModel : PageModel
     {
@@ -23,24 +22,24 @@ namespace ArgoCMS.Pages.Teams.TeamHome.Members
 
         public List<SelectListItem> EmployeeList { get; set; }
 
-        public async Task OnGet(int teamId)
+        public async Task OnGet(int projectId)
         {
-            Id = teamId;
+            Id = projectId;
 
-            var employeesAlreadyInTeam = await _context.EmployeeTeams
-                .Where(et => et.TeamId == teamId)
+            var employeesAlreadyInProject = await _context.EmployeesProjects
+                .Where(et => et.ProjectId == projectId)
                 .Select(et => et.EmployeeId)
                 .ToListAsync();
 
-            EmployeeList = await _context.EmployeeTeams
-                .Where(et => !employeesAlreadyInTeam.Contains(et.EmployeeId))
-                .Select(et => new SelectListItem { Value = et.EmployeeId, Text = et.Employee.FullName })
+            EmployeeList = await _context.EmployeesProjects
+                .Where(ep => !employeesAlreadyInProject.Contains(ep.EmployeeId))
+                .Select(ep => new SelectListItem { Value = ep.EmployeeId, Text = ep.Employee.FullName })
                 .Distinct()
                 .ToListAsync();
         }
 
-		public async Task<IActionResult> OnPost(int teamId)
-		{
+        public async Task<IActionResult> OnPost(int projectId)
+        {
             if (SelectedEmployeeId == null)
             {
                 return NotFound("Selected employee Id was null");
@@ -49,26 +48,26 @@ namespace ArgoCMS.Pages.Teams.TeamHome.Members
             var employee = await _context.Employees
                 .FirstOrDefaultAsync(e => e.Id == SelectedEmployeeId);
 
-            var team = await _context.Teams
-                .Include(t => t.Members)
-                .FirstOrDefaultAsync(t => t.TeamId == teamId);
+            var project = await _context.Projects
+                .Include(p => p.Members)
+                .FirstOrDefaultAsync(p => p.ProjectId == projectId);
 
-            if (employee != null && team != null)
+            if (employee != null && project != null)
             {
-                team.Members.Add(employee);
+                project.Members.Add(employee);
 
-                EmployeeTeam employeeTeam = new EmployeeTeam
+                EmployeeProject employeeProject = new EmployeeProject
                 {
                     EmployeeId = employee.Id,
-                    TeamId = team.TeamId
+                    ProjectId = project.ProjectId
                 };
 
-                _context.EmployeeTeams.Add(employeeTeam);
+                _context.EmployeesProjects.Add(employeeProject);
                 await _context.SaveChangesAsync();
             }
 
-            return RedirectToPage("./Index", new { teamId });
+            return RedirectToPage("./Index", new { projectId });
 
-		}
-	}
+        }
+    }
 }

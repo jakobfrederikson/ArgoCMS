@@ -1,0 +1,66 @@
+﻿@page
+@model ArgoCMS.Pages.Projects.ProjectHome.IndexModel
+@{
+}
+
+<h2>@Model.Project.ProjectName</h2>
+<div class="row">
+
+    <div class="col-xl-4">
+        <div class="card mb-4 bg-dark_blue">
+            <div class="card-header">
+                <h5>Project Members</h5>
+                <a asp-page="Members/Index" asp-route-projectId="@Model.Project.ProjectId">
+                    Add/Remove
+                </a>
+            </div>
+            <div class="card-body">
+                @foreach (var item in Model.EmployeeAndRole)
+                {
+                    <div class="row mb-1">
+                        <div class="col-2">
+                            <span class="badge rounded-pill bg-success">@item.Key.FirstName[0]@item.Key.LastName[0]</span>
+                        </div>
+                        <div class="col-5">
+                            <a class="link-light link" asp-area="Identity" asp-page="/Account/Manage/Index" asp-route-id="@item.Key.Id">
+                                <p class="mb-0"><strong>@item.Key.FullName</strong></p>
+                            </a>
+                        </div>
+                        <div class="col-5">
+                            <p class="mb-0">@item.Value</p>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-xl-4">
+        <div class="card mb-4 bg-dark_blue">
+            <div class="card-header">
+                <h5>Project Notices</h5>
+            </div>
+            <div class="card-body">
+                @foreach (var item in Model.ProjectNotices)
+                {
+                    <div class="row">
+                        <div class="col">
+                            <div class="card mb-1">
+                                <div class="card-header text-black">
+                                    <h5>@Html.DisplayFor(modelItem => item.Key.NoticeTitle)</h5>
+                                    <p class="text-muted mb-0">Created by <a asp-page="/Account/Manage/Index" asp-area="Identity" asp-route-id="@item.Key.OwnerID">@Html.DisplayFor(modelItem => item.Value)</a> on @Html.DisplayFor(modelItem => item.Key.DateCreated)</p>
+                                </div>
+                                <div class="card-body text-black">
+                                    <p class="mb-0"> @Html.DisplayFor(modelItem => item.Key.NoticeMessageContent)</p>
+                                    <a class="card-link" asp-page="/Notices/NoticeDetails" asp-route-id="@item.Key.NoticeId">Notice details</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+</div>

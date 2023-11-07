@@ -9,8 +9,8 @@
 <div class="row">
     @foreach (var item in Model.EmployeeTeams)
     {
-        <div class="col-xl-3 col-md-6">
-            <a asp-page="TeamHome/Index" asp-route-teamId="@item.TeamId">
+        <div class="col-xl-3 col-md-6 col-xl-6">
+            <a asp-page="TeamHome/Index" asp-route-teamId="@item.TeamId" class="text-decoration-none">
                 <div class="card mb-4 bg-dark_blue hover-shadow">
                     <div class="card-body">
                         <div class="row text-center">

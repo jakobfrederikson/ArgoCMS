@@ -1,0 +1,29 @@
+﻿@page
+@model ArgoCMS.Pages.Projects.ProjectHome.Members.AddMemberModel
+@{
+}
+
+<h1>Add Project Member</h1>
+<div class="row">
+    <div class="col">
+        <form method="post">
+            <div class="form-group">
+                <label for="employeeSelect" class="control-label">Select an Employee:</label>
+                <select id="employeeSelect" class="form-control" asp-for="SelectedEmployeeId" asp-items="Model.EmployeeList">
+                    <option selected disabled>-- Select Employee --</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary mt-1">Add Member</button>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        // Use the Select2 library to create a searchable dropdown
+        $("#employeeSelect").select2();
+    </script>
+}
