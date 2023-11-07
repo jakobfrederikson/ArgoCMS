@@ -91,6 +91,9 @@ namespace ArgoCMS.Data
 
             // TeamProject
             builder.Entity<TeamProject>()
+                .HasKey(tp => tp.Id);
+
+            builder.Entity<TeamProject>()
                 .HasKey(tp => new { tp.TeamId, tp.ProjectId });
 
             builder.Entity<TeamProject>()
@@ -103,7 +106,10 @@ namespace ArgoCMS.Data
                 .WithMany(p => p.TeamProjects)
                 .HasForeignKey(tp => tp.ProjectId);
 
-			// EmployeeProject
+            // EmployeeProject
+            builder.Entity<EmployeeProject>()
+                .HasKey(ep => ep.Id);
+
 			builder.Entity<EmployeeProject>()
 			.HasKey(ep => new { ep.EmployeeId, ep.ProjectId });
 
@@ -118,6 +124,9 @@ namespace ArgoCMS.Data
 				.HasForeignKey(ep => ep.ProjectId);
 
             // EmployeeTeam
+            builder.Entity<EmployeeTeam>()
+                .HasKey(et => et.Id);
+
             builder.Entity<EmployeeTeam>()
                 .HasKey(et => new {et.EmployeeId, et.TeamId });
 
