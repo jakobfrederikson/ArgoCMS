@@ -1,0 +1,40 @@
+﻿@page
+@model ArgoCMS.Pages.Admin.NotificationGroups.IndexModel
+
+@{
+    ViewData["Title"] = "Notification Groups";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<h1>Admin/Notification Groups</h1>
+<partial name="_AdminNavPartial" />
+
+<h1>Notification Groups</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table table-light">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NotificationGroup[0].GroupName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.NotificationGroup) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.GroupName)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

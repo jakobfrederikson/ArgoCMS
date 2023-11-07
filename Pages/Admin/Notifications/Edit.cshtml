@@ -1,0 +1,61 @@
+﻿@page
+@model ArgoCMS.Pages.Admin.Notifications.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<h1>Edit</h1>
+
+<h4>Notification</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Notification.NotificationId" />
+            <div class="form-group">
+                <label asp-for="Notification.Message" class="control-label"></label>
+                <input asp-for="Notification.Message" class="form-control" />
+                <span asp-validation-for="Notification.Message" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Notification.URL" class="control-label"></label>
+                <input asp-for="Notification.URL" class="form-control" />
+                <span asp-validation-for="Notification.URL" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Notification.ObjectId" class="control-label"></label>
+                <input asp-for="Notification.ObjectId" class="form-control" />
+                <span asp-validation-for="Notification.ObjectId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Notification.UserId" class="control-label"></label>
+                <input asp-for="Notification.UserId" class="form-control" />
+                <span asp-validation-for="Notification.UserId" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Notification.IsRead" /> @Html.DisplayNameFor(model => model.Notification.IsRead)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="Notification.TimeStamp" class="control-label"></label>
+                <input asp-for="Notification.TimeStamp" class="form-control" />
+                <span asp-validation-for="Notification.TimeStamp" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

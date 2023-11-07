@@ -1,0 +1,58 @@
+﻿@page
+@model ArgoCMS.Pages.Admin.EmployeeProjects.IndexModel
+
+@{
+    ViewData["Title"] = "Employee Projects";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<h1>Admin/Employee Projects</h1>
+<partial name="_AdminNavPartial" />
+
+<h1>Employee Projects</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table table-light">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.EmployeeProject[0].Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EmployeeProject[0].Employee)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EmployeeProject[0].Project)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EmployeeProject[0].IsCompleted)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.EmployeeProject) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Employee.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Project.ProjectName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsCompleted)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

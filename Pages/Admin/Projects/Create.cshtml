@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = "Create";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
 <h1>Create</h1>
@@ -15,8 +16,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Project.OwnerID" class="control-label"></label>
-                <input asp-for="Project.OwnerID" class="form-control" />
-                <span asp-validation-for="Project.OwnerID" class="text-danger"></span>
+                <select asp-for="Project.OwnerID" class ="form-control" asp-items="ViewBag.OwnerID"></select>
             </div>
             <div class="form-group">
                 <label asp-for="Project.ProjectName" class="control-label"></label>
@@ -32,6 +32,16 @@
                 <label asp-for="Project.DateCreated" class="control-label"></label>
                 <input asp-for="Project.DateCreated" class="form-control" />
                 <span asp-validation-for="Project.DateCreated" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Project.DueDate" class="control-label"></label>
+                <input asp-for="Project.DueDate" class="form-control" />
+                <span asp-validation-for="Project.DueDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Project.ProjectStatus" class="control-label"></label>
+                <select asp-for="Project.ProjectStatus" class="form-control"></select>
+                <span asp-validation-for="Project.ProjectStatus" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

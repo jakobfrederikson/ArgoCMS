@@ -1,0 +1,59 @@
+﻿@page
+@model ArgoCMS.Pages.Admin.Notifications.DeleteModel
+
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Notification</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Notification.Message)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Notification.Message)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Notification.URL)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Notification.URL)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Notification.ObjectId)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Notification.ObjectId)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Notification.UserId)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Notification.UserId)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Notification.IsRead)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Notification.IsRead)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Notification.TimeStamp)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Notification.TimeStamp)
+        </dd>
+    </dl>
+    
+    <form method="post">
+        <input type="hidden" asp-for="Notification.NotificationId" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-page="./Index">Back to List</a>
+    </form>
+</div>

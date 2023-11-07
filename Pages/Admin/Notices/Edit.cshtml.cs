@@ -1,6 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using ArgoCMS.Data;
 using ArgoCMS.Models;
 
 namespace ArgoCMS.Pages.Admin.Notices
@@ -30,6 +36,9 @@ namespace ArgoCMS.Pages.Admin.Notices
                 return NotFound();
             }
             Notice = notice;
+           ViewData["OwnerID"] = new SelectList(_context.Employees, "Id", "Id");
+           ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "OwnerID");
+           ViewData["TeamId"] = new SelectList(_context.Teams, "TeamId", "TeamDescription");
             return Page();
         }
 
@@ -65,7 +74,7 @@ namespace ArgoCMS.Pages.Admin.Notices
 
         private bool NoticeExists(int id)
         {
-          return _context.Notices.Any(e => e.NoticeId == id);
+          return (_context.Notices?.Any(e => e.NoticeId == id)).GetValueOrDefault();
         }
     }
 }

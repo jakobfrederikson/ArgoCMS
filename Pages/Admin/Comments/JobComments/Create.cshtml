@@ -1,0 +1,48 @@
+﻿@page
+@model ArgoCMS.Pages.Admin.Comments.JobComments.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<h1>Create</h1>
+
+<h4>JobComment</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="JobComment.ParentId" class="control-label"></label>
+                <select asp-for="JobComment.ParentId" class ="form-control" asp-items="ViewBag.ParentId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="JobComment.OwnerID" class="control-label"></label>
+                <select asp-for="JobComment.OwnerID" class ="form-control" asp-items="ViewBag.OwnerID"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="JobComment.CommentText" class="control-label"></label>
+                <input asp-for="JobComment.CommentText" class="form-control" />
+                <span asp-validation-for="JobComment.CommentText" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="JobComment.CreationDate" class="control-label"></label>
+                <input asp-for="JobComment.CreationDate" class="form-control" />
+                <span asp-validation-for="JobComment.CreationDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

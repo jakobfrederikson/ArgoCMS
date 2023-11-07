@@ -65,7 +65,7 @@ namespace ArgoCMS.Pages.Admin.Employees
                 ReportsToId = user.ReportsToId,
                 UserName = user.UserName,
                 EmploymentDate = user.EmploymentDate,
-                TeamID = user.TeamID
+                //TeamID = user.TeamID
             };
 
             Input.EmployeeRole = string.Join(",", UserManager.GetRolesAsync(user).Result.ToArray());
@@ -141,7 +141,7 @@ namespace ArgoCMS.Pages.Admin.Employees
 			user.PersonalEmail = Input.PersonalEmail;
 			user.ReportsToId = Input.ReportsToId;
 			user.UserName = Input.UserName;
-            user.TeamID = Input.TeamID;
+            //user.TeamID = Input.TeamID;
             var result = await UserManager.UpdateAsync(user);
 
             if (!result.Succeeded)

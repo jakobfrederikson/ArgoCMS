@@ -25,7 +25,8 @@ namespace ArgoCMS.Pages.Admin.Projects
         {
             if (_context.Projects != null)
             {
-                Project = await _context.Projects.ToListAsync();
+                Project = await _context.Projects
+                .Include(p => p.Owner).ToListAsync();
             }
         }
     }

@@ -1,44 +1,43 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ArgoCMS.Data;
 using ArgoCMS.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ArgoCMS.Pages.Admin.Jobs
 {
-    public class EditModel : DependencyInjection_BasePageModel
+    public class EditModel : PageModel
     {
-        public EditModel(
-            ApplicationDbContext context,
-            IAuthorizationService authorizationService,
-            UserManager<Employee> userManager)
-            : base(context, authorizationService, userManager)
+        private readonly ArgoCMS.Data.ApplicationDbContext _context;
+
+        public EditModel(ArgoCMS.Data.ApplicationDbContext context)
         {
+            _context = context;
         }
 
         [BindProperty]
         public Job Job { get; set; } = default!;
-        public IEnumerable<SelectListItem> Employees { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || Context.Jobs == null)
+            if (id == null || _context.Jobs == null)
             {
                 return NotFound();
             }
 
-            var job =  await Context.Jobs.FirstOrDefaultAsync(m => m.JobId == id);
+            var job =  await _context.Jobs.FirstOrDefaultAsync(m => m.JobId == id);
             if (job == null)
             {
                 return NotFound();
             }
             Job = job;
-
-            Employees = Context.Employees.Select(
-                e => new SelectListItem { Text = e.FullName, Value = e.Id });
-
+           ViewData["AssignedEmployeeID"] = new SelectList(_context.Employees, "Id", "Id");
+           ViewData["OwnerID"] = new SelectList(_context.Employees, "Id", "Id");
             return Page();
         }
 
@@ -51,21 +50,11 @@ namespace ArgoCMS.Pages.Admin.Jobs
                 return Page();
             }
 
-            var job = await Context.Jobs
-                        .AsNoTracking()
-                        .FirstOrDefaultAsync
-                            (j => j.JobId == Job.JobId);
-
-            Job.TeamID = Context.Employees
-                .Where(e => e.Id == Job.AssignedEmployeeID)
-                .Select(e => e.TeamID)
-                .Single();
-
-            Context.Attach(Job).State = EntityState.Modified;
+            _context.Attach(Job).State = EntityState.Modified;
 
             try
             {
-                await Context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -84,7 +73,7 @@ namespace ArgoCMS.Pages.Admin.Jobs
 
         private bool JobExists(int id)
         {
-          return Context.Jobs.Any(e => e.JobId == id);
+          return (_context.Jobs?.Any(e => e.JobId == id)).GetValueOrDefault();
         }
     }
 }

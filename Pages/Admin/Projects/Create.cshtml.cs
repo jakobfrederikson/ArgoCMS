@@ -21,17 +21,18 @@ namespace ArgoCMS.Pages.Admin.Projects
 
         public IActionResult OnGet()
         {
+        ViewData["OwnerID"] = new SelectList(_context.Employees, "Id", "Id");
             return Page();
         }
 
         [BindProperty]
-        public Project Project { get; set; }
+        public Project Project { get; set; } = default!;
         
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-          if (!ModelState.IsValid)
+          if (!ModelState.IsValid || _context.Projects == null || Project == null)
             {
                 return Page();
             }

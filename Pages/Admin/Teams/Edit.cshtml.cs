@@ -1,6 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using ArgoCMS.Data;
 using ArgoCMS.Models;
 
 namespace ArgoCMS.Pages.Admin.Teams
@@ -17,8 +23,6 @@ namespace ArgoCMS.Pages.Admin.Teams
         [BindProperty]
         public Team Team { get; set; } = default!;
 
-        private string createdById = string.Empty;
-
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null || _context.Teams == null)
@@ -32,7 +36,8 @@ namespace ArgoCMS.Pages.Admin.Teams
                 return NotFound();
             }
             Team = team;
-            createdById = Team.CreatedById;
+           ViewData["CreatedById"] = new SelectList(_context.Employees, "Id", "Id");
+           ViewData["TeamLeaderId"] = new SelectList(_context.Employees, "Id", "Id");
             return Page();
         }
 
@@ -45,15 +50,6 @@ namespace ArgoCMS.Pages.Admin.Teams
                 return Page();
             }
 
-            var team = await _context.Teams.AsNoTracking().SingleOrDefaultAsync(t => t.TeamId == Team.TeamId);
-
-            if (team == null)
-            {
-                return NotFound($"{Team.TeamName} was not found.");
-            }
-
-
-            Team.CreatedById = team.CreatedById;
             _context.Attach(Team).State = EntityState.Modified;
 
             try
@@ -77,7 +73,7 @@ namespace ArgoCMS.Pages.Admin.Teams
 
         private bool TeamExists(int id)
         {
-          return _context.Teams.Any(e => e.TeamId == id);
+          return (_context.Teams?.Any(e => e.TeamId == id)).GetValueOrDefault();
         }
     }
 }

@@ -1,6 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using ArgoCMS.Data;
 using ArgoCMS.Models;
 
 namespace ArgoCMS.Pages.Admin.Notices
@@ -14,7 +19,7 @@ namespace ArgoCMS.Pages.Admin.Notices
             _context = context;
         }
 
-      public Notice Notice { get; set; }
+      public Notice Notice { get; set; } = default!; 
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {

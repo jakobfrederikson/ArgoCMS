@@ -19,7 +19,7 @@ namespace ArgoCMS.Pages.Admin.Teams
             _context = context;
         }
 
-      public Team Team { get; set; }
+      public Team Team { get; set; } = default!; 
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {

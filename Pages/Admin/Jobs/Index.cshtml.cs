@@ -1,8 +1,12 @@
-using ArgoCMS.Models;
-using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using ArgoCMS.Data;
+using ArgoCMS.Models;
 
 namespace ArgoCMS.Pages.Admin.Jobs
 {
@@ -15,13 +19,15 @@ namespace ArgoCMS.Pages.Admin.Jobs
             _context = context;
         }
 
-        public IList<Job> Job { get; set; } = default!;
+        public IList<Job> Job { get;set; } = default!;
 
         public async Task OnGetAsync()
         {
             if (_context.Jobs != null)
             {
-                Job = await _context.Jobs.ToListAsync();
+                Job = await _context.Jobs
+                .Include(j => j.AssignedEmployee)
+                .Include(j => j.Owner).ToListAsync();
             }
         }
     }

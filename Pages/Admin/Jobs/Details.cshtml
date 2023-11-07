@@ -1,8 +1,9 @@
 ﻿@page
-@model ArgoCMS.Pages.Jobs.DetailsModel
+@model ArgoCMS.Pages.Admin.Jobs.DetailsModel
 
 @{
     ViewData["Title"] = "Details";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
 <h1>Details</h1>
@@ -12,10 +13,16 @@
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Job.OwnerID)
+            @Html.DisplayNameFor(model => model.Job.Owner)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Job.OwnerID)
+            @Html.DisplayFor(model => model.Job.Owner.Id)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Job.AssignedEmployee)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Job.AssignedEmployee.Id)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Job.TeamID)

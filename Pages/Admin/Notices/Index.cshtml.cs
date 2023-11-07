@@ -1,5 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using ArgoCMS.Data;
 using ArgoCMS.Models;
 
 namespace ArgoCMS.Pages.Admin.Notices
@@ -19,7 +25,10 @@ namespace ArgoCMS.Pages.Admin.Notices
         {
             if (_context.Notices != null)
             {
-                Notice = await _context.Notices.ToListAsync();
+                Notice = await _context.Notices
+                .Include(n => n.Owner)
+                .Include(n => n.Project)
+                .Include(n => n.Team).ToListAsync();
             }
         }
     }

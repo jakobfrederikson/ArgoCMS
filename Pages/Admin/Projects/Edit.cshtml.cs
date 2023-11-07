@@ -36,6 +36,7 @@ namespace ArgoCMS.Pages.Admin.Projects
                 return NotFound();
             }
             Project = project;
+           ViewData["OwnerID"] = new SelectList(_context.Employees, "Id", "Id");
             return Page();
         }
 
@@ -71,7 +72,7 @@ namespace ArgoCMS.Pages.Admin.Projects
 
         private bool ProjectExists(int id)
         {
-          return _context.Projects.Any(e => e.ProjectId == id);
+          return (_context.Projects?.Any(e => e.ProjectId == id)).GetValueOrDefault();
         }
     }
 }

@@ -1,0 +1,52 @@
+﻿@page
+@model ArgoCMS.Pages.Admin.TeamProjects.IndexModel
+
+@{
+    ViewData["Title"] = "Team Projects";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<h1>Admin/Team Projects</h1>
+<partial name="_AdminNavPartial" />
+
+<h1>Team Projects</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table table-light">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.TeamProject[0].Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TeamProject[0].Team)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TeamProject[0].Project)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.TeamProject) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Team.TeamName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Project.ProjectName)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

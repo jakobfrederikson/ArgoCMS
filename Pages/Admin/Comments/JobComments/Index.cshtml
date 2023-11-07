@@ -1,0 +1,58 @@
+﻿@page
+@model ArgoCMS.Pages.Admin.Comments.JobComments.IndexModel
+
+@{
+    ViewData["Title"] = "Job Comments";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<h1>Admin/Job Comments</h1>
+<partial name="_AdminNavPartial" />
+
+<h1>Job Comments</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table table-light">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.JobComment[0].Owner)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.JobComment[0].CommentText)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.JobComment[0].CreationDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.JobComment[0].Job)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.JobComment) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Owner.FullName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CommentText)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreationDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Job.JobName)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.CommentId">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.CommentId">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.CommentId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

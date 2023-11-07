@@ -1,64 +1,45 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ArgoCMS.Data;
 using ArgoCMS.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 
 namespace ArgoCMS.Pages.Admin.Jobs
 {
-    public class CreateModel : DependencyInjection_BasePageModel
+    public class CreateModel : PageModel
     {
-        public CreateModel(
-            ApplicationDbContext context,
-            IAuthorizationService authorizationService,
-            UserManager<Employee> userManager)
-            : base(context, authorizationService, userManager)
+        private readonly ArgoCMS.Data.ApplicationDbContext _context;
+
+        public CreateModel(ArgoCMS.Data.ApplicationDbContext context)
         {
+            _context = context;
         }
 
         public IActionResult OnGet()
         {
-            Job = new Job();
-            Job.DueDate = DateTime.Now;
-            Employees = Context.Employees.Select(
-                    e => new SelectListItem { Text = e.FullName, Value = e.Id });
-
-            var currId = UserManager.GetUserId(User);
-            var currUser = Context.Employees.FirstOrDefault(e => e.Id == currId);
-
-            if (currUser == null)
-            {
-                return Forbid($"Could not find a user with the id: {currId}");
-            }
-
+        ViewData["AssignedEmployeeID"] = new SelectList(_context.Employees, "Id", "Id");
+        ViewData["OwnerID"] = new SelectList(_context.Employees, "Id", "Id");
             return Page();
         }
 
         [BindProperty]
-        public Job Job { get; set; }
-
-        public string OwnerID { get; set; }
-        public IEnumerable<SelectListItem> Employees { get; set; }
+        public Job Job { get; set; } = default!;
+        
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-            if (Job.AssignedEmployeeID == null
-             || Job.JobName == null
-             || Job.JobDescription == null)
+          if (!ModelState.IsValid || _context.Jobs == null || Job == null)
             {
                 return Page();
             }
 
-            Job.OwnerID = UserManager.GetUserId(User);
-            Job.DateCreated = DateTime.Now;
-            Job.JobStatus = JobStatus.Unread;
-            Job.TeamID = Context.Employees.FirstOrDefault(
-                e => e.Id == Job.AssignedEmployeeID).TeamID;
-
-            Context.Jobs.Add(Job);
-            await Context.SaveChangesAsync();
+            _context.Jobs.Add(Job);
+            await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");
         }

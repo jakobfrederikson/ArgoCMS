@@ -25,7 +25,9 @@ namespace ArgoCMS.Pages.Admin.Teams
         {
             if (_context.Teams != null)
             {
-                Team = await _context.Teams.ToListAsync();
+                Team = await _context.Teams
+                .Include(t => t.CreatedBy)
+                .Include(t => t.TeamLeader).ToListAsync();
             }
         }
     }

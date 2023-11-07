@@ -1,8 +1,9 @@
 ﻿@page
-@model ArgoCMS.Pages.Jobs.EditModel
+@model ArgoCMS.Pages.Admin.Jobs.EditModel
 
 @{
     ViewData["Title"] = "Edit";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
 <h1>Edit</h1>
@@ -16,17 +17,18 @@
             <input type="hidden" asp-for="Job.JobId" />
             <div class="form-group">
                 <label asp-for="Job.OwnerID" class="control-label"></label>
-                <select asp-for="Job.OwnerID" class="form-control">
-                    <option selected value="@Model.Job.OwnerID">@User.Identity.Name</option>
-                </select>
+                <select asp-for="Job.OwnerID" class="form-control" asp-items="ViewBag.OwnerID"></select>
                 <span asp-validation-for="Job.OwnerID" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Job.AssignedEmployeeID" class="control-label"></label>
-                <select asp-for="Job.AssignedEmployeeID" class="form-control" asp-items="Model.Employees">
-                    <option selected disabled>Please select an Employee</option>
-                </select>
+                <select asp-for="Job.AssignedEmployeeID" class="form-control" asp-items="ViewBag.AssignedEmployeeID"></select>
                 <span asp-validation-for="Job.AssignedEmployeeID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Job.TeamID" class="control-label"></label>
+                <input asp-for="Job.TeamID" class="form-control" />
+                <span asp-validation-for="Job.TeamID" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Job.JobName" class="control-label"></label>
@@ -35,8 +37,13 @@
             </div>
             <div class="form-group">
                 <label asp-for="Job.JobDescription" class="control-label"></label>
-                <input asp-for="Job.JobDescription" class="form-control" />
+                <textarea asp-for="Job.JobDescription" class="form-control"></textarea>
                 <span asp-validation-for="Job.JobDescription" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Job.DateCreated" class="control-label"></label>
+                <input asp-for="Job.DateCreated" class="form-control" />
+                <span asp-validation-for="Job.DateCreated" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Job.DueDate" class="control-label"></label>
@@ -45,16 +52,12 @@
             </div>
             <div class="form-group">
                 <label asp-for="Job.JobStatus" class="control-label"></label>
-                <select asp-for="Job.JobStatus" asp-items="Html.GetEnumSelectList<ArgoCMS.Models.JobStatus>()" class="form-control">
-                    <option selected disabled>Please select a status level</option>
-                </select>
+                <select asp-for="Job.JobStatus" class="form-control"></select>
                 <span asp-validation-for="Job.JobStatus" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Job.PriorityLevel" class="control-label"></label>
-                <select asp-for="Job.PriorityLevel" asp-items="Html.GetEnumSelectList<ArgoCMS.Models.PriorityLevel>()" class="form-control">
-                    <option selected disabled>Please select a priority level</option>
-                </select>
+                <select asp-for="Job.PriorityLevel" class="form-control"></select>
                 <span asp-validation-for="Job.PriorityLevel" class="text-danger"></span>
             </div>
             <div class="form-group">
