@@ -1,25 +1,34 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using ArgoCMS.Models;
+using ArgoCMS.Data;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace ArgoCMS.Pages.Notices
 {
-    public class IndexModel : PageModel
+    public class IndexModel : DependencyInjection_BasePageModel
     {
-        private readonly ArgoCMS.Data.ApplicationDbContext _context;
-
-        public IndexModel(ArgoCMS.Data.ApplicationDbContext context)
-        {
-            _context = context;
+        public IndexModel(
+            ApplicationDbContext context,
+            IAuthorizationService authorizationService,
+            UserManager<Employee> userManager)
+            : base(context, authorizationService, userManager) 
+        { 
         }
 
-        public IList<Notice> Notice { get;set; } = default!;
+        public IList<Notice> Notices { get;set; } = default!;
 
         public async Task OnGetAsync()
         {
-            if (_context.Notices != null)
+            if (Context.Notices != null)
             {
-                Notice = await _context.Notices.ToListAsync();
+                var userId = UserManager.GetUserId(User);
+                Notices = await Context.Notices
+                    .Where(n => n.OwnerID == userId)
+                    .Include(n => n.Team)
+                    .Include(n => n.Project)
+                    .ToListAsync();
             }
         }
     }
