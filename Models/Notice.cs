@@ -41,13 +41,10 @@ namespace ArgoCMS.Models
         public List<NoticeComment> Comments { get; set; } // Navigation property
     }
 
-    [Flags]
     public enum PublicityStatus
     {
-        None = 0,
-        OnlyTeam = 1,
-        OnlyProject = 2,
-        OnlyRole = 4,
-        Everyone = 8
+        Company,
+        Project,
+        Team
     }
 }

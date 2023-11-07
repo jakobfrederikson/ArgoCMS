@@ -745,7 +745,7 @@ namespace ArgoCMS.Data
                     NoticeTitle = "New Software Release",
                     NoticeMessageContent = "The latest version of our software is now available for testing. Please review the release notes and report any issues.",
                     DateCreated = DateTime.Now,
-                    PublicityStatus = PublicityStatus.OnlyTeam
+                    PublicityStatus = PublicityStatus.Team
                 },
                 new Notice
                 {
@@ -754,7 +754,7 @@ namespace ArgoCMS.Data
                     NoticeTitle = "Coding Standards Update",
                     NoticeMessageContent = "We've updated our coding standards document. All developers should familiarize themselves with the changes and apply them in their work.",
                     DateCreated = DateTime.Now,
-                    PublicityStatus = PublicityStatus.OnlyTeam
+                    PublicityStatus = PublicityStatus.Team
                 },
                 new Notice
                 {
@@ -763,7 +763,7 @@ namespace ArgoCMS.Data
                     NoticeTitle = "Development Team Meeting",
                     NoticeMessageContent = "Reminder of the development team meeting scheduled for Friday at 10 AM to discuss project progress and upcoming tasks.",
                     DateCreated = DateTime.Now,
-                    PublicityStatus = PublicityStatus.OnlyTeam
+                    PublicityStatus = PublicityStatus.Team
                 },
                 new Notice
                 {
@@ -772,7 +772,7 @@ namespace ArgoCMS.Data
                     NoticeTitle = "User Interface Redesign Project Kickoff",
                     NoticeMessageContent = "We're excited to announce the kickoff of the UI redesign project. Let's collaborate and bring fresh ideas to the table!",
                     DateCreated = DateTime.Now,
-                    PublicityStatus = PublicityStatus.OnlyTeam
+                    PublicityStatus = PublicityStatus.Team
                 },
                 new Notice
                 {
@@ -781,7 +781,7 @@ namespace ArgoCMS.Data
                     NoticeTitle = "Design Review Meeting",
                     NoticeMessageContent = "There will be a design review meeting on Wednesday at 2 PM to ensure consistency and quality in our design work.",
                     DateCreated = DateTime.Now,
-                    PublicityStatus = PublicityStatus.OnlyTeam
+                    PublicityStatus = PublicityStatus.Team
                 },
                 new Notice
                 {
@@ -790,7 +790,7 @@ namespace ArgoCMS.Data
                     NoticeTitle = "Creative Inspiration Workshop",
                     NoticeMessageContent = "Join us for a creative inspiration workshop next week to explore new design trends and brainstorm innovative ideas.",
                     DateCreated = DateTime.Now,
-                    PublicityStatus = PublicityStatus.OnlyTeam
+                    PublicityStatus = PublicityStatus.Team
                 },
                 new Notice
                 {
@@ -798,7 +798,7 @@ namespace ArgoCMS.Data
                     NoticeTitle = "Employee Recognition Awards",
                     NoticeMessageContent = "It's time to nominate outstanding colleagues for our Employee Recognition Awards. Let's celebrate and appreciate our team members.",
                     DateCreated = DateTime.Now,
-                    PublicityStatus = PublicityStatus.Everyone
+                    PublicityStatus = PublicityStatus.Company
                 },
                 new Notice
                 {
@@ -806,7 +806,7 @@ namespace ArgoCMS.Data
                     NoticeTitle = "Company Quarterly Update",
                     NoticeMessageContent = "Join us for our quarterly company-wide update meeting on [Date] to get insights on our progress and upcoming initiatives.",
                     DateCreated = DateTime.Now,
-                    PublicityStatus = PublicityStatus.Everyone
+                    PublicityStatus = PublicityStatus.Company
                 },
                 new Notice
                 {
@@ -814,7 +814,7 @@ namespace ArgoCMS.Data
                     NoticeTitle = "Upcoming Holiday Office Closure",
                     NoticeMessageContent = "Our offices will be closed on the 25th of December for Christmas. Please plan your work accordingly, and enjoy the holiday!",
                     DateCreated = DateTime.Now,
-                    PublicityStatus = PublicityStatus.Everyone
+                    PublicityStatus = PublicityStatus.Company
                 },
             };
             context.Notices.AddRange(notices);
