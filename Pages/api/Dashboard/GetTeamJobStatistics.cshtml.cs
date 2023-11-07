@@ -3,7 +3,6 @@ using ArgoCMS.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 
 namespace ArgoCMS.Pages.api.Dashboard
 {
@@ -23,7 +22,7 @@ namespace ArgoCMS.Pages.api.Dashboard
 				.ThenInclude(e => e.Jobs)
 				.ToDictionary(
 					et => et.Employee.FullName,
-					et => et.Employee.Jobs.Count(job => job.JobStatus == JobStatus.Completed)
+					et => et.Employee.Jobs.Count(job => job.JobStatus == JobStatus.Completed && job.TeamID == teamId)
 				);
 
 			return new JsonResult(teamJobStatistics);
