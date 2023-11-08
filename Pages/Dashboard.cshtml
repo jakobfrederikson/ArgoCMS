@@ -293,7 +293,10 @@
         Chart.defaults.color = "#F3F5F7";
         $(document).ready(function () {
             const teamSelector = document.getElementById('teamSelector');
-            fetchTeamJobStatistics(teamSelector.value);
+
+            if (teamSelector.value) {
+                fetchTeamJobStatistics(teamSelector.value);
+            }
 
             // Add a change event listener to the teamSelector dropdown
             teamSelector.addEventListener('change', function () {

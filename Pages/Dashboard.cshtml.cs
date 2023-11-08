@@ -119,6 +119,7 @@ namespace ArgoCMS.Pages
         private async Task<List<Team>> GetTeams(Employee currentUser)
         {
             return await Context.Teams
+                .Include(t => t.TeamLeader)
                 .Include(t => t.TeamProjects)
                 .ThenInclude(p => p.Project)
                 .Where(t => t.Members.Any(m => m.Id == currentUser.Id))
