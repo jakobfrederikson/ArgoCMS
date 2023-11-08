@@ -125,9 +125,6 @@ namespace ArgoCMS.Data
 
             // EmployeeTeam
             builder.Entity<EmployeeTeam>()
-                .HasKey(et => et.Id);
-
-            builder.Entity<EmployeeTeam>()
                 .HasKey(et => new {et.EmployeeId, et.TeamId });
 
             builder.Entity<EmployeeTeam>()
@@ -140,8 +137,22 @@ namespace ArgoCMS.Data
                 .WithMany(t => t.EmployeeTeams)
                 .HasForeignKey(et => et.TeamId);
 
-            // Comments
-            builder.Entity<JobComment>()
+            // EmployeeNotificationGroup
+			builder.Entity<EmployeeNotificationGroup>()
+				.HasKey(eng => new { eng.EmployeeId, eng.NotificationGroupId });
+
+			builder.Entity<EmployeeNotificationGroup>()
+		        .HasOne(ent => ent.Employee)
+		        .WithMany(e => e.EmployeeNotificationGroups)
+		        .HasForeignKey(ent => ent.EmployeeId);
+
+			builder.Entity<EmployeeNotificationGroup>()
+				.HasOne(ent => ent.NotificationGroup)
+				.WithMany(ng => ng.EmployeeNotificationGroups)
+				.HasForeignKey(ent => ent.NotificationGroupId);
+
+			// Comments
+			builder.Entity<JobComment>()
             .HasKey(jc => jc.CommentId);
 
             builder.Entity<JobComment>()
@@ -171,7 +182,6 @@ namespace ArgoCMS.Data
 
             // Notification
 
-
             base.OnModelCreating(builder);
 		}
 
@@ -188,5 +198,6 @@ namespace ArgoCMS.Data
         public DbSet<Notification> Notifications { get; set;} = default!;
         public DbSet<NoticeNotification> NoticeNotifications { get; set; } = default!;
         public DbSet<NotificationGroup> NotificationGroups { get; set; } = default!;
+        public DbSet<EmployeeNotificationGroup> EmployeeNotificationGroups { get; set; } = default!;
     }
 }

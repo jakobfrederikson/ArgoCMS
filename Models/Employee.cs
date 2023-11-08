@@ -38,9 +38,17 @@ namespace ArgoCMS.Models
             }
         }
 
+        public string Initials
+        {
+            get
+            {
+                return FirstName[0] + "" + LastName[0];
+            }
+        }
+
         public List<Job> Jobs { get; set; }
         public List<EmployeeProject> EmployeeProjects { get; set; }
         public List<EmployeeTeam> EmployeeTeams { get; set; }
-        public List<NotificationGroup> NotificationGroups { get; set; }
+        public List<EmployeeNotificationGroup> EmployeeNotificationGroups { get; set; }
     }
 }

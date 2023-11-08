@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ArgoCMS.Models.JointEntities;
+using System.ComponentModel.DataAnnotations;
 
 namespace ArgoCMS.Models.Notifications
 {
@@ -6,6 +7,6 @@ namespace ArgoCMS.Models.Notifications
     {
         public int Id { get; set; }
         public string GroupName { get; set; }
-        public List<Employee> Employees { get; set; }
+        public List<EmployeeNotificationGroup> EmployeeNotificationGroups { get; set; }
     }
 }
