@@ -49,10 +49,10 @@
                         </tr>
                         <tr>
                             <td>
-                                <strong>@Html.DisplayNameFor(modelItem => modelItem.Employee.PersonalEmail)</strong>
+                                <strong>@Html.DisplayNameFor(modelItem => modelItem.Employee.Email)</strong>
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => modelItem.Employee.PersonalEmail)
+                                @Html.DisplayFor(modelItem => modelItem.Employee.Email)
                             </td>
                         </tr>
                         <tr>
@@ -74,7 +74,7 @@
             <div class="card-body">
                 <div class="row align-items-center">
                     <div class="col text-center">
-                        <h3>50</h3>
+                        <h3>@Model.NumOfCompletedJobs</h3>
                     </div>
                 </div>
             </div>
@@ -96,14 +96,14 @@
             <div class="card-body">
                 <div class="row align-items-center">
                     <div class="col text-center">
-                        <h3>50</h3>
+                        <h3>@Model.NumOfCompletedProjects</h3>
                     </div>
                 </div>
             </div>
             <div class="card-footer bg-warning bg-gradient text-black">
                 <div class="row align-items-center">
                     <div class="col-9">
-                        <p class="mb-0">Team</p>
+                        <p class="mb-0">Completed Projects</p>
                     </div>
                     <div class="col-3">
                         <img src="~/images/users.svg" />
@@ -120,8 +120,10 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-4 text-center">
-                        <div class="bg-primary bg-gradient rounded-circle">JF</div>
+                    <div class="col-4 text-center d-flex flex-column align-items-center">
+                        <div class="rounded-avatar" id="reportsToAvatar">
+                            @Model.ReportsTo.Initials
+                        </div>
                         <a class="link link-light" asp-area="Identity" asp-page="/Account/Manage/Index" asp-route-id="@Model.ReportsTo.Id">
                             <p class="mb-0">@Html.DisplayFor(modelItem => modelItem.ReportsTo.FullName)</p>
                         </a>
@@ -131,8 +133,10 @@
                         <img src="~/images/arrow-square-right.svg" class="white-svg-filter"/>
                         <p class="mb-0"><small>Reports To</small></p>
                     </div>
-                    <div class="col-4 text-center">
-                        <div class="bg-primary bg-gradient rounded-circle">JF</div>
+                    <div class="col-4 text-center  d-flex flex-column align-items-center">
+                        <div class="rounded-avatar" id="reportsToBossAvatar">
+                            @Model.ReportsToBoss.Initials
+                        </div>
                         <a class="link  link-light" asp-area="Identity" asp-page="/Account/Manage/Index" asp-route-id="@Model.ReportsToBoss.Id">
                             <p class="mb-0">@Html.DisplayFor(modelItem => modelItem.ReportsToBoss.FullName)</p>
                         </a>
@@ -147,4 +151,20 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        let reportsToAvatar = document.getElementById("reportsToAvatar");
+        let reportsToBossAvatar = document.getElementById("reportsToBossAvatar");
+
+        reportsToAvatar.style.backgroundColor = RandomColour();
+        reportsToBossAvatar.style.backgroundColor = RandomColour();
+
+        function RandomColour() {
+            // Generate a random color (you can define an array of colors)
+            const colors = ["#FF5733", "#33FF57", "#5733FF", "#FF33E9"];
+            const randomIndex = Math.floor(Math.random() * colors.length);
+            return colors[randomIndex];
+        }
+
+    </script>
 }

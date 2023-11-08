@@ -70,6 +70,8 @@ namespace ArgoCMS.Areas.Identity.Pages.Account.Manage
         // The supervisor of the supervisor (boss's boss)
         public Employee ReportsToBoss { get; set; }
 
+        public int NumOfCompletedJobs { get; set; }
+        public int NumOfCompletedProjects { get; set; }
         public List<Team> Teams { get; set; }
         public string Role { get; set; }
 
@@ -122,6 +124,9 @@ namespace ArgoCMS.Areas.Identity.Pages.Account.Manage
             if (employeeTeams != null)
                 Teams = employeeTeams.Select(et => et.Team).ToList();
 
+            NumOfCompletedJobs = await GetNumOfCompletedJobs(Employee);
+            NumOfCompletedProjects = await GetNumOfCompletedProjects(Employee);
+
             await LoadAsync(user);
             return Page();
         }
@@ -154,6 +159,26 @@ namespace ArgoCMS.Areas.Identity.Pages.Account.Manage
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";
             return RedirectToPage();
+        }
+
+        private async Task<int> GetNumOfCompletedJobs(Employee currentEmployee)
+        {
+            var completedJobCount = 0;
+            completedJobCount = await Context.Jobs
+                .Where(j => j.AssignedEmployeeID == currentEmployee.Id)
+                .CountAsync(j => j.JobStatus == JobStatus.Completed);
+
+            return completedJobCount;
+        }
+
+        private async Task<int> GetNumOfCompletedProjects(Employee currentEmployee)
+        {
+            var completedProjectCount = 0;
+            completedProjectCount = await Context.EmployeesProjects
+                .Where(ep => ep.EmployeeId ==  currentEmployee.Id)
+                .CountAsync(ep => ep.IsCompleted == true);
+
+            return completedProjectCount;
         }
     }
 }
