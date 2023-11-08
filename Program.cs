@@ -6,6 +6,8 @@ using ArgoCMS.Hubs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Builder;
+using ArgoCMS.Services.Notifications;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +35,8 @@ builder.Services.AddDefaultIdentity<Employee>(
 builder.Services.AddRazorPages();
 
 builder.Services.AddSignalR();
+
+builder.Services.AddHttpContextAccessor();
 
 // Require authorization unless specified.
 builder.Services.AddAuthorization(options =>
@@ -70,6 +74,8 @@ builder.Services.AddScoped<IAuthorizationHandler,
 
 builder.Services.AddSingleton<IAuthorizationHandler,
                     EmployeeAdministratorAuthorizationHandler>();
+
+builder.Services.AddSingleton<INotificationService, NotificationService>();
 
 var app = builder.Build();
 
@@ -109,6 +115,19 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapRazorPages();
+
+app.Map("/api/Notifications", (INotificationService service) =>
+{
+    try
+    {
+        var notifications = service.GetAllUnread();
+        return Results.Ok(notifications);
+    }
+    catch (Exception ex)
+    {
+		return Results.Problem(ex.Message);
+	}
+});
 
 app.MapHub<NotificationHub>("/notificationHub");
 
