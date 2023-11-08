@@ -22,18 +22,19 @@ namespace ArgoCMS.Hubs
         {
             var userName = Context.User.Identity.Name;
             var user = _context.Employees
-                .Include(e => e.NotificationGroups)
+                .Include(e => e.EmployeeNotificationGroups)
+                .ThenInclude(eng => eng.NotificationGroup)
                 .SingleOrDefault(u => u.UserName == userName);
 
             var connectionId = Context.ConnectionId;
 
             if (user != null)
             {
-                if (user.NotificationGroups != null)
+                if (user.EmployeeNotificationGroups != null)
                 {
-                    foreach (var item in user.NotificationGroups)
+                    foreach (var item in user.EmployeeNotificationGroups)
                     {
-                        Groups.AddToGroupAsync(connectionId, item.GroupName);
+                        Groups.AddToGroupAsync(connectionId, item.NotificationGroup.GroupName);
                     }
                 }                
             }               
@@ -45,18 +46,19 @@ namespace ArgoCMS.Hubs
         {
             var userName = Context.User.Identity.Name;
             var user = _context.Employees
-                .Include(e => e.NotificationGroups)
+                .Include(e => e.EmployeeNotificationGroups)
+                .ThenInclude(eng => eng.NotificationGroup)
                 .SingleOrDefault(u => u.UserName == userName);
 
             var connectionId = Context.ConnectionId;
 
             if (user != null)
             {
-                if (user.NotificationGroups != null)
+                if (user.EmployeeNotificationGroups != null)
                 {
-                    foreach (var item in user.NotificationGroups)
+                    foreach (var item in user.EmployeeNotificationGroups)
                     {
-                        Groups.RemoveFromGroupAsync(connectionId, item.GroupName);
+                        Groups.RemoveFromGroupAsync(connectionId, item.NotificationGroup.GroupName);
                     }
                 }                
             }
