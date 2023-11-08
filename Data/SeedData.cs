@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using ArgoCMS.Models.JointEntities;
 using Newtonsoft.Json.Linq;
 using ArgoCMS.Models.Comments;
+using ArgoCMS.Models.Notifications;
 
 namespace ArgoCMS.Data
 {
@@ -70,7 +71,10 @@ namespace ArgoCMS.Data
                     EmploymentDate = DateTime.Now,
                     UserName = UserName,
                     EmailConfirmed = true,
-                    PersonalEmail = firstName + "@gmail.com"
+                    PersonalEmail = firstName + "@gmail.com",
+                    Email = UserName,
+                    PhoneNumber = "123456789",
+                    PhoneNumberConfirmed = true
                 };
                 await userManager.CreateAsync(user, testUserPw);
             }
@@ -888,6 +892,78 @@ namespace ArgoCMS.Data
             };
 
             context.NoticeComments.AddRange(comments);
+            context.SaveChanges();
+
+            var notifications = new Notification[]
+            {
+                new Notification
+                {
+                    Message = "Testing this (job) notification",
+                    URL = "/Jobs/Details",
+                    ObjectId = "1",
+                    UserId = adminID,
+                    IsRead = false,
+                    TimeStamp = DateTime.Now
+                }
+            };
+
+            context.Notifications.AddRange(notifications);
+            context.SaveChanges();
+
+
+            var notiGroups = new NotificationGroup[]
+            {
+                new NotificationGroup
+                {
+                    GroupName = "Dev Team"
+                },
+                new NotificationGroup
+                {
+                    GroupName = "Company"
+                }
+            };
+
+            context.NotificationGroups.AddRange(notiGroups);
+            context.SaveChanges();
+
+            var employeeNotificationGroups = new List<EmployeeNotificationGroup>
+            {
+                new EmployeeNotificationGroup
+                {
+                    EmployeeId = adminID,
+                    NotificationGroupId = notiGroups[0].Id
+                },
+                new EmployeeNotificationGroup
+                {
+					EmployeeId = vanahID,
+					NotificationGroupId = notiGroups[0].Id
+				},
+				new EmployeeNotificationGroup
+				{
+					EmployeeId = empHenryID,
+					NotificationGroupId = notiGroups[0].Id
+				},
+				new EmployeeNotificationGroup
+				{
+					EmployeeId = empLarryID,
+					NotificationGroupId = notiGroups[0].Id
+				},
+			};
+
+            // Add every employee to company notification group
+            foreach(var e in context.Employees)
+            {
+                employeeNotificationGroups.Add
+                    (
+                        new EmployeeNotificationGroup
+                        { 
+                            EmployeeId = e.Id,
+                            NotificationGroupId = notiGroups[1].Id
+                        }
+                    );
+            }
+
+            context.EmployeeNotificationGroups.AddRange(employeeNotificationGroups);
             context.SaveChanges();
         }
     }
