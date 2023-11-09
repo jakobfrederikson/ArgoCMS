@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Builder;
 using ArgoCMS.Services.Notifications;
+using Newtonsoft.Json;
+using ArgoCMS.Services.Jobs;
+using ArgoCMS.Services.Dashboard;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -75,7 +78,10 @@ builder.Services.AddScoped<IAuthorizationHandler,
 builder.Services.AddSingleton<IAuthorizationHandler,
                     EmployeeAdministratorAuthorizationHandler>();
 
-builder.Services.AddSingleton<INotificationService, NotificationService>();
+// Services
+builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<IJobService, JobService>();
+builder.Services.AddScoped<IDashboardService, DashboardService>();
 
 var app = builder.Build();
 
@@ -127,6 +133,45 @@ app.Map("/api/Notifications", (INotificationService service) =>
     {
 		return Results.Problem(ex.Message);
 	}
+});
+
+app.Map("/api/Jobs/GetEmployeesByTeam/{teamId:int}", (int teamId, IJobService service) =>
+{
+    try
+    {
+        var employees = service.GetEmployeesByTeam(teamId);
+        return Results.Ok(employees);
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message);
+    }
+});
+
+app.Map("/api/Dashboard/LoadListOfColours/{numberOfEmployees:int}", (int numberOfEmployees, IDashboardService service) =>
+{
+    try
+    {
+        var employees = service.ListOfColours(numberOfEmployees);
+        return Results.Ok(employees);
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message);
+    }
+});
+
+app.Map("/api/Dashboard/LoadTeamJobStats/{teamId:int}", (int teamId, IDashboardService service) =>
+{
+    try
+    {
+        var employees = service.GetTeamJobStatistics(teamId);
+        return Results.Ok(employees);
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message);
+    }
 });
 
 app.MapHub<NotificationHub>("/notificationHub");
