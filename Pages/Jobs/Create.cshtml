@@ -63,9 +63,9 @@
 
     <script>
         $('#teamSelect').change(function () {
-            var selectedTeamId = $(this).val();
+            var teamId = $(this).val();
 
-            $.getJSON(`../api/Job/GetEmployeesByTeam?teamId=${selectedTeamId}`, function (data) {
+            $.getJSON(`/api/Jobs/GetEmployeesByTeam/${teamId}`, function (data) {
                 $('#employeeSelect').empty();
 
                 $.each(data, function (index, employee) {

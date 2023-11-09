@@ -1,8 +1,5 @@
 ﻿using ArgoCMS.Data;
-using ArgoCMS.Models;
 using ArgoCMS.Models.Notifications;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
@@ -25,13 +22,33 @@ namespace ArgoCMS.Services.Notifications
             var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             var test = scope.ServiceProvider.GetRequiredService<IHttpContextAccessor>();
 
-            var currentEmployee = test.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var userId = test.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            var listOfNotifications = context.Notifications
-                .Where(n => n.UserId == currentEmployee && n.IsRead == false)
+            var userNotifications = context.Notifications
+                .Where(n => n.EmployeeId == userId && n.IsRead == false)
                 .ToList();
 
-            return listOfNotifications;
-        }
+            var userGroups = context.EmployeeNotificationGroups
+                .Where(eng => eng.EmployeeId == userId)
+                .Select(eng => eng.NotificationGroup)
+                .ToList();
+
+            var userGroupsWithNotifications = context.NotificationGroups
+                .Where(ng => userGroups.Contains(ng))
+                .Include(ng => ng.NoticeNotifications)
+                .ToList();
+
+            foreach (var item in userGroupsWithNotifications)
+            {
+                if (item.NoticeNotifications != null)
+                {
+                    userNotifications = userNotifications.Concat(item.NoticeNotifications).ToList();
+                }
+            }
+
+            userNotifications.Reverse();
+
+			return userNotifications;
+		}
     }
 }

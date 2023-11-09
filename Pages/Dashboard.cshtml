@@ -310,8 +310,8 @@
             });
 
             function fetchTeamJobStatistics(teamId) {
-                
-                $.getJSON(`api/Dashboard/GetTeamJobStatistics?teamId=${teamId}`, function (data) {
+
+                $.getJSON(`/api/Dashboard/LoadTeamJobStats/${teamId}`, function (data) {
                     fetchBackgroundColours(Object.keys(data).length, function (colours) {
                         updateChart(data, colours);
                     });
@@ -324,7 +324,7 @@
             function fetchBackgroundColours(count, callback) {
                 var bgColours;
                 console.log("starting background colour fetch");
-                $.getJSON(`api/Dashboard/GetBackgroundColours?count=${count}`, function (colours) {
+                $.getJSON(`/api/Dashboard/LoadListOfColours/${count}`, function (colours) {
                     callback(colours);
                 })
                 .fail(function (error) {

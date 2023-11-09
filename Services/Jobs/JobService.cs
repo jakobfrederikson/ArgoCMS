@@ -1,26 +1,26 @@
-using ArgoCMS.Data;
+﻿using ArgoCMS.Data;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
-namespace ArgoCMS.Pages.api.Job
+namespace ArgoCMS.Services.Jobs
 {
-    public class GetEmployeesByTeamModel : PageModel
+    public class JobService : IJobService
     {
         private readonly ApplicationDbContext _context;
-        public GetEmployeesByTeamModel(ApplicationDbContext context)
+
+        public JobService(ApplicationDbContext context)
         {
-            _context = context;
+            this._context = context;
         }
 
-        public IActionResult OnGet(int teamId)
+        public IQueryable<SelectListItem> GetEmployeesByTeam(int teamId)
         {
             var employees = _context.EmployeeTeams
                 .Include(et => et.Employee)
                 .Include(et => et.Team)
                 .Where(t => t.TeamId == teamId)
-                .Select( et =>
+                .Select(et =>
                     new SelectListItem
                     {
                         Text = et.Employee.FullName,
@@ -28,7 +28,7 @@ namespace ArgoCMS.Pages.api.Job
                     }
                 );
 
-            return new JsonResult(employees);
+            return employees;
         }
     }
 }
