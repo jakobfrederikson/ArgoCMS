@@ -28,11 +28,11 @@ namespace ArgoCMS.Data
 
                 var mohammadID = await EnsureUser(serviceProvider, testUserPw, "mohammad@argo.com",
                                         "Mohammad", "Norouzifard");
-                await EnsureRole(serviceProvider, adminID, Constants.AdministratorsRole);
+                await EnsureRole(serviceProvider, mohammadID, Constants.AdministratorsRole);
 
                 var arthurID = await EnsureUser(serviceProvider, testUserPw, "arthur@argo.com",
                                         "Arthur", "Lewis");
-                await EnsureRole(serviceProvider, adminID, Constants.AdministratorsRole);
+                await EnsureRole(serviceProvider, arthurID, Constants.AdministratorsRole);
 
                 var vanahID = await EnsureUser(serviceProvider, testUserPw, "vanah@argo.com",
                                         "Lavanah", "Holsted");
