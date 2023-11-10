@@ -180,7 +180,17 @@ namespace ArgoCMS.Data
                 .HasForeignKey(nc => nc.OwnerID)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Notification
+            // Notifications
+            builder.Entity<NoticeNotification>()
+                .HasOne(nn => nn.NotificationGroup)
+                .WithMany(ng => ng.NoticeNotifications)
+                .HasForeignKey(nn => nn.NotificationGroupId)
+                .IsRequired(true);
+
+            builder.Entity<NotificationGroup>()
+                .HasMany(ng => ng.NoticeNotifications)
+                .WithOne(nn => nn.NotificationGroup)
+                .IsRequired(false);
 
             base.OnModelCreating(builder);
 		}
@@ -197,6 +207,9 @@ namespace ArgoCMS.Data
         public DbSet<NoticeComment> NoticeComments { get; set; } = default!;
         public DbSet<Notification> Notifications { get; set;} = default!;
         public DbSet<NoticeNotification> NoticeNotifications { get; set; } = default!;
+        public DbSet<JobNotification> JobNotifications { get; set; } = default!;
+        public DbSet<JobCommentNotification> JobCommentsNotifications { get; set; } = default!;
+        public DbSet<NoticeCommentNotification> NoticeCommentNotifications { get; set; } = default!;
         public DbSet<NotificationGroup> NotificationGroups { get; set; } = default!;
         public DbSet<EmployeeNotificationGroup> EmployeeNotificationGroups { get; set; } = default!;
     }

@@ -4,6 +4,7 @@ using ArgoCMS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ArgoCMS.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231108210001_NoticeNotificationUpdated")]
+    partial class NoticeNotificationUpdated
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -605,56 +608,6 @@ namespace ArgoCMS.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("ArgoCMS.Models.Notifications.JobCommentNotification", b =>
-                {
-                    b.HasBaseType("ArgoCMS.Models.Notifications.Notification");
-
-                    b.HasDiscriminator().HasValue("JobCommentNotification");
-                });
-
-            modelBuilder.Entity("ArgoCMS.Models.Notifications.JobNotification", b =>
-                {
-                    b.HasBaseType("ArgoCMS.Models.Notifications.Notification");
-
-                    b.HasDiscriminator().HasValue("JobNotification");
-                });
-
-            modelBuilder.Entity("ArgoCMS.Models.Notifications.NoticeCommentNotification", b =>
-                {
-                    b.HasBaseType("ArgoCMS.Models.Notifications.Notification");
-
-                    b.Property<bool>("CompanyWide")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("NotificationGroupId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ProjectId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TeamId")
-                        .HasColumnType("int");
-
-                    b.HasIndex("NotificationGroupId");
-
-                    b.ToTable("Notifications", t =>
-                        {
-                            t.Property("CompanyWide")
-                                .HasColumnName("NoticeCommentNotification_CompanyWide");
-
-                            t.Property("NotificationGroupId")
-                                .HasColumnName("NoticeCommentNotification_NotificationGroupId");
-
-                            t.Property("ProjectId")
-                                .HasColumnName("NoticeCommentNotification_ProjectId");
-
-                            t.Property("TeamId")
-                                .HasColumnName("NoticeCommentNotification_TeamId");
-                        });
-
-                    b.HasDiscriminator().HasValue("NoticeCommentNotification");
-                });
-
             modelBuilder.Entity("ArgoCMS.Models.Notifications.NoticeNotification", b =>
                 {
                     b.HasBaseType("ArgoCMS.Models.Notifications.Notification");
@@ -958,17 +911,6 @@ namespace ArgoCMS.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("ArgoCMS.Models.Notifications.NoticeCommentNotification", b =>
-                {
-                    b.HasOne("ArgoCMS.Models.Notifications.NotificationGroup", "NotificationGroup")
-                        .WithMany()
-                        .HasForeignKey("NotificationGroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("NotificationGroup");
                 });
 
             modelBuilder.Entity("ArgoCMS.Models.Notifications.NoticeNotification", b =>
