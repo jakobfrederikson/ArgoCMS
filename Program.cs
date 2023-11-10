@@ -135,6 +135,19 @@ app.Map("/api/Notifications", (INotificationService service) =>
 	}
 });
 
+app.Map("/api/Notifications/DeleteNotification/{objectId:int}", (int objectId, INotificationService service) =>
+{
+    try
+    {
+        service.DeleteNotification(objectId);
+        return Results.Ok($"Deleted notification: {objectId}");
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message);
+    }
+});
+
 app.Map("/api/Jobs/GetEmployeesByTeam/{teamId:int}", (int teamId, IJobService service) =>
 {
     try
