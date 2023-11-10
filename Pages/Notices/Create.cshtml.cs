@@ -55,47 +55,51 @@ namespace ArgoCMS.Pages.Notices
             Context.Notices.Add(Notice);
             await Context.SaveChangesAsync();
 
+            var notificationGroup = DetermineNotificationGroup(Notice);
             var notification = new NoticeNotification();
-            notification.Message = $"You have a new notice: {Notice.NoticeTitle}";
-            notification.URL = "/Notices/NoticeDetails";
-            notification.ObjectId = Notice.NoticeId.ToString();
-            notification.CompanyWide = Notice.PublicityStatus == PublicityStatus.Company;            
+            notification.SetNoticeNotification(Notice, notificationGroup.Id);
 
             Context.NoticeNotifications.Add(notification);
-
-            string groupName = DetermineGroupNameForNotification(notification);
-            await HubContext.Clients.Group(groupName).SendAsync("ReceiveNoticeNotification", 
-                JsonConvert.SerializeObject(notification));
+            JsonSerializerSettings jss = new JsonSerializerSettings();
+            jss.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            await HubContext.Clients.Group(notificationGroup.GroupName).SendAsync("ReceiveNoticeNotification", 
+                JsonConvert.SerializeObject(notification, jss));
             
             await Context.SaveChangesAsync();
 
             return RedirectToPage("./Index");
         }
 
-        private string DetermineGroupNameForNotification(
-            NoticeNotification noticeNotification)
+        private NotificationGroup DetermineNotificationGroup(Notice notice)
         {
-            if (noticeNotification.CompanyWide) return "Company";
-
-            if (Notice.TeamId != null)
+            if (notice.PublicityStatus == PublicityStatus.Company)
+                return Context.NotificationGroups.FirstOrDefault(ng => ng.GroupName == "Company");
+            else if (notice.PublicityStatus == PublicityStatus.Project)
             {
-                string teamName = Context.Teams
-                    .Find(Notice.TeamId)
-                    .TeamName;
+                var projectName = Context.Projects
+                    .Where(p => p.ProjectId == notice.ProjectId)
+                    .Select(p => p.ProjectName)
+                    .FirstOrDefault();
 
-                return teamName;
+                if (!string.IsNullOrEmpty(projectName))
+                {
+                    return Context.NotificationGroups.FirstOrDefault(ng => ng.GroupName == projectName);
+                }
+            }
+            else if (notice.PublicityStatus == PublicityStatus.Team)
+            {
+                var teamName = Context.Teams
+                    .Where(t => t.TeamId == notice.TeamId)
+                    .Select(t => t.TeamName)
+                    .FirstOrDefault();
+
+                if (!string.IsNullOrEmpty(teamName))
+                {
+                    return Context.NotificationGroups.FirstOrDefault(ng => ng.GroupName == teamName);
+                }                
             }
 
-            if (Notice.ProjectId != null)
-            {
-                string projectName = Context.Projects
-                    .Find(Notice.ProjectId)
-                    .ProjectName;
-
-                return projectName;
-            }
-
-            return "";
+            return null;                
         }
     }
 }

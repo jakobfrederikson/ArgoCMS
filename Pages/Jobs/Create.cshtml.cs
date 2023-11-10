@@ -68,12 +68,13 @@ namespace ArgoCMS.Pages.Jobs
             Context.Jobs.Add(Job);
             await Context.SaveChangesAsync();
 
-            var notification = new JobNotification(Job);
+            var notification = new JobNotification();
+            notification.SetJobNotification(Job);
 
             Context.Notifications.Add(notification);
             await Context.SaveChangesAsync();
 
-            await HubContext.Clients.User(notification.UserId)
+            await HubContext.Clients.User(notification.EmployeeId)
                 .SendAsync("ReceiveJobNotification", JsonConvert.SerializeObject(notification));
 
             return RedirectToPage("./Index");

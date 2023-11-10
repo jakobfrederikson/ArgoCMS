@@ -44,11 +44,14 @@ namespace ArgoCMS.Pages.Notices
                 return NotFound();
             }
             var notice = await _context.Notices.FindAsync(id);
+            var noticeNotification = await _context.NoticeNotifications
+                .FirstOrDefaultAsync(nn => nn.ObjectId == id.ToString());
 
-            if (notice != null)
+            if (notice != null && noticeNotification != null)
             {
                 Notice = notice;
                 _context.Notices.Remove(Notice);
+                _context.NoticeNotifications.Remove(noticeNotification);
                 await _context.SaveChangesAsync();
             }
 

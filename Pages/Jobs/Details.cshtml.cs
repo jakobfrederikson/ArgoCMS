@@ -6,16 +6,21 @@ using ArgoCMS.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using ArgoCMS.Models.Comments;
+using Microsoft.AspNetCore.SignalR;
+using ArgoCMS.Hubs;
+using Newtonsoft.Json;
+using ArgoCMS.Models.Notifications;
 
 namespace ArgoCMS.Pages.Jobs
 {
-    public class DetailsModel : DependencyInjection_BasePageModel
+    public class DetailsModel : DependencyInjection_Hub_BasePageModel
     {
         public DetailsModel(
             ApplicationDbContext context,
             IAuthorizationService authorizationService,
-            UserManager<Employee> userManager)
-            : base (context, authorizationService, userManager)
+            UserManager<Employee> userManager,
+            IHubContext<NotificationHub> hubContext)
+            : base (context, authorizationService, userManager, hubContext)
         {
         }
 
@@ -47,16 +52,32 @@ namespace ArgoCMS.Pages.Jobs
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(int? id)
         {
             if (JobComment.CommentText == null)
             {
                 return Page();
             }
 
+            var job = Context.Jobs.FirstOrDefault(j => j.JobId == id);
+
+            if (job == null)
+            {
+                return NotFound();
+            }
+
             JobComment.CreationDate = DateTime.Now;
             JobComment.OwnerID = UserManager.GetUserId(User);
+            JobComment.Job = job;
 
+            string receiverId = JobComment.OwnerID == job.OwnerID
+                ? job.AssignedEmployeeID
+                : job.OwnerID;
+
+            var notification = new JobCommentNotification();
+            notification.SetJobCommentNotification(JobComment, receiverId);
+
+            Context.JobCommentsNotifications.Add(notification);
             Context.JobComments.Add(JobComment);
 
             try
@@ -69,9 +90,12 @@ namespace ArgoCMS.Pages.Jobs
                 return Page();
             }
 
+            await HubContext.Clients.User(receiverId)
+                .SendAsync("ReceiveJobNotification", JsonConvert.SerializeObject(notification));
+
             JobComment.CommentText = string.Empty;
 
-            return RedirectToPage("Details", new { id = JobComment.ParentId });
+            return RedirectToPage("Index");
         }
     }
 }
