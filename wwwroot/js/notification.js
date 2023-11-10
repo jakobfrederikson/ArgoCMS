@@ -22,29 +22,7 @@ connection.on("ReceiveJobNotification", (notification) => {
         var li = document.createElement("li");
         var a = document.createElement("a");
 
-        a.href = notification.URL + "?id=" + notification.ObjectId;
-        a.innerHTML = notification.Message;
-
-        li.appendChild(a);
-
-        notificationList.appendChild(li);
-
-        const currentCount = parseInt(notificationBadge.innerHTML);
-        notificationBadge.innerHTML = (currentCount + 1).toString();
-        notificationBadge.style.display = "inline";
-    } else {
-        console.log("Notification could not send.");
-    }
-});
-
-connection.on("ReceiveNoticeNotification", (notification) => {
-    console.log("notification: " + notification);
-    notification = JSON.parse(notification);
-    if (notification.URL && notification.ObjectId) {
-        console.log("Sending notification");
-        var li = document.createElement("li");
         li.className = "dropdown-item";
-        var a = document.createElement("a");
 
         a.href = notification.URL + "?id=" + notification.ObjectId;
         a.innerHTML = notification.Message;
@@ -55,7 +33,6 @@ connection.on("ReceiveNoticeNotification", (notification) => {
 
         const currentCount = parseInt(notificationBadge.innerHTML);
         notificationBadge.innerHTML = (currentCount + 1).toString();
-        notificationBadge.style.display = "inline";
     } else {
         console.log("Notification could not send.");
     }
