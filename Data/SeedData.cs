@@ -26,6 +26,14 @@ namespace ArgoCMS.Data
                                         "Jakob", "Frederikson");
                 await EnsureRole(serviceProvider, adminID, Constants.AdministratorsRole);
 
+                var mohammadID = await EnsureUser(serviceProvider, testUserPw, "mohammad@argo.com",
+                                        "Mohammad", "Norouzifard");
+                await EnsureRole(serviceProvider, adminID, Constants.AdministratorsRole);
+
+                var arthurID = await EnsureUser(serviceProvider, testUserPw, "arthur@argo.com",
+                                        "Arthur", "Lewis");
+                await EnsureRole(serviceProvider, adminID, Constants.AdministratorsRole);
+
                 var vanahID = await EnsureUser(serviceProvider, testUserPw, "vanah@argo.com",
                                         "Lavanah", "Holsted");
                 await EnsureRole(serviceProvider, vanahID, Constants.AdministratorsRole);
@@ -51,7 +59,8 @@ namespace ArgoCMS.Data
                 await EnsureRole(serviceProvider, empLarryID, Constants.EmployeesRole);
 
                 SeedDB(serviceProvider, context, adminID, vanahID, 
-                    managerID, empGeorgeID, empJerryID, empHenryID, empLarryID);
+                    managerID, empGeorgeID, empJerryID, empHenryID, empLarryID,
+                    mohammadID, arthurID);
             }
         }
 
@@ -124,7 +133,7 @@ namespace ArgoCMS.Data
 
         public static async void SeedDB(IServiceProvider serviceProvider, ApplicationDbContext context,
             string adminID, string vanahID, string managerID, string empGeorgeID, string empJerryID,
-            string empHenryID, string empLarryID)
+            string empHenryID, string empLarryID, string mohammadID, string arthurID)
         {
             if (context.Jobs.Any())
             {
@@ -138,6 +147,19 @@ namespace ArgoCMS.Data
             Employee jerry = context.Employees.FirstOrDefault(e => e.Id == empJerryID);
             Employee henry = context.Employees.FirstOrDefault(e => e.Id == empHenryID);
             Employee larry = context.Employees.FirstOrDefault(e => e.Id == empLarryID);
+            Employee mohammad = context.Employees.FirstOrDefault(e => e.Id == mohammadID);
+            Employee arthur = context.Employees.FirstOrDefault(e => e.Id == arthurID);
+
+            // update ReportTo IDs
+            jakob.ReportsToId = vanahID;
+            vanah.ReportsToId = adminID;
+            nathan.ReportsToId = vanahID;
+            george.ReportsToId = adminID;
+            jerry.ReportsToId = adminID;
+            henry.ReportsToId = adminID;
+            larry.ReportsToId = vanahID;
+            mohammad.ReportsToId = arthurID;
+            arthur.ReportsToId = mohammadID;
 
             Team devTeam = new Team
             {
@@ -157,10 +179,20 @@ namespace ArgoCMS.Data
                 DateCreated = DateTime.Now
             };
 
+            Team YoobeeTeam = new Team
+            {
+                CreatedBy = mohammad,
+                TeamLeader = mohammad,
+                TeamName = "Yoobee Team",
+                TeamDescription = "For my tutors that have helped me on this project.",
+                DateCreated = DateTime.Now
+            };
+
             devTeam.Members = new List<Employee> { jakob, vanah, henry, larry };
             pdTeam.Members = new List<Employee> { jakob, nathan, george, jerry };
+            YoobeeTeam.Members = new List<Employee> { mohammad, arthur, jakob };
 
-            context.Teams.AddRange(new Team[] { devTeam, pdTeam });
+            context.Teams.AddRange(new Team[] { devTeam, pdTeam, YoobeeTeam });
             context.SaveChanges();
             
             var ets = new EmployeeTeam[]
@@ -204,20 +236,26 @@ namespace ArgoCMS.Data
                 {
                     Employee = jakob,
                     Team = pdTeam
+                },
+                new EmployeeTeam
+                {
+                    Employee = mohammad,
+                    Team = YoobeeTeam
+                },
+                new EmployeeTeam
+                {
+                    Employee = arthur,
+                    Team = YoobeeTeam
+                },
+                new EmployeeTeam
+                {
+                    Employee = jakob,
+                    Team = YoobeeTeam
                 }
         };
 
             context.EmployeeTeams.AddRange(ets);
             context.SaveChanges(); 
-
-            // update ReportTo IDs
-            jakob.ReportsToId = vanahID;
-            vanah.ReportsToId = adminID;
-            nathan.ReportsToId = vanahID;
-            george.ReportsToId = adminID;
-            jerry.ReportsToId = adminID;
-            henry.ReportsToId = adminID;
-            larry.ReportsToId = vanahID;
 
             Project paySys = new Project
             {
@@ -665,6 +703,42 @@ namespace ArgoCMS.Data
                     DueDate = DateTime.Now.AddDays(-7),
                     JobStatus = JobStatus.Completed,
                     PriorityLevel = PriorityLevel.Normal
+                },
+                new Job
+                {
+                    OwnerID = mohammadID,
+                    AssignedEmployeeID = adminID,
+                    TeamID = YoobeeTeam.TeamId,
+                    JobName = "Finish your Capstone Project",
+                    JobDescription = "What are you doing? Hurry up!",
+                    DateCreated = DateTime.Now,
+                    DueDate = new DateTime(2023, 11, 24),
+                    JobStatus = JobStatus.Working,
+                    PriorityLevel = PriorityLevel.Critical
+                },
+                new Job
+                {
+                    OwnerID = arthurID,
+                    AssignedEmployeeID = mohammadID,
+                    TeamID = YoobeeTeam.TeamId,
+                    JobName = "Take a break",
+                    JobDescription = "You've been working hard, you should take a holiday.",
+                    DateCreated = DateTime.Now,
+                    DueDate = new DateTime(2023, 11, 24),
+                    JobStatus = JobStatus.Unread,
+                    PriorityLevel = PriorityLevel.Medium
+                },
+                new Job
+                {
+                    OwnerID = mohammadID,
+                    AssignedEmployeeID = arthurID,
+                    TeamID = YoobeeTeam.TeamId,
+                    JobName = "Take a break",
+                    JobDescription = "Hey, you should also take a break!",
+                    DateCreated = DateTime.Now,
+                    DueDate = new DateTime(2023, 11, 24),
+                    JobStatus = JobStatus.Unread,
+                    PriorityLevel = PriorityLevel.Medium
                 }
             };
             context.Jobs.AddRange(jobs);
@@ -894,73 +968,127 @@ namespace ArgoCMS.Data
             context.NoticeComments.AddRange(comments);
             context.SaveChanges();
 
-            var notifications = new Notification[]
-            {
-                new Notification
-                {
-                    Message = "Testing this (job) notification",
-                    URL = "/Jobs/Details",
-                    ObjectId = "1",
-                    UserId = adminID,
-                    IsRead = false,
-                    TimeStamp = DateTime.Now
-                }
-            };
+            CreateNotificationGroups(context);
+            CreateEmployeeNotificationGroups(context);
+
+            var notifications = new List<Notification>();
+            var jn = new JobNotification();
+            jn.SetJobNotification(jobs[2]);
+            var nn = new NoticeNotification();
+            var companyNG = context.NotificationGroups
+                .FirstOrDefault(ng => ng.GroupName == "Company");
+            nn.SetNoticeNotification(notices[6], companyNG.Id);
+            notifications.Add(jn);
+            notifications.Add(nn);
 
             context.Notifications.AddRange(notifications);
             context.SaveChanges();
+        }
 
+        private static void CreateNotificationGroups(ApplicationDbContext context)
+        {
+            var projects = context.Projects.ToList();
+            var teams = context.Teams.ToList();
+            var notificationGroups = new List<NotificationGroup>();
 
-            var notiGroups = new NotificationGroup[]
+            foreach (var  project in projects)
             {
-                new NotificationGroup
+                var notificationGroup = new NotificationGroup
                 {
-                    GroupName = "Dev Team"
-                },
-                new NotificationGroup
-                {
-                    GroupName = "Company"
-                }
-            };
+                    GroupName = project.ProjectName
+                };
 
-            context.NotificationGroups.AddRange(notiGroups);
+                notificationGroups.Add(notificationGroup);
+            }
+
+            foreach (var team in teams)
+            {
+                var notificationGroup = new NotificationGroup
+                {
+                    GroupName = team.TeamName
+                };
+
+                notificationGroups.Add(notificationGroup);
+            }
+
+            notificationGroups.Add(new NotificationGroup { GroupName = "Company" });
+
+            context.NotificationGroups.AddRange(notificationGroups); 
             context.SaveChanges();
+        }
 
-            var employeeNotificationGroups = new List<EmployeeNotificationGroup>
-            {
-                new EmployeeNotificationGroup
-                {
-                    EmployeeId = adminID,
-                    NotificationGroupId = notiGroups[0].Id
-                },
-                new EmployeeNotificationGroup
-                {
-					EmployeeId = vanahID,
-					NotificationGroupId = notiGroups[0].Id
-				},
-				new EmployeeNotificationGroup
-				{
-					EmployeeId = empHenryID,
-					NotificationGroupId = notiGroups[0].Id
-				},
-				new EmployeeNotificationGroup
-				{
-					EmployeeId = empLarryID,
-					NotificationGroupId = notiGroups[0].Id
-				},
-			};
+        private static void CreateEmployeeNotificationGroups(ApplicationDbContext context)
+        {
+            var employees = context.Employees.ToList();
 
-            // Add every employee to company notification group
-            foreach(var e in context.Employees)
+            List<NotificationGroup> notificationGroups = new List<NotificationGroup>();
+            List<EmployeeNotificationGroup> employeeNotificationGroups = new List<EmployeeNotificationGroup>();
+
+            // Add every employee to Company notification group
+            var companyNG = context.NotificationGroups
+                .FirstOrDefault(ng => ng.GroupName == "Company");
+            if (companyNG != null)
             {
-                employeeNotificationGroups.Add
-                    (
-                        new EmployeeNotificationGroup
-                        { 
-                            EmployeeId = e.Id,
-                            NotificationGroupId = notiGroups[1].Id
-                        }
-                    );
+                var companyNgId = companyNG.Id;
+
+                foreach (var employee in employees)
+                {
+                    var notificationGroup = new EmployeeNotificationGroup
+                    {
+                        EmployeeId = employee.Id,
+                        NotificationGroupId = companyNgId
+                    };
+
+                    if (!context.EmployeeNotificationGroups
+                    .Any(eng => eng.EmployeeId == notificationGroup.EmployeeId && eng.NotificationGroupId == notificationGroup.NotificationGroupId))
+                    {
+                        employeeNotificationGroups.Add(notificationGroup);
+                    }
+                }                
+            }
+
+            // Add every employee to the notification groups for their teams
+            var employeeTeams = context.EmployeeTeams
+                .Include(et => et.Team)
+                .Include(et => et.Employee)
+                .ToList();
+
+            foreach (var et in employeeTeams)
+            {
+                var notificationGroup = context.NotificationGroups.FirstOrDefault(ng => ng.GroupName == et.Team.TeamName);
+
+                if (notificationGroup != null)
+                {
+                    var employeeNotificationGroup = new EmployeeNotificationGroup
+                    {
+                        EmployeeId = et.EmployeeId,
+                        NotificationGroupId = notificationGroup.Id
+                    };
+
+                    employeeNotificationGroups.Add(employeeNotificationGroup);
+                }
+            }
+
+            // Add every employee to the notification group for their projects
+            var employeeProjects = context.EmployeesProjects
+                .Include(ep => ep.Project)
+                .Include(ep => ep.Employee)
+                .ToList();
+
+            foreach (var ep in employeeProjects)
+            {
+                var notificationGroup = context.NotificationGroups.FirstOrDefault(ng => ng.GroupName == ep.Project.ProjectName);
+
+                if (notificationGroup != null)
+                {
+                    var employeeNotificationGroup = new EmployeeNotificationGroup
+                    {
+                        EmployeeId = ep.EmployeeId,
+                        NotificationGroupId = notificationGroup.Id
+                    };
+
+                    employeeNotificationGroups.Add(employeeNotificationGroup);
+                }
             }
 
             context.EmployeeNotificationGroups.AddRange(employeeNotificationGroups);
