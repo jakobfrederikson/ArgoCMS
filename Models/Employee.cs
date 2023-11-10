@@ -49,6 +49,7 @@ namespace ArgoCMS.Models
         public List<Job> Jobs { get; set; }
         public List<EmployeeProject> EmployeeProjects { get; set; }
         public List<EmployeeTeam> EmployeeTeams { get; set; }
+        public List<Notification> Notifications { get; set; }
         public List<EmployeeNotificationGroup> EmployeeNotificationGroups { get; set; }
     }
 }
