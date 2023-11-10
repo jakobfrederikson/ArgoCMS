@@ -7,5 +7,7 @@ namespace ArgoCMS.Services.Notifications
 	public interface INotificationService
 	{
 		List<Notification> GetAllUnread();
-	}
+		void DeleteNotification(int objectId);
+
+    }
 }

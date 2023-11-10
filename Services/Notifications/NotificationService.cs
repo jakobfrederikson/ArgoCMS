@@ -17,7 +17,6 @@ namespace ArgoCMS.Services.Notifications
 
         public List<Notification> GetAllUnread()
         {
-
             using var scope = _scopeFactory.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             var test = scope.ServiceProvider.GetRequiredService<IHttpContextAccessor>();
@@ -50,5 +49,20 @@ namespace ArgoCMS.Services.Notifications
 
 			return userNotifications;
 		}
+
+        public void DeleteNotification(int notificationId)
+        {
+            using var scope = _scopeFactory.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+            var notification = context.Notifications
+                .FirstOrDefault(n => n.NotificationId == notificationId);
+
+            if (notification != null)
+            {
+                context.Notifications.Remove(notification);
+                context.SaveChanges();
+            }
+        }
     }
 }
