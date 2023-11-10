@@ -2,12 +2,12 @@
 {
     public class JobNotification : Notification
     {
-        public JobNotification(Job job)
+        public void SetJobNotification(Job job)
         {
             Message = $"New job assigned: {job.JobName}";
             URL = "/Jobs/Details";
             ObjectId = job.JobId.ToString();
-            UserId = job.AssignedEmployeeID;
+            EmployeeId = job.AssignedEmployeeID;
         }
     }
 }

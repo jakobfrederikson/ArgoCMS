@@ -4,12 +4,12 @@ namespace ArgoCMS.Models.Notifications
 {
     public class JobCommentNotification : Notification
     {
-        public JobCommentNotification(JobComment jobComment)
+        public void SetJobCommentNotification(JobComment jobComment, string receiverId)
         {
             Message = $"New comment on job: {jobComment.Job.JobName}";
             URL = "/Jobs/Details";
             ObjectId = jobComment.Job.JobId.ToString();
-            UserId = jobComment.Job.AssignedEmployeeID;
+            EmployeeId = receiverId;
         }
     }
 }
