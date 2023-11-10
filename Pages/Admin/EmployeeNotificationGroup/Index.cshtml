@@ -1,0 +1,52 @@
+﻿@page
+@model ArgoCMS.Pages.Admin.EmployeeNotificationGroup.IndexModel
+
+@{
+    ViewData["Title"] = "Employee Notification Groups";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<h1>Admin/Employee Notification Groups</h1>
+<partial name="_AdminNavPartial" />
+
+<h1>Employee Notification Groups</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table table-light">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.EmployeeNotificationGroup[0].Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EmployeeNotificationGroup[0].Employee)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EmployeeNotificationGroup[0].NotificationGroup)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.EmployeeNotificationGroup) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Employee.FullName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NotificationGroup.Id)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
