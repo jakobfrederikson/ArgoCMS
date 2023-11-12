@@ -6,9 +6,7 @@ using ArgoCMS.Hubs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Builder;
 using ArgoCMS.Services.Notifications;
-using Newtonsoft.Json;
 using ArgoCMS.Services.Jobs;
 using ArgoCMS.Services.Dashboard;
 
