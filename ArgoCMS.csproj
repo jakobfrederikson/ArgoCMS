@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <Folder Include="Pages\Admin\Employees\" />
+    <Folder Include="wwwroot\font\" />
   </ItemGroup>
 
 </Project>
