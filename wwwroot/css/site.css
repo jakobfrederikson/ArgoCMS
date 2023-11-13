@@ -1,3 +1,8 @@
+@font-face {
+    font-family: 'Poppins-Bold';
+    src: url('../font/Poppins-Bold.ttf') format('truetype');
+}
+
 html {
   font-size: 14px;
 }
@@ -21,11 +26,16 @@ body {
     margin-bottom: 60px;
     background-color: #101322;
     color: #F3F5F7;
+    font-family: Arial, Verdana, sans-serif;
 }
 @media (min-width: 991.98px) {
     main {
         padding-left: 240px;
     }
+}
+
+.font-bold {
+    font-family: Poppins-Bold;
 }
 
 .white-svg-filter {
