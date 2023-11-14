@@ -47,7 +47,7 @@ body {
 }
 
 .bg-team_dashboard_blue {
-    background: #3B4158;
+    background: #3A4158;
 }
 
 .text-snow-white {
@@ -69,6 +69,14 @@ body {
 
 .dashboard-card-link:hover {
     color: #d4d4d4;
+}
+
+.dashboard-quick-link {
+    text-decoration: none;
+}
+
+.db-ql:hover {
+    background: #3A4158;
 }
 
 .notice-block {
