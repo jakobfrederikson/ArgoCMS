@@ -1,6 +1,5 @@
 ﻿using ArgoCMS.Models.JointEntities;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
 
 namespace ArgoCMS.Models
 {
@@ -27,6 +26,7 @@ namespace ArgoCMS.Models
         [DataType(DataType.Date)]
         public DateTime DateCreated { get; set; }
 
+        public List<Job> Jobs { get; set; }
         public List<Employee> Members { get; set; }
         public List<EmployeeTeam> EmployeeTeams { get; set; } // Collection of team members
         public List<TeamProject> TeamProjects { get; set; }

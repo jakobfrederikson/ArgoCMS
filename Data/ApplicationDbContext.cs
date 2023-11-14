@@ -38,6 +38,18 @@ namespace ArgoCMS.Data
                 .WithOne(jc => jc.Job)
                 .HasForeignKey(jc => jc.ParentId);
 
+            builder.Entity<Job>()
+                .HasOne(j => j.Team)
+                .WithMany(t => t.Jobs)
+                .HasForeignKey(j => j.TeamID)
+                .IsRequired(false);
+
+            builder.Entity<Job>()
+                .HasOne(j => j.Project)
+                .WithMany(p => p.Jobs)
+                .HasForeignKey(j => j.ProjectID)
+                .IsRequired(false);
+
             // Employees
             builder.Entity<Employee>()
                 .HasMany(e => e.Jobs)
@@ -57,12 +69,22 @@ namespace ArgoCMS.Data
                 .HasForeignKey(t => t.TeamLeaderId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            builder.Entity<Team>()
+                .HasMany(t => t.Jobs)
+                .WithOne(j => j.Team)
+                .HasForeignKey(j => j.TeamID);
+
             // Projects
             builder.Entity<Project>()
                 .HasOne(p => p.Owner)
                 .WithMany()
                 .HasForeignKey(p => p.OwnerID)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Project>()
+                .HasMany(p => p.Jobs)
+                .WithOne(j => j.Project)
+                .HasForeignKey(j => j.ProjectID);
 
             // Notices
             builder.Entity<Notice>()

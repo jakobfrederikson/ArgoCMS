@@ -62,7 +62,7 @@ namespace ArgoCMS.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     OwnerID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EmployeeID = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    TeamID = table.Column<int>(type: "int", nullable: false),
+                    TeamID = table.Column<int>(type: "int", nullable: true),
                     JobName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     JobDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using ArgoCMS.Models.Comments;
+using ArgoCMS.Validation;
 
 namespace ArgoCMS.Models
 {
@@ -20,9 +21,15 @@ namespace ArgoCMS.Models
         public string AssignedEmployeeID { get; set; }
         public Employee AssignedEmployee { get; set; }
 
-        [Required]
+        [TeamOrProjectRequired]
         [Display(Name = "Team")]
-        public int TeamID { get; set; }
+        public int? TeamID { get; set; }
+        public Team Team { get; set; }
+
+        [TeamOrProjectRequired]
+        [Display(Name = "Project")]
+        public int? ProjectID { get; set; }
+        public Project Project { get; set; }
 
         [Required]
         [Display(Name = "Name")]

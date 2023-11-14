@@ -34,9 +34,10 @@ namespace ArgoCMS.Models
         [Display(Name = "Project status")]
         public ProjectStatus ProjectStatus { get; set; }
 
+        public List<Job> Jobs { get; set; }
         public List<Employee> Members { get; set; }
-        public ICollection<EmployeeProject> EmployeeProjects { get; set; }
-        public ICollection<TeamProject> TeamProjects { get; set; }
+        public List<EmployeeProject> EmployeeProjects { get; set; }
+        public List<TeamProject> TeamProjects { get; set; }
     }
 
     public enum ProjectStatus
