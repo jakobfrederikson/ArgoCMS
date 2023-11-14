@@ -20,7 +20,7 @@ namespace ArgoCMS.Pages.Admin.Jobs
         }
 
         [BindProperty]
-      public Job Job { get; set; } = default!;
+        public Job Job { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
