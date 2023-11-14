@@ -66,7 +66,7 @@ namespace ArgoCMS.Pages.Teams.TeamHome
 
 			var jobsList = await Context.Jobs
 		        .Include(j => j.AssignedEmployee) // Eager load the related Employee
-		        .Where(j => j.TeamID == Team.TeamId)
+		        .Where(j => j.TeamID != null && j.TeamID == Team.TeamId)
 		        .ToListAsync();
 
 			var result = new Dictionary<Job, string>();

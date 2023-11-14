@@ -62,9 +62,9 @@ namespace ArgoCMS.Pages.Jobs
                     assignedToIdToFullName[job.AssignedEmployeeID] = employees[job.AssignedEmployeeID];
                 }
 
-                if (teams.ContainsKey(job.TeamID))
+                if (job.TeamID != null && teams.ContainsKey(job.TeamID.Value))
                 {
-                    teamsToFullName[job.TeamID] = teams[job.TeamID];
+                    teamsToFullName[job.TeamID.Value] = teams[job.TeamID.Value];
                 }
             }
 

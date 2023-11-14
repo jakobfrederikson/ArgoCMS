@@ -37,6 +37,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Jobs.Keys.FirstOrDefault().TeamID)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Jobs.Keys.FirstOrDefault().ProjectID)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -72,9 +75,20 @@
                 </a>
             </td>
             <td>
-                <a asp-page="/Teams/Index" asp-route-id="@item.Key.TeamID">
-                    @Model.TeamsToFullName[item.Key.TeamID]
-                </a>
+                @if (item.Key.TeamID != null)
+                {
+                    <a asp-page="/Teams/TeamHome/Index" asp-route-teamId="@item.Key.TeamID">
+                        @Model.TeamsToFullName[item.Key.TeamID.Value]
+                    </a>
+                }                
+            </td>
+            <td>
+                @if (item.Key.ProjectID != null)
+                {
+                    <a asp-page="/Projects/ProjectHome/Index" asp-route-projectId="@item.Key.ProjectID">
+                        @Model.TeamsToFullName[item.Key.ProjectID.Value]
+                    </a>
+                }
             </td>
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.Key.JobId">Edit</a> |
