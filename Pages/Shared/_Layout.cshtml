@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - ArgoCMS</title>
+    <link rel="icon" type="image/x-icon" href="~/favicon.ico" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ArgoCMS.styles.css" asp-append-version="true" />
@@ -98,19 +99,21 @@
       </button>
 
       <!-- Brand -->
-      <a class="navbar-brand" href="/Dashboard">
-            <h3 class="text-snow-white">ArgoCMS</h3>
+      <a class="navbar-brand ms-5 font-bold" href="/Dashboard">
+            <h3 class="text-snow-white">Argo</h3>
       </a>
 
 
       <!-- Right links -->
         <div class="dropdown">
-                <button class="btn btn-success dropdown-toggle" type="button" id="notificationButton" data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="~/images/bell.svg" class="white-svg-filter"/>
-                <span class="badge badge-danger" id="notificationBadge">0</span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="notificationButton" id="notificationList" style="width:350px;">
+            <a id="notificationButton" data-bs-toggle="dropdown" aria-expanded="false" style="cursor:pointer;">
+                    <img src="~/images/bell-f.svg" class="white-svg-filter hover-alert" />
+            </a>
+            <ul class="dropdown-menu notifications" aria-labelledby="notificationButton" id="notificationList">
                     <li><h6 class="dropdown-header">Notifications</h6></li>
+                    <div class="notifications-wrapper" id="notificationWrapper">
+
+                    </div>
             </ul>
         </div>
 
