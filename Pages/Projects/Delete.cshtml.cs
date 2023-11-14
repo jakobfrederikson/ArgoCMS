@@ -20,7 +20,7 @@ namespace ArgoCMS.Pages.Projects
         }
 
         [BindProperty]
-      public Project Project { get; set; }
+        public Project Project { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
