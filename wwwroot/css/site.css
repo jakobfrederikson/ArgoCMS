@@ -140,3 +140,34 @@ body {
     font-size: 24px; /* Adjust the font size as needed */
     color: white; /* Text color for initials */
 }
+
+/* Notification bar */
+.dropdown {
+    display: inline-block;
+    padding: 10px;
+}
+
+.hover-alert:hover {
+    filter: invert(98%) sepia(14%) saturate(330%) hue-rotate(175deg) brightness(80%) contrast(95%);
+}
+
+.notifications {
+    min-width: 420px;
+}
+
+.notifications a.notificationUrl {
+    text-decoration: none;
+}
+
+.notifications-wrapper {
+    overflow: auto;
+    max-height: 250px;
+}
+
+.notification-read {
+    background-color: #ccc;
+}
+
+.delete-link {
+    cursor:pointer;
+}

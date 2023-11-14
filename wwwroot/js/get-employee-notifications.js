@@ -14,74 +14,83 @@ function updateNotificationList(notifications) {
         return;
     }
 
-    const notificationList = document.getElementById("notificationList");
-    const notificationBadge = document.getElementById("notificationBadge");
+    const notificationWrapper = document.getElementById("notificationWrapper");
+    //const notificationBadge = document.getElementById("notificationBadge");
 
     notifications.forEach(n => {
         console.log(n);
         var notification = createNotification(n);
         
-        notificationList.appendChild(notification);
-        const currentCount = parseInt(notificationBadge.innerHTML);
-        notificationBadge.innerHTML = (currentCount + 1).toString();
+        notificationWrapper.appendChild(notification);
+        //const currentCount = parseInt(notificationBadge.innerHTML);
+        //notificationBadge.innerHTML = (currentCount + 1).toString();
     });    
 }
 
 function createNotification(n) {
 
-    var div = document.createElement("div");
-    div.className = "row overflow-hidden";
+    var card = document.createElement("div");
 
-    var divText = document.createElement("div");
-    divText.className = "col-10 col-sm-10 col-xl-10 overflow-hidden";
+    if (n.isRead) {
+        card.className = "card notification-read";
+    } else {
+        card.className = "card";
+    }
 
-    var divButton = document.createElement("div");
-    divButton.className = "col-2 col-sm-2 col-xl-2";
+    var cardBody = document.createElement("div");
+    cardBody.className = "card-body";
 
-    var li = document.createElement("li");
-    li.appendChild(div);
+    var notificationURL = document.createElement("a");
+    notificationURL.href = n.url + "?id=" + n.objectId;
+    notificationURL.className = "notificationUrl";
 
-    var a = document.createElement("a");
-    a.className = "dropdown-item overflow-hidden";
-    a.href = n.url + "?id=" + n.objectId;
-    a.innerHTML = n.message;
+    var cardTitle = document.createElement("h5");
+    cardTitle.className = "card-title";
+    cardTitle.innerHTML = n.message;
 
-    var deleteButton = document.createElement("button");
-    deleteButton.className = "btn btn-danger ms-auto";
-    deleteButton.type = "button";
-    deleteButton.innerHTML = "X";
+    var cardDate = document.createElement("h6");
+    cardDate.className = "card-subtitle mb-2 text-muted";
+    let timeStamp = new Date(n.timeStamp).toLocaleString('en-GB');
+    cardDate.innerHTML = timeStamp;
 
-    //li.appendChild(a);
-    //li.appendChild(deleteButton);
-    divText.appendChild(a);
-    divButton.appendChild(deleteButton);
-
-    div.appendChild(divText);
-    div.appendChild(divButton);
-
-    deleteButton.onclick = function (event) {
+    var deleteCardLink = document.createElement("a");
+    deleteCardLink.className = "card-link delete-link";
+    deleteCardLink.innerHTML = "Delete";
+    deleteCardLink.onclick = function (event) {
         // Prevent notification list from closing after every delete click
         event.stopPropagation();
-        deleteNotification(n, li);
+        deleteNotification(n, card);
     };   
 
-    return li;
+    notificationURL.appendChild(cardTitle);
+    notificationURL.appendChild(cardDate);
+
+    if (n.isRead == false) {
+        notificationURL.onclick = function () {
+            UpdateNotificationToRead(n);
+        };
+    }    
+
+    cardBody.appendChild(notificationURL);
+    cardBody.appendChild(deleteCardLink);
+
+    card.appendChild(cardBody);
+
+    return card;
 }
 
-function deleteNotification(notification, li) {
-    fetch(`/api/Notifications/DeleteNotification/${notification.notificationId}`, function (data) {
-
-    })
+function deleteNotification(notification, card) {
+    fetch(`/api/Notifications/DeleteNotification/${notification.notificationId}`)
     .then(response => {
         if (response.ok) {
             // Remove notification from list
-            var notificationList = document.getElementById("notificationList");
-            notificationList.removeChild(li);
+            var notificationWrapper = document.getElementById("notificationWrapper");
+            notificationWrapper.removeChild(card);
 
             // Decrease notification count by 1
-            var notificationBadge = document.getElementById("notificationBadge");
-            const currentCount = parseInt(notificationBadge.innerHTML);
-            notificationBadge.innerHTML = (currentCount - 1).toString();
+            //var notificationBadge = document.getElementById("notificationBadge");
+            //const currentCount = parseInt(notificationBadge.innerHTML);
+            //notificationBadge.innerHTML = (currentCount - 1).toString();
 
             console.log("Notification delted", notification);
         } else {
@@ -90,6 +99,20 @@ function deleteNotification(notification, li) {
     })
     .catch(error => {
         console.error("Error deleting notification: ", error);
+    });
+}
+
+function UpdateNotificationToRead(notification) {
+    fetch(`/api/Notifications/MarkNotificationAsRead/${notification.notificationId}`)
+    .then(response => {
+        if (response.ok) {
+            notification.isRead = true;
+        } else {
+            console.error("Failed to mark notification as read", response.statusText);
+        }
+    })
+    .catch(error => {
+        console.error("Error marking notification as read: ", error);
     });
 }
 
