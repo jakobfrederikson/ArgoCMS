@@ -14,7 +14,7 @@
         <div class="accordion" id="accordionExample">
             <div class="accordion-item">
                 <h2 class="accordion-header" id="headingOne">
-                    <button class="accordion-button text-snow-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    <button class="accordion-button text-snow-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-controls="collapseOne">
                         Company Wide Notices
                     </button>
                 </h2>
@@ -49,7 +49,6 @@
         </div>
     </div>
 
-    <!-- Column 1 -->
     <div class="col-xl-3 col-md-6">
         <div class="card mb-4 bg-dark_blue">
             <div class="card-body">
@@ -150,15 +149,16 @@
         </div>
     </div>
 
+
     <div class="col-xl-4">
         <div class="card mb-4 bg-dark_blue">
-            <a asp-area="" asp-page="Jobs/Index"
-            class="dashboard-card-link">
+            <a asp-page="Jobs/Index"
+                class="dashboard-card-link">
                 <div class="card-header">
                     <h5>Your Jobs</h5>
                 </div>
             </a>
-            <div class="card-body justify-content-between align-content-between">
+            <div class="card-body justify-content-between align-content-between" id="userJobsChartContainer">
                 <canvas id="userJobsChart" class="text-snow-white"></canvas>
             </div>
         </div>
@@ -167,7 +167,7 @@
     <div class="col-xl-8">
         <div class="card mb-4 bg-dark_blue">
             <a asp-area="" asp-page="Jobs/Index"
-               class="dashboard-card-link">
+                class="dashboard-card-link">
                 <div class="card-header">
                     <h5>Team Job Statistics</h5>
                 </div>
@@ -186,7 +186,6 @@
             </div>
         </div>
     </div>
-
 
     <div class="col-xl-6">
         <div class="card mb-4 bg-dark_blue">
@@ -340,7 +339,7 @@
                 let canvas = document.createElement("canvas");
                 canvas.setAttribute('id', 'companyWideChart');
                 teamJobChart.appendChild(canvas);
-                companyWideChart = document.getElementById("companyWideChart");
+                let companyWideChart = document.getElementById("companyWideChart");
 
                 companyWideChart = new Chart(companyWideChart, {
                     type: 'bar',
@@ -360,6 +359,19 @@
                         }
                     }
                 });
+
+                let userJobsChartContainer = document.getElementById('userJobsChartContainer');
+                let companyWideChartContainer = document.getElementById('teamJobChart');
+
+                const userJobsChartHeight = userJobsChartContainer.clientHeight;
+                const companyWideChartHeight = companyWideChartContainer.clientHeight;
+
+                // Set both containers to the height of the taller one
+                if (userJobsChartHeight > companyWideChartHeight) {
+                    companyWideChartContainer.style.height = userJobsChartHeight + 'px';
+                } else {
+                    userJobsChartContainer.style.height = companyWideChartHeight + 'px';
+                }
             }
         });          
 
