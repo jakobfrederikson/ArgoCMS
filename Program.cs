@@ -124,7 +124,7 @@ app.Map("/api/Notifications", (INotificationService service) =>
 {
     try
     {
-        var notifications = service.GetAllUnread();
+        var notifications = service.GetAll();
         return Results.Ok(notifications);
     }
     catch (Exception ex)
@@ -139,6 +139,19 @@ app.Map("/api/Notifications/DeleteNotification/{objectId:int}", (int objectId, I
     {
         service.DeleteNotification(objectId);
         return Results.Ok($"Deleted notification: {objectId}");
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message);
+    }
+});
+
+app.Map("/api/Notifications/MarkNotificationAsRead/{objectId:int}", (int objectId, INotificationService service) =>
+{
+    try
+    {
+        service.MarkNotificationAsRead(objectId);
+        return Results.Ok($"Notification marked as read: {objectId}");
     }
     catch (Exception ex)
     {
