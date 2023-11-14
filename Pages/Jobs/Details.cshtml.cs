@@ -49,6 +49,20 @@ namespace ArgoCMS.Pages.Jobs
             {
                 Job = job;
             }
+
+            var userId = UserManager.GetUserId(User);
+            if (userId != null)
+            {
+                if (Job.JobStatus == JobStatus.Unread)
+                {
+                    if (Job.AssignedEmployeeID == userId)
+                    {
+                        Job.JobStatus = JobStatus.Read;
+                        Context.Jobs.Update(Job);
+                        Context.SaveChanges();
+                    }       
+                }
+            }
             return Page();
         }
 
