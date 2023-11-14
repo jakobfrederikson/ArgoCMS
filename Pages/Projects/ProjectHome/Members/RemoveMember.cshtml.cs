@@ -14,12 +14,11 @@ namespace ArgoCMS.Pages.Projects.ProjectHome.Members
             _context = context;
         }
 
-        [BindProperty]
         public Employee Employee { get; set; }
 
         public int projectId { get; set; }
 
-        public async Task<IActionResult> OnGet(string memberId, int projectId)
+        public async Task<IActionResult> OnGetAsync(string memberId, int projectId)
         {
             var employee = await _context.Employees
                 .FirstOrDefaultAsync(e => e.Id == memberId);
@@ -38,10 +37,15 @@ namespace ArgoCMS.Pages.Projects.ProjectHome.Members
 
         public async Task<IActionResult> OnPost(string memberId, int projectId)
         {
-            if (Employee == null)
+            var employee = _context.Employees
+                .FirstOrDefault(e => e.Id == memberId);
+
+            if (employee == null)
             {
                 return NotFound("Employee not found.");
             }
+
+            Employee = employee;
 
             var employeeProject = await _context.EmployeesProjects
                 .FirstOrDefaultAsync(ep => ep.EmployeeId == memberId && ep.ProjectId == projectId);

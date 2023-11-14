@@ -9,6 +9,41 @@
     <div class="col-xl-4">
         <div class="card mb-4 bg-dark_blue">
             <div class="card-header">
+                <h5>Project Task's</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped table-hover table-light">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ProjectJobs.Keys.FirstOrDefault().JobName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ProjectJobs.Keys.FirstOrDefault().AssignedEmployeeID)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.ProjectJobs)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(model => item.Key.JobName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(model => item.Value)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-4">
+        <div class="card mb-4 bg-dark_blue">
+            <div class="card-header">
                 <h5>Project Members</h5>
                 <a asp-page="Members/Index" asp-route-projectId="@Model.Project.ProjectId">
                     Add/Remove

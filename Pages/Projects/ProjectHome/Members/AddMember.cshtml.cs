@@ -31,10 +31,9 @@ namespace ArgoCMS.Pages.Projects.ProjectHome.Members
                 .Select(et => et.EmployeeId)
                 .ToListAsync();
 
-            EmployeeList = await _context.EmployeesProjects
-                .Where(ep => !employeesAlreadyInProject.Contains(ep.EmployeeId))
-                .Select(ep => new SelectListItem { Value = ep.EmployeeId, Text = ep.Employee.FullName })
-                .Distinct()
+            EmployeeList = await _context.Employees
+                .Where(e => !employeesAlreadyInProject.Contains(e.Id))
+                .Select(e => new SelectListItem { Value = e.Id, Text = e.FullName })
                 .ToListAsync();
         }
 

@@ -32,10 +32,9 @@ namespace ArgoCMS.Pages.Teams.TeamHome.Members
                 .Select(et => et.EmployeeId)
                 .ToListAsync();
 
-            EmployeeList = await _context.EmployeeTeams
-                .Where(et => !employeesAlreadyInTeam.Contains(et.EmployeeId))
-                .Select(et => new SelectListItem { Value = et.EmployeeId, Text = et.Employee.FullName })
-                .Distinct()
+            EmployeeList = await _context.Employees
+                .Where(e => !employeesAlreadyInTeam.Contains(e.Id))
+                .Select(e => new SelectListItem { Value = e.Id, Text = e.FullName })
                 .ToListAsync();
         }
 

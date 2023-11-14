@@ -19,6 +19,7 @@ namespace ArgoCMS.Pages.Projects.ProjectHome
         }
 
         public Project Project { get; set; } = default!;
+        public IDictionary<Job, string> ProjectJobs { get; set; } = default!;
         public IDictionary<Notice, string> ProjectNotices { get; set; } = default!;
         public IDictionary<Employee, string> EmployeeAndRole { get; set; } = default!;
 
@@ -29,6 +30,12 @@ namespace ArgoCMS.Pages.Projects.ProjectHome
             if (project != null)
             {
                 Project = project;
+            }
+
+            var projectJobs = await AcquireProjectJobs();
+            if (projectJobs != null)
+            {
+                ProjectJobs = projectJobs;
             }
 
             var projectNotices = await AcquireProjectNotices();
@@ -52,6 +59,25 @@ namespace ArgoCMS.Pages.Projects.ProjectHome
                 Include(p => p.Members)
                 .Include(p => p.Owner)
                 .FirstOrDefaultAsync(p => p.ProjectId == id);
+
+        }
+
+        private async Task<Dictionary<Job, string>> AcquireProjectJobs()
+        {
+
+            var jobsList = await Context.Jobs
+                .Include(j => j.AssignedEmployee) // Eager load the related Employee
+                .Where(j => j.ProjectID == Project.ProjectId)
+                .ToListAsync();
+
+            var result = new Dictionary<Job, string>();
+
+            foreach (var job in jobsList)
+            {
+                result[job] = job.AssignedEmployee?.FullName;
+            }
+
+            return result;
 
         }
 

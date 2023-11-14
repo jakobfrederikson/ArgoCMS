@@ -14,12 +14,11 @@ namespace ArgoCMS.Pages.Teams.TeamHome.Members
             _context = context;
         }
 
-        [BindProperty]
         public Employee Employee { get; set; }
 
         public int teamId { get; set; }
 
-        public async Task<IActionResult> OnGet(string memberId, int teamId)
+        public async Task<IActionResult> OnGetAsync(string memberId, int teamId)
         {
             var employee = await _context.Employees
                 .FirstOrDefaultAsync(e => e.Id == memberId);
@@ -36,12 +35,17 @@ namespace ArgoCMS.Pages.Teams.TeamHome.Members
             return Page();
         }
 
-        public async Task<IActionResult> OnPost(string memberId, int teamId)
+        public async Task<IActionResult> OnPostAsync(string memberId, int teamId)
         {
-            if (Employee == null)
+            var employee = _context.Employees
+                .FirstOrDefault(e => e.Id == memberId);
+
+            if (employee == null)
             {
                 return NotFound("Employee not found.");
             }
+
+            Employee = employee;
 
             var employeeTeam = await _context.EmployeeTeams
                 .FirstOrDefaultAsync(et => et.EmployeeId == memberId && et.TeamId == teamId);
