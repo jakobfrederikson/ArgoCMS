@@ -122,7 +122,7 @@ namespace ArgoCMS.Pages
                 .Include(t => t.TeamLeader)
                 .Include(t => t.TeamProjects)
                 .ThenInclude(p => p.Project)
-                .Where(t => t.Members.Any(m => m.Id == currentUser.Id))
+                .Where(t => t.EmployeeTeams.Any(et => et.Employee == currentUser))
                 .ToListAsync();
         }
 
