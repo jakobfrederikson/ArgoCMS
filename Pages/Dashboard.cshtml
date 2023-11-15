@@ -235,83 +235,71 @@
         </div>
     </div>
 
-    <div class="col-xl-6">
+    <div class="col-xl-12">
         <div class="card mb-4 bg-dark_blue">
             <div class="card-header">
                 <h5>Your Projects</h5>
             </div>
             <div class="card-body">
-                @foreach (var item in Model.Projects)
-                {
-                    <div class="bg-team_dashboard_blue p-1 rounded mb-1">
-                        <dl class="row">
-                            <dt class="col-sm-3">Project Name</dt>
-                            <dd class="col-sm-9">
-                                <a asp-page="/Projects/Index" asp-route-itemid="@item.ProjectId" class="text-white">
-                                    @item.ProjectName
-                                </a>
-                            </dd>
-
-                            <dt class="col-sm-3">Desc</dt>
-                            <dd class="col-sm-9">@item.ProjectDescription</dd>
-
-                            <dt class="col-sm-3">Finish Date</dt>
-                            <dd class="col-sm-9">@item.DueDate</dd>
-
-                            <dt class="col-sm-3">Teams Involved</dt>
-                            @foreach (var t in item.TeamProjects)
-                            {
-                                <dd class="col-sm-9">
-                                    <a asp-page="/Teams/Index" asp-route-itemid="@t.TeamId" class="text-white">
-                                        @t.Team.TeamName
+                <div class="container">
+                    <div class="row g-2">
+                        @foreach (var item in Model.Projects)
+                        {
+                            <div class="col-xl-3">
+                                <div class="card bg-team_dashboard_blue">
+                                    <a asp-page="/Projects/ProjectHome/Index" asp-route-projectId="@item.ProjectId" class="dashboard-quick-link">
+                                        <div class="card-body text-snow-white text-center db-ql">                                        
+                                                <p class="mb-0">@item.ProjectName</p>                                        
+                                        </div>
                                     </a>
-                                </dd>
-                            }
-                        </dl>
+                                    <div class="list-group list-group-horizontal">
+                                        <a asp-page="/Jobs/Create" asp-route-projectId="@item.ProjectId" class="list-group-item list-group-item-action dashboard-quick-link text-center">
+                                            Create a Job
+                                        </a>
+                                        <a asp-page="/Notices/Create" asp-route-projectId="@item.ProjectId" class="list-group-item list-group-item-action dashboard-quick-link text-center">
+                                            Create a Notice
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>                            
+                        }
                     </div>
-                }
+                </div>                
             </div>
         </div>
     </div>
 
 
-    <div class="col-xl-6">
+    <div class="col-xl-12">
         <div class="card mb-4 bg-dark_blue">
             <div class="card-header">
                 <h5>Your Teams</h5>
             </div>
             <div class="card-body">
-                @foreach (var item in Model.Teams)
-                {
-                    <div class="bg-team_dashboard_blue p-1 rounded mb-1">
-                        <dl class="row">
-                            <dt class="col-sm-3">Team Name</dt>
-                            <dd class="col-sm-9">
-                                <a asp-page="/Teams/Index" asp-route-itemid="@item.TeamId" class="text-white">
-                                    @item.TeamName
-                                </a>                            
-                            </dd>
-
-                            <dt class="col-sm-3">Desc</dt>
-                            <dd class="col-sm-9">@item.TeamDescription</dd>
-
-                            <dt class="col-sm-3">Team Leader</dt>
-                            <dd class="col-sm-9">
-                                <a asp-area="Identity" asp-page="/Account/Manage/Index" asp-route-itemid="@item.TeamLeader.Id" class="text-white">
-                                    @item.TeamLeader.FullName
-                                </a>
-                            </dd>
-
-                            <dt class="col-sm-3">Team Projects</dt>
-                            @foreach(var p in item.TeamProjects)
-                            {
-                                <dd class="col-sm-9">
-                                    @p.Project.ProjectName
-                                </dd>
-                            }
-                        </dl>
+                <div class="container">
+                    <div class="row g-2">
+                        @foreach (var item in Model.Teams)
+                        {
+                            <div class="col-xl-3">
+                                <div class="card bg-team_dashboard_blue">
+                                    <a asp-page="/Projects/ProjectHome/Index" asp-route-projectId="@item.TeamId" class="dashboard-quick-link text-snow-white">
+                                        <div class="card-body text-snow-white text-center db-ql">                                        
+                                                <p class="mb-0">@item.TeamName</p>                                        
+                                        </div>
+                                    </a>
+                                    <div class="list-group list-group-horizontal">
+                                        <a asp-page="/Jobs/Create" asp-route-teamId="@item.TeamId" class="list-group-item list-group-item-action dashboard-quick-link db-ql-light text-center">
+                                            Create a Job
+                                        </a>
+                                        <a asp-page="/Notices/Create" asp-route-teamId="@item.TeamId" class="list-group-item list-group-item-action dashboard-quick-link db-ql-light text-center">
+                                            Create a Notice
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
                     </div>
-                }                
+                </div>
             </div>
         </div>
     </div>
@@ -381,7 +369,6 @@
 
             // Define a function to update the chart with new data
             function updateChart(data, colours) {
-                console.log("in update chart" + colours);
                 let teamJobChart = document.getElementById("teamJobChart");
                 document.getElementById("companyWideChart").remove();
                 let canvas = document.createElement("canvas");
