@@ -20,6 +20,7 @@ namespace ArgoCMS.Pages.Jobs
         public Dictionary<string, string> CreatedByIdToFullName { get; set; } = default!;
         public Dictionary<string, string> AssignedToIdToFullName { get; set; } = default!;
         public Dictionary<int, string> TeamsToFullName { get; set; } = default!;
+        public Dictionary<int, string> ProjectsToFullName { get; set; } = default!;
 
         public async Task OnGetAsync()
         {
@@ -37,6 +38,7 @@ namespace ArgoCMS.Pages.Jobs
             var createdByIds = Jobs.Keys.Select(job => job.OwnerID).Distinct();
             var assignedToIds = Jobs.Keys.Select(job => job.AssignedEmployeeID).Distinct();
             var teamIds = Jobs.Keys.Select(job => job.TeamID).Distinct();
+            var projectIds = Jobs.Keys.Select(job => job.ProjectID).Distinct();
 
             var employees = await Context.Employees
                 .Where(e => createdByIds.Contains(e.Id) || assignedToIds.Contains(e.Id))
@@ -46,9 +48,14 @@ namespace ArgoCMS.Pages.Jobs
                 .Where(t => teamIds.Contains(t.TeamId))
                 .ToDictionaryAsync(t => t.TeamId, t => t.TeamName);
 
+            var projects = await Context.Projects
+                .Where(p => projectIds.Contains(p.ProjectId))
+                .ToDictionaryAsync(p => p.ProjectId, p => p.ProjectName);
+
             var createdByIdToFullName = new Dictionary<string, string>();
             var assignedToIdToFullName = new Dictionary<string, string>();
             var teamsToFullName = new Dictionary<int, string>();
+            var projectsToFullName = new Dictionary<int, string>();
 
             foreach (var job in Jobs.Keys)
             {
@@ -66,11 +73,17 @@ namespace ArgoCMS.Pages.Jobs
                 {
                     teamsToFullName[job.TeamID.Value] = teams[job.TeamID.Value];
                 }
+
+                if (job.ProjectID != null && projects.ContainsKey(job.ProjectID.Value))
+                {
+                    projectsToFullName[job.ProjectID.Value] = projects[job.ProjectID.Value];
+                }
             }
 
             CreatedByIdToFullName = createdByIdToFullName;
             AssignedToIdToFullName = assignedToIdToFullName;
             TeamsToFullName = teamsToFullName;
+            ProjectsToFullName = projectsToFullName;
         }
 
         private async Task<Dictionary<Job, string>> GetJobsWithStatusCssClassAsync(IQueryable<Job> query)

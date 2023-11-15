@@ -86,7 +86,7 @@
                 @if (item.Key.ProjectID != null)
                 {
                     <a asp-page="/Projects/ProjectHome/Index" asp-route-projectId="@item.Key.ProjectID">
-                        @Model.TeamsToFullName[item.Key.ProjectID.Value]
+                        @Model.ProjectsToFullName[item.Key.ProjectID.Value]
                     </a>
                 }
             </td>
