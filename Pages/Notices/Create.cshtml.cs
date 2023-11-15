@@ -24,8 +24,30 @@ namespace ArgoCMS.Pages.Notices
         {
         }
 
-        public IActionResult OnGet()
+        public IActionResult OnGet(int? teamId, int? projectId)
         {
+            Notice = new Notice();
+
+            if (teamId != null)
+            {
+                var team = Context.Teams.FirstOrDefault(t => t.TeamId == teamId);
+                if (team != null)
+                {
+                    Notice.TeamId = team.TeamId;
+                    Notice.PublicityStatus = PublicityStatus.Team;
+                }                
+            }
+
+            if (projectId != null)
+            {
+                var project = Context.Projects.FirstOrDefault(p => p.ProjectId == projectId);
+                if (project != null)
+                {
+                    Notice.ProjectId = project.ProjectId;
+                    Notice.PublicityStatus = PublicityStatus.Project;
+                }
+            }
+
             TeamItems = new SelectList(Context.Teams, "TeamId", "TeamName");
             ProjectItems = new SelectList(Context.Projects, "ProjectId", "ProjectName");
 
