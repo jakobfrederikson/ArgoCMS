@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>aspnet-ArgoCMS-31c90d27-2758-46b0-ab21-191f19b69c02</UserSecretsId>
     <UseRazorSourceGenerator>false</UseRazorSourceGenerator>
