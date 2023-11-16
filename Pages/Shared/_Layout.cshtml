@@ -66,7 +66,7 @@
                         <img src="~/images/users.svg" class="me-1 white-svg-filter" />
             <span>Employees</span>
         </a>
-        @if (User.IsInRole(Authorization.AuthorizationOperations.Constants.AdministratorsRole))
+        @if (User.IsInRole(Constants.AdministratorsRole))
         {
             <a asp-area=""
                 asp-page="/Admin/Index"
