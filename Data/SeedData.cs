@@ -1,5 +1,5 @@
 ﻿using ArgoCMS.Models;
-using Constants = ArgoCMS.Authorization.AuthorizationOperations.Constants;
+using Constants = ArgoCMS.Authorization.Constants;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ArgoCMS.Models.JointEntities;

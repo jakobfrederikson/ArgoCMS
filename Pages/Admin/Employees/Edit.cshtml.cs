@@ -103,7 +103,7 @@ namespace ArgoCMS.Pages.Admin.Employees
 
             var isAuthorized = await AuthorizationService.AuthorizeAsync(
                                                 User, _employee,
-                                                AuthorizationOperations.ContactOperations.Update);
+                                                ArgoAuthOperations.Update);
 
             if (!isAuthorized.Succeeded)
             {
@@ -129,7 +129,7 @@ namespace ArgoCMS.Pages.Admin.Employees
 
             var isAuthorized = await AuthorizationService.AuthorizeAsync(
                                                 User, user,
-                                                AuthorizationOperations.ContactOperations.Update);
+                                                ArgoAuthOperations.Update);
 
             if (!isAuthorized.Succeeded)
             {

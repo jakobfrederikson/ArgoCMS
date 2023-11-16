@@ -56,7 +56,7 @@ namespace ArgoCMS.Pages.Admin.Employees
 				return NotFound();
             }
 
-			var isAuthorized = User.IsInRole(AuthorizationOperations.Constants.AdministratorsRole);
+			var isAuthorized = User.IsInRole(Constants.AdministratorsRole);
 
 			var currentUserId = UserManager.GetUserId(User);
 
