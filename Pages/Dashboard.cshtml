@@ -28,13 +28,11 @@
                                 <div class="card bg-dark_blue text-snow-white">
                                     <div class="card-body">
                                         <h5 class="card-title">@item.NoticeTitle</h5>
-                                        <h6 class="card-subtitle mb-2 text-muted">Posted by 
-                                            <a asp-area="Identity" asp-page="/Account/Manage/Index" asp-route-id="@item.Owner.Id">
-                                                @item.Owner.FullName
-                                            </a>
-                                            on 
-                                            @item.DateCreated
+                                        <h6 class="card-subtitle mb-2 text-muted d-inline">Posted by </h6>
+                                        <h6 class="card-subtitle mb-2 text-muted d-inline">
+                                            <a asp-area="Identity" asp-page="/Account/Manage/Index" asp-route-id="@item.Owner.Id">@item.Owner.FullName</a>
                                         </h6>
+                                        <h6 class="card-subtitle mb-2 text-muted d-inline"> on @item.DateCreated</h6>
                                         <p class="card-text">@item.NoticeMessageContent</p>
                                         <a asp-page="/Notices/NoticeDetails" asp-route-id="@item.NoticeId" class="card-link">View more</a>
                                     </div>
