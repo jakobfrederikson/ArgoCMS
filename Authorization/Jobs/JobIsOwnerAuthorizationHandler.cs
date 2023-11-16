@@ -28,10 +28,10 @@ namespace ArgoCMS.Authorization.Jobs
 
             // If not asking for CRUD permission, return.
 
-            if (requirement.Name != AuthorizationOperations.Constants.CreateOperationName &&
-                requirement.Name != AuthorizationOperations.Constants.ReadOperationName &&
-                requirement.Name != AuthorizationOperations.Constants.UpdateOperationName &&
-                requirement.Name != AuthorizationOperations.Constants.DeleteOperationName)
+            if (requirement.Name != Constants.CreateOperationName &&
+                requirement.Name != Constants.ReadOperationName &&
+                requirement.Name != Constants.UpdateOperationName &&
+                requirement.Name != Constants.DeleteOperationName)
             {
                 return Task.CompletedTask;
             }

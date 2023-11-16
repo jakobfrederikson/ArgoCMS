@@ -18,14 +18,14 @@ namespace ArgoCMS.Authorization.Jobs
         }
 
         // If not asking for approval/reject, return.
-        if (requirement.Name != AuthorizationOperations.Constants.ApproveOperationName &&
-            requirement.Name != AuthorizationOperations.Constants.RejectOperationName)
+        if (requirement.Name != Constants.ApproveOperationName &&
+            requirement.Name != Constants.RejectOperationName)
         {
             return Task.CompletedTask;
         }
 
         // Managers can approve or reject.
-        if (context.User.IsInRole(AuthorizationOperations.Constants.ManagersRole))
+        if (context.User.IsInRole(Constants.ManagersRole))
         {
             context.Succeed(requirement);
         }

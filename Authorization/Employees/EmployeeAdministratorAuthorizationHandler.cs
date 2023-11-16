@@ -18,7 +18,7 @@ namespace ArgoCMS.Authorization.Employees
             }
 
             // Administrators can do anything.
-            if (context.User.IsInRole(AuthorizationOperations.Constants.AdministratorsRole))
+            if (context.User.IsInRole(Constants.AdministratorsRole))
             {
                 context.Succeed(requirement);
             }
