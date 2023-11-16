@@ -5,12 +5,12 @@ using ArgoCMS.Models;
 
 namespace ArgoCMS.Authorization.Teams
 {
-    public class ProjectIsOwnerAuthorizationHandler
+    public class TeamIsOwnerAuthorizationHandler
     : AuthorizationHandler<OperationAuthorizationRequirement, Employee>
     {
         UserManager<Employee> _userManager;
 
-        public ProjectIsOwnerAuthorizationHandler
+        public TeamIsOwnerAuthorizationHandler
             (UserManager<Employee> userManager)
         {
             _userManager = userManager;
