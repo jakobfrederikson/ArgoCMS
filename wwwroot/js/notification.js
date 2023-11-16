@@ -6,7 +6,6 @@ var connection = new signalR.HubConnectionBuilder()
     .build();
 
 connection.start().then(() => {
-    console.log("SignalR Hub connected");
 }).catch(function (err) {
     return console.error(err.toString());
 });
@@ -15,10 +14,8 @@ const notificationList = document.getElementById("notificationList");
 const notificationBadge = document.getElementById("notificationBadge");
 
 connection.on("ReceiveJobNotification", (notification) => {
-    console.log("notification: " + notification);
     notification = JSON.parse(notification);
     if (notification.URL && notification.ObjectId) {
-        console.log("Sending notification");
         var li = document.createElement("li");
         var a = document.createElement("a");
 

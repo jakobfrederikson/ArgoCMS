@@ -18,7 +18,6 @@ function updateNotificationList(notifications) {
     //const notificationBadge = document.getElementById("notificationBadge");
 
     notifications.forEach(n => {
-        console.log(n);
         var notification = createNotification(n);
         
         notificationWrapper.appendChild(notification);
@@ -91,8 +90,6 @@ function deleteNotification(notification, card) {
             //var notificationBadge = document.getElementById("notificationBadge");
             //const currentCount = parseInt(notificationBadge.innerHTML);
             //notificationBadge.innerHTML = (currentCount - 1).toString();
-
-            console.log("Notification delted", notification);
         } else {
             console.error("Failed to delete notification", response.statusText);
         }
