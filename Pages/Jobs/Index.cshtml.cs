@@ -1,5 +1,6 @@
 ﻿using ArgoCMS.Models;
 using ArgoCMS.Data;
+using ArgoCMS.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
