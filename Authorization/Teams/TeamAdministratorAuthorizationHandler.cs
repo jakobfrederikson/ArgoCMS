@@ -5,12 +5,12 @@ using ArgoCMS.Models;
 namespace ArgoCMS.Authorization.Teams
 {
     public class TeamAdministratorAuthorizationHandler
-    : AuthorizationHandler<OperationAuthorizationRequirement, Employee>
+    : AuthorizationHandler<OperationAuthorizationRequirement, Team>
     {
         protected override Task HandleRequirementAsync(
                                               AuthorizationHandlerContext context,
                                               OperationAuthorizationRequirement requirement,
-                                              Employee resource)
+                                              Team resource)
         {
             if (context.User == null)
             {
