@@ -89,7 +89,7 @@ using (var scope = app.Services.CreateScope())
     var context = services.GetRequiredService<ApplicationDbContext>();
     //context.Database.EnsureDeleted();
     //context.Database.EnsureCreated();
-    //context.Database.Migrate();
+    context.Database.Migrate();
     // requires using Microsoft.Extensions.Configuration;
     // Set password with the Secret Manager tool.
     // dotnet user-secrets set SeedUserPW <pw>
