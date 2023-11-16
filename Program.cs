@@ -1,14 +1,15 @@
-using ArgoCMS.Authorization.Jobs;
 using ArgoCMS.Authorization.Employees;
 using ArgoCMS.Data;
 using ArgoCMS.Models;
 using ArgoCMS.Hubs;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using ArgoCMS.Services.Notifications;
 using ArgoCMS.Services.Jobs;
 using ArgoCMS.Services.Dashboard;
+using ArgoCMS.Authorization.Projects;
+using ArgoCMS.Authorization.Teams;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -60,15 +61,19 @@ builder.Services.AddRazorPages(options =>
 });
 
 // Authorization handlers.
-// Assignments
+// Projects
 builder.Services.AddScoped<IAuthorizationHandler,
-                        JobIsOwnerAuthorizationHandler>();
+                        ProjectIsOwnerAuthorizationHandler>();
 
 builder.Services.AddSingleton<IAuthorizationHandler,
-                        JobAdministratorAuthorizationHandler>();
+                        ProjectAdministratorAuthorizationHandler>();
+
+//Teams
+builder.Services.AddScoped<IAuthorizationHandler,
+                        TeamIsOwnerAuthorizationHandler>();
 
 builder.Services.AddSingleton<IAuthorizationHandler,
-                        JobManagerAuthorizationHandler>();
+                        TeamAdministratorAuthorizationHandler>();
 // Employees
 builder.Services.AddScoped<IAuthorizationHandler,
                     EmployeeIsOwnerAuthorizationHandler>();
@@ -76,7 +81,7 @@ builder.Services.AddScoped<IAuthorizationHandler,
 builder.Services.AddSingleton<IAuthorizationHandler,
                     EmployeeAdministratorAuthorizationHandler>();
 
-// Services
+// Services (Add Scoped because they use EF)
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
@@ -87,9 +92,9 @@ using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<ApplicationDbContext>();
-    //context.Database.EnsureDeleted();
-    //context.Database.EnsureCreated();
-    context.Database.Migrate();
+    context.Database.EnsureDeleted();
+    context.Database.EnsureCreated();
+    //context.Database.Migrate();
     // requires using Microsoft.Extensions.Configuration;
     // Set password with the Secret Manager tool.
     // dotnet user-secrets set SeedUserPW <pw>
