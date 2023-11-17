@@ -14,11 +14,6 @@
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Project.OwnerID" class="control-label"></label>
-                <input asp-for="Project.OwnerID" class="form-control" />
-                <span asp-validation-for="Project.OwnerID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="Project.ProjectName" class="control-label"></label>
                 <input asp-for="Project.ProjectName" class="form-control" />
                 <span asp-validation-for="Project.ProjectName" class="text-danger"></span>
@@ -29,9 +24,9 @@
                 <span asp-validation-for="Project.ProjectDescription" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Project.DateCreated" class="control-label"></label>
-                <input asp-for="Project.DateCreated" class="form-control" />
-                <span asp-validation-for="Project.DateCreated" class="text-danger"></span>
+                <label asp-for="Project.DueDate" class="control-label"></label>
+                <input asp-for="Project.DueDate" class="form-control" />
+                <span asp-validation-for="Project.DueDate" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

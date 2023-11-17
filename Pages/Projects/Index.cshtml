@@ -5,6 +5,10 @@
     ViewData["Title"] = "Index";
 }
 <h2>Your Projects</h2>
+@if ((await AuthorizationService.AuthorizeAsync(User, new Project(), ArgoAuthOperations.Create)).Succeeded)
+{
+    <a asp-page="Create">Create New</a>
+}
 <div class="row">
     @foreach (var item in Model.EmployeeProjects)
     {

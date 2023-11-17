@@ -6,7 +6,10 @@
 }
 
 <h2>Your Teams</h2>
-<a href="">Create a team</a>
+@if ((await AuthorizationService.AuthorizeAsync(User, new Team(), ArgoAuthOperations.Create)).Succeeded)
+{
+    <a asp-page="Create">Create New</a>
+}
 <div class="row">
     @foreach (var item in Model.EmployeeTeams)
     {
