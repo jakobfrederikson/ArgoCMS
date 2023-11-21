@@ -180,12 +180,28 @@ body {
     cursor:pointer;
 }
 
-.table > thead > tr {
+.job-table {
+    table-layout: fixed;
+}
+
+.job-table > thead > tr {
     background: #262A39 !important;
 }
 
-.table > tbody > tr {
+.job-table > tbody > tr {
     background: #3B4158 !important;
+}
+
+.job-table td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.job-table td:hover {
+    white-space: initial;
+    overflow: initial;
+    text-overflow: initial;
 }
 
 .table-link {

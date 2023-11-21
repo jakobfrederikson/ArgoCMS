@@ -26,155 +26,162 @@
     </div>
 </div>
 
-<table class="job-table table table-bordered text-snow-white">
-    <thead>
-        <tr>
-            <th style="width:10%;">
-                <a class="table-link" asp-page="./Index" asp-route-sortOrder="@Model.NameSort"
-                asp-route-currentFilter="@Model.CurrentFilter">
-                    @Html.DisplayNameFor(model => model.Jobs[0].JobName)
-                </a>                
-            </th>
-            <th style ="width:10%;">
-                <a class="table-link" asp-page="./Index" asp-route-sortOrder="@Model.DateSort">
-                    @Html.DisplayNameFor(model => model.Jobs[0].DateCreated)
-                </a>
-            </th>
-            <th style="width:10%;">
-                <a class="table-link" asp-page="./Index" asp-route-sortOrder="@Model.DueDateSort">
-                    @Html.DisplayNameFor(model => model.Jobs[0].DueDate)
-                </a>
-            </th>
-            <th style="width:10%;">
-                <a class="table-link" asp-page="./Index" asp-route-sortOrder="@Model.JobStatusSort">
-                    @Html.DisplayNameFor(model => model.Jobs[0].JobStatus)
-                </a>
-            </th>
-            <th style="width:10%;">
-                <a class="table-link" asp-page="./Index" asp-route-sortOrder="@Model.PriorityLevelSort">
-                    @Html.DisplayNameFor(model => model.Jobs[0].PriorityLevel)
-                </a>
-            </th>
-            <th style="width:10%;">
-                <a class="table-link" asp-page="./Index" asp-route-sortOrder="@Model.CreatedBySort">
-                    @Html.DisplayNameFor(model => model.Jobs[0].OwnerID)
-                </a>
-            </th>
-            <th style="width:10%;">
-                <a class="table-link" asp-page="./Index" asp-route-sortOrder="@Model.AssignedToSort">
-                    @Html.DisplayNameFor(model => model.Jobs[0].AssignedEmployeeID)
-                </a>
-            </th>            
-            <th style="width:10%;">
-                <a class="table-link" asp-page="./Index" asp-route-sortOrder="@Model.TeamSort">
-                    @Html.DisplayNameFor(model => model.Jobs[0].TeamID)
-                </a>
-            </th>
-            <th style="width:10%;">
-                <a class="table-link" asp-page="./Index" asp-route-sortOrder="@Model.ProjectSort">
-                    @Html.DisplayNameFor(model => model.Jobs[0].ProjectID)
-                </a>
-            </th>
-            <th style="width:10%;"></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Jobs) {
-            <tr>
-            <td>
-                <a class="table-link" asp-page="./Details" asp-route-id="@item.JobId" class="link-primary">
-                    @Html.DisplayFor(modelItem => item.JobName)
-                </a>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateCreated)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DueDate)
-            </td>
-            @switch (item.JobStatus)
+<div class="row">
+    <div class="col-12">
+        <table class="job-table table table-bordered text-snow-white">
+            <thead>
+                <tr>
+                    <th style="width:11%;">
+                        <a class="table-link" asp-page="./Index" asp-route-sortOrder="@Model.NameSort"
+                           asp-route-currentFilter="@Model.CurrentFilter">
+                            @Html.DisplayNameFor(model => model.Jobs[0].JobName)
+                        </a>
+                    </th>
+                    <th style="width:9%;">
+                        <a class="table-link" asp-page="./Index" asp-route-sortOrder="@Model.DateSort">
+                            @Html.DisplayNameFor(model => model.Jobs[0].DateCreated)
+                        </a>
+                    </th>
+                    <th style="width:9%;">
+                        <a class="table-link" asp-page="./Index" asp-route-sortOrder="@Model.DueDateSort">
+                            @Html.DisplayNameFor(model => model.Jobs[0].DueDate)
+                        </a>
+                    </th>
+                    <th style="width:9%;">
+                        <a class="table-link" asp-page="./Index" asp-route-sortOrder="@Model.JobStatusSort">
+                            @Html.DisplayNameFor(model => model.Jobs[0].JobStatus)
+                        </a>
+                    </th>
+                    <th style="width:7%;">
+                        <a class="table-link" asp-page="./Index" asp-route-sortOrder="@Model.PriorityLevelSort">
+                            @Html.DisplayNameFor(model => model.Jobs[0].PriorityLevel)
+                        </a>
+                    </th>
+                    <th style="width:11%;">
+                        <a class="table-link" asp-page="./Index" asp-route-sortOrder="@Model.CreatedBySort">
+                            @Html.DisplayNameFor(model => model.Jobs[0].OwnerID)
+                        </a>
+                    </th>
+                    <th style="width:11%;">
+                        <a class="table-link" asp-page="./Index" asp-route-sortOrder="@Model.AssignedToSort">
+                            @Html.DisplayNameFor(model => model.Jobs[0].AssignedEmployeeID)
+                        </a>
+                    </th>
+                    <th style="width:10%;">
+                        <a class="table-link" asp-page="./Index" asp-route-sortOrder="@Model.TeamSort">
+                            @Html.DisplayNameFor(model => model.Jobs[0].TeamID)
+                        </a>
+                    </th>
+                    <th style="width:10%;">
+                        <a class="table-link" asp-page="./Index" asp-route-sortOrder="@Model.ProjectSort">
+                            @Html.DisplayNameFor(model => model.Jobs[0].ProjectID)
+                        </a>
+                    </th>
+                    <th style="width:13%;">Action Links</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Jobs)
                 {
-                    case JobStatus.Unread:
-                        <td class="unread text-black">
-                            <strong>@Html.DisplayFor(modelItem => item.JobStatus)</strong>
+                    <tr>
+                        <td style="width:11% !important;">
+                            <a class="table-link" asp-page="./Details" asp-route-id="@item.JobId" class="link-primary">
+                                @Html.DisplayFor(modelItem => item.JobName)
+                            </a>
                         </td>
-                        break;
-                    case JobStatus.Read:
-                        <td class="read text-black">
-                            <strong>@Html.DisplayFor(modelItem => item.JobStatus)</strong>
+                        <td style="width:9% !important;">
+                            @Html.DisplayFor(modelItem => item.DateCreated)
                         </td>
-                        break;
-                    case JobStatus.Working:
-                        <td class="working text-black">
-                            <strong>@Html.DisplayFor(modelItem => item.JobStatus)</strong>
+                        <td style="width:9% !important;">
+                            @Html.DisplayFor(modelItem => item.DueDate)
                         </td>
-                        break;
-                    case JobStatus.Submitted:
-                        <td class="submitted text-black">
-                            <strong>@Html.DisplayFor(modelItem => item.JobStatus)</strong>
+                        @switch (item.JobStatus)
+                        {
+                            case JobStatus.Unread:
+                                <td class="unread text-black" style="width:9% !important;">
+                                    <strong>@Html.DisplayFor(modelItem => item.JobStatus)</strong>
+                                </td>
+                                break;
+                            case JobStatus.Read:
+                                <td class="read text-black" style="width:9% !important;">
+                                    <strong>@Html.DisplayFor(modelItem => item.JobStatus)</strong>
+                                </td>
+                                break;
+                            case JobStatus.Working:
+                                <td class="working text-black" style="width:9% !important;">
+                                    <strong>@Html.DisplayFor(modelItem => item.JobStatus)</strong>
+                                </td>
+                                break;
+                            case JobStatus.Submitted:
+                                <td class="submitted text-black" style="width:9% !important;">
+                                    <strong>@Html.DisplayFor(modelItem => item.JobStatus)</strong>
+                                </td>
+                                break;
+                            case JobStatus.Completed:
+                                <td class="completed text-black" style="width:9% !important;">
+                                    <strong>@Html.DisplayFor(modelItem => item.JobStatus)</strong>
+                                </td>
+                                break;
+                        }
+                        <td style="width:7% !important;">
+                            @Html.DisplayFor(modelItem => item.PriorityLevel)
                         </td>
-                        break;
-                    case JobStatus.Completed:
-                        <td class="completed text-black">
-                            <strong>@Html.DisplayFor(modelItem => item.JobStatus)</strong>
+                        <td style="width:11% !important;">
+                            <a class="table-link" asp-area="Identity" asp-page="/Account/Manage/Index" asp-route-id="@item.OwnerID">
+                                @item.Owner.FullName
+                            </a>
                         </td>
-                        break;
+                        <td style="width:11% !important;">
+                            <a class="table-link" asp-area="Identity" asp-page="/Account/Manage/Index" asp-route-id="@item.AssignedEmployeeID">
+                                @item.AssignedEmployee.FullName
+                            </a>
+                        </td>
+                        <td style="width:10% !important;">
+                            @if (item.TeamID != null)
+                            {
+                                <a class="table-link" asp-page="/Teams/TeamHome/Index" asp-route-teamId="@item.TeamID">
+                                    @item.Team.TeamName
+                                </a>
+                            }
+                        </td>
+                        <td style="width:10% !important;">
+                            @if (item.ProjectID != null)
+                            {
+                                <a class="table-link" asp-page="/Projects/ProjectHome/Index" asp-route-projectId="@item.ProjectID">
+                                    @item.Project.ProjectName
+                                </a>
+                            }
+                        </td>
+                        <td style="width:13% !important;">
+                            <a class="table-link" asp-page="./Edit" asp-route-id="@item.JobId">Edit</a> |
+                            <a class="table-link" asp-page="./Details" asp-route-id="@item.JobId">Details</a> |
+                            <a class="table-link" asp-page="./Delete" asp-route-id="@item.JobId">Delete</a>
+                        </td>
+                    </tr>
                 }
-            <td>
-                @Html.DisplayFor(modelItem => item.PriorityLevel)
-            </td>
-            <td>
-                <a class="table-link" asp-area="Identity" asp-page="/Account/Manage/Index" asp-route-id="@item.OwnerID">
-                    @item.Owner.FullName
-                </a>
-            </td>
-            <td>
-                <a class="table-link" asp-area="Identity" asp-page="/Account/Manage/Index" asp-route-id="@item.AssignedEmployeeID">
-                    @item.AssignedEmployee.FullName
-                </a>
-            </td>
-            <td>
-                @if (item.TeamID != null)
-                {
-                    <a class="table-link" asp-page="/Teams/TeamHome/Index" asp-route-teamId="@item.TeamID">
-                        @item.Team.TeamName
-                    </a>
-                }                
-            </td>
-            <td>
-                @if (item.ProjectID != null)
-                {
-                    <a class="table-link" asp-page="/Projects/ProjectHome/Index" asp-route-projectId="@item.ProjectID">
-                        @item.Project.ProjectName
-                    </a>
-                }
-            </td>
-            <td>
-                <a class="table-link" asp-page="./Edit" asp-route-id="@item.JobId">Edit</a> |
-                <a class="table-link" asp-page="./Details" asp-route-id="@item.JobId">Details</a> |
-                <a class="table-link" asp-page="./Delete" asp-route-id="@item.JobId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+            </tbody>
+        </table>
 
-@{
-    var prevDisabled = !Model.Jobs.HasPreviousPage ? "disabled" : "";
-    var nextDisabled = !Model.Jobs.HasNextPage ? "disabled" : "";
-}
+        @{
+            var prevDisabled = !Model.Jobs.HasPreviousPage ? "disabled" : "";
+            var nextDisabled = !Model.Jobs.HasNextPage ? "disabled" : "";
+        }
 
-<a asp-page="./Index"
-   asp-route-sortOrder="@Model.CurrentSort"
-   asp-route-pageIndex="@(Model.Jobs.PageIndex - 1)"
-   asp-route-currentFilter="@Model.CurrentFilter"
-   class="btn btn-primary @prevDisabled">
-    Previous
-</a>
-<a asp-page="./Index"
-   asp-route-sortOrder="@Model.CurrentSort"
-   asp-route-pageIndex="@(Model.Jobs.PageIndex + 1)"
-   asp-route-currentFilter="@Model.CurrentFilter"
-   class="btn btn-primary @nextDisabled">
-    Next
-</a>
+        <a asp-page="./Index"
+           asp-route-sortOrder="@Model.CurrentSort"
+           asp-route-pageIndex="@(Model.Jobs.PageIndex - 1)"
+           asp-route-currentFilter="@Model.CurrentFilter"
+           class="btn btn-primary @prevDisabled">
+            Previous
+        </a>
+        <a asp-page="./Index"
+           asp-route-sortOrder="@Model.CurrentSort"
+           asp-route-pageIndex="@(Model.Jobs.PageIndex + 1)"
+           asp-route-currentFilter="@Model.CurrentFilter"
+           class="btn btn-primary @nextDisabled">
+            Next
+        </a>
+    </div>
+</div>
+
+
