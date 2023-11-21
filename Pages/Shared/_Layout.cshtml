@@ -107,7 +107,10 @@
       <!-- Right links -->
         <div class="dropdown">
             <a id="notificationButton" data-bs-toggle="dropdown" aria-expanded="false" style="cursor:pointer;">
-                    <img src="~/images/bell-f.svg" class="white-svg-filter hover-alert" />
+                    <span class="position-absolute top-50 start-100 translate-middle p-2 bg-danger rounded-circle" id="notificationBadge" style="display:none;">
+                        <span class="visually-hidden">New alerts</span>
+                    </span>
+                    <img src="~/images/bell-f.svg" class="white-svg-filter hover-alert" />                                       
             </a>
             <ul class="dropdown-menu notifications" aria-labelledby="notificationButton" id="notificationList">
                     <li><h6 class="dropdown-header">Notifications</h6></li>

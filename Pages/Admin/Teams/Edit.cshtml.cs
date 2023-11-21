@@ -36,8 +36,8 @@ namespace ArgoCMS.Pages.Admin.Teams
                 return NotFound();
             }
             Team = team;
-           ViewData["CreatedById"] = new SelectList(_context.Employees, "Id", "Id");
-           ViewData["TeamLeaderId"] = new SelectList(_context.Employees, "Id", "Id");
+           ViewData["CreatedById"] = new SelectList(_context.Employees, "Id", "FullName");
+           ViewData["TeamLeaderId"] = new SelectList(_context.Employees, "Id", "FullName");
             return Page();
         }
 
