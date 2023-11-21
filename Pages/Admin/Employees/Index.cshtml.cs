@@ -22,17 +22,22 @@ namespace ArgoCMS.Pages.Admin.Employees
             public string Role { get; set; }
         }
 
-        public List<EmployeeViewModel> Employees { get; set; }
+        public List<EmployeeViewModel> Employees { get; set; } = new();
 
         public async Task OnGetAsync()
         {
             if (Context.Users != null)
             {
-                Employees = await UserManager.Users.Select(u => new EmployeeViewModel()
+                var employees = await Context.Employees.ToListAsync();
+
+                foreach (var employee in employees)
                 {
-                    Employee = u,
-                    Role = string.Join(",", UserManager.GetRolesAsync(u).Result.ToArray())
-                }).ToListAsync();
+                    Employees.Add(new EmployeeViewModel 
+                    { 
+                        Employee = employee,
+                        Role = string.Join(",", UserManager.GetRolesAsync(employee).Result.ToArray())
+                    });
+                }
             }           
         }
     }
