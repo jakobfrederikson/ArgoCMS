@@ -1,5 +1,10 @@
 ﻿function fetchUserNotifications() {
     $.getJSON(`/api/Notifications`, function (data) {
+        if (data === null || !Array.isArray(data)) {
+            console.log("Notifications are null or not an array");
+            return;
+        }
+        updateNotificationBadge(data);
         updateNotificationList(data);
     })
     .fail(function (error) {
@@ -7,23 +12,27 @@
     });
 }
 
+// Function to update the notification badge
+function updateNotificationBadge(notifications) {
+    const notificationBadge = document.getElementById("notificationBadge");
+
+    if (Object.values(notifications).some(n => n.isRead === false)) {
+        console.log("ayyyy");
+        notificationBadge.style.display = "inline-block";
+    } else {
+        console.log("there we go");
+        notificationBadge.style.display = "none";
+    }
+}
+
 // Function to update the notification list on the page
 function updateNotificationList(notifications) {
-    if (notifications === null || !Array.isArray(notifications)) {
-        console.log("Notifications are null or not an array");
-        return;
-    }
-
-    const notificationWrapper = document.getElementById("notificationWrapper");
-    //const notificationBadge = document.getElementById("notificationBadge");
+    const notificationWrapper = document.getElementById("notificationWrapper");    
 
     notifications.forEach(n => {
-        var notification = createNotification(n);
-        
+        var notification = createNotification(n);        
         notificationWrapper.appendChild(notification);
-        //const currentCount = parseInt(notificationBadge.innerHTML);
-        //notificationBadge.innerHTML = (currentCount + 1).toString();
-    });    
+    });
 }
 
 function createNotification(n) {
@@ -86,10 +95,6 @@ function deleteNotification(notification, card) {
             var notificationWrapper = document.getElementById("notificationWrapper");
             notificationWrapper.removeChild(card);
 
-            // Decrease notification count by 1
-            //var notificationBadge = document.getElementById("notificationBadge");
-            //const currentCount = parseInt(notificationBadge.innerHTML);
-            //notificationBadge.innerHTML = (currentCount - 1).toString();
         } else {
             console.error("Failed to delete notification", response.statusText);
         }
