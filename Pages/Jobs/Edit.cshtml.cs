@@ -22,6 +22,7 @@ namespace ArgoCMS.Pages.Jobs
         public Job Job { get; set; } = default!;
         public IEnumerable<SelectListItem> Employees { get; set; }
         public IEnumerable<SelectListItem> Teams { get; set; }
+        public IEnumerable<SelectListItem> Projects { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -42,6 +43,9 @@ namespace ArgoCMS.Pages.Jobs
 
             Teams = Context.Teams.Select(
                 t => new SelectListItem { Text = t.TeamName, Value = t.TeamId.ToString() });
+
+            Projects = Context.Projects.Select(
+                p => new SelectListItem { Text = p.ProjectName, Value = p.ProjectId.ToString() });
 
             return Page();
         }

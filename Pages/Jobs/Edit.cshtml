@@ -28,6 +28,12 @@
                 </select>
             </div>
             <div class="form-group">
+                <label for="projectSelect" class="control-label">Select a Project</label>
+                <select id="projectSelect" class="form-control" asp-for="Job.ProjectID" asp-items="Model.Projects">
+                    <option selected disabled>-- Select Project --</option>
+                </select>
+            </div>
+            <div class="form-group">
                 <label for="employeeSelect" class="control-label">Select an Employee</label>
                 <select id="employeeSelect" asp-for="Job.AssignedEmployeeID" class="form-control" asp-items="Model.Employees">
                     <option selected disabled>-- Select Employee --</option>
