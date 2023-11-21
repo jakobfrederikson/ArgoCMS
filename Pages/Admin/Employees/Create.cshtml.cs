@@ -54,13 +54,20 @@ namespace ArgoCMS.Pages.Admin.Employees
 
 		public async Task<IActionResult> OnPostAsync()
         {
+            // Clear all unnecessary validation checks.
+            // https://stackoverflow.com/questions/24879672/how-to-exclude-navigation-properties-validations-from-model-state-on-web-api
+            ModelState.Remove($"Employee.{nameof(Employee.Jobs)}");
+            ModelState.Remove($"Employee.{nameof(Employee.EmployeeProjects)}");
+            ModelState.Remove($"Employee.{nameof(Employee.EmployeeTeams)}");
+            ModelState.Remove($"Employee.{nameof(Employee.Notifications)}");
+            ModelState.Remove($"Employee.{nameof(Employee.EmployeeNotificationGroups)}");
             if (!ModelState.IsValid)
             {
 				return Page();
 			}
 
             Employee.EmailConfirmed = true;
-            string defaultPassword = _configuration["SeedUserPW"];
+            string defaultPassword = "Passw0rd!";
             await UserManager.CreateAsync(Employee, defaultPassword);
             await UserManager.AddToRoleAsync(Employee, Role);
             await Context.SaveChangesAsync();
