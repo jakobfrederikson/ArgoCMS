@@ -95,34 +95,30 @@
                         <td style="width:9% !important;">
                             @Html.DisplayFor(modelItem => item.DueDate)
                         </td>
-                        @switch (item.JobStatus)
-                        {
-                            case JobStatus.Unread:
-                                <td class="unread text-black" style="width:9% !important;">
-                                    <strong>@Html.DisplayFor(modelItem => item.JobStatus)</strong>
-                                </td>
-                                break;
-                            case JobStatus.Read:
-                                <td class="read text-black" style="width:9% !important;">
-                                    <strong>@Html.DisplayFor(modelItem => item.JobStatus)</strong>
-                                </td>
-                                break;
-                            case JobStatus.Working:
-                                <td class="working text-black" style="width:9% !important;">
-                                    <strong>@Html.DisplayFor(modelItem => item.JobStatus)</strong>
-                                </td>
-                                break;
-                            case JobStatus.Submitted:
-                                <td class="submitted text-black" style="width:9% !important;">
-                                    <strong>@Html.DisplayFor(modelItem => item.JobStatus)</strong>
-                                </td>
-                                break;
-                            case JobStatus.Completed:
-                                <td class="completed text-black" style="width:9% !important;">
-                                    <strong>@Html.DisplayFor(modelItem => item.JobStatus)</strong>
-                                </td>
-                                break;
+                        @{
+                            string statusClass = "";
+                            switch (item.JobStatus)
+                            {
+                                case JobStatus.Unread:
+                                    statusClass = "unread";
+                                    break;
+                                case JobStatus.Read:
+                                    statusClass = "read";
+                                    break;
+                                case JobStatus.Working:
+                                    statusClass = "working";
+                                    break;
+                                case JobStatus.Submitted:
+                                    statusClass = "submitted";
+                                    break;
+                                case JobStatus.Completed:
+                                    statusClass = "completed";
+                                    break;
+                            }
                         }
+                        <td class="@statusClass text-black" style="width: 9% !important;">
+                            <strong>@Html.DisplayFor(modelItem => item.JobStatus)</strong>
+                        </td>
                         <td style="width:7% !important;">
                             @Html.DisplayFor(modelItem => item.PriorityLevel)
                         </td>
