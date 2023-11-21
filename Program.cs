@@ -38,8 +38,6 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddSignalR();
 
-builder.Services.AddHttpContextAccessor();
-
 // Require authorization unless specified.
 builder.Services.AddAuthorization(options =>
 {
@@ -62,15 +60,15 @@ builder.Services.AddRazorPages(options =>
 
 // Authorization handlers.
 // Projects
-builder.Services.AddScoped<IAuthorizationHandler,
-                        ProjectIsOwnerAuthorizationHandler>();
+builder.Services.AddSingleton<IAuthorizationHandler,
+                        ProjectManagerAuthorizationHandler>();
 
 builder.Services.AddSingleton<IAuthorizationHandler,
                         ProjectAdministratorAuthorizationHandler>();
 
 //Teams
-builder.Services.AddScoped<IAuthorizationHandler,
-                        TeamIsOwnerAuthorizationHandler>();
+builder.Services.AddSingleton<IAuthorizationHandler,
+                        TeamManagerAuthorizationHandler>();
 
 builder.Services.AddSingleton<IAuthorizationHandler,
                         TeamAdministratorAuthorizationHandler>();
@@ -95,6 +93,7 @@ using (var scope = app.Services.CreateScope())
     context.Database.EnsureDeleted();
     context.Database.EnsureCreated();
     //context.Database.Migrate();
+
     // requires using Microsoft.Extensions.Configuration;
     // Set password with the Secret Manager tool.
     // dotnet user-secrets set SeedUserPW <pw>
