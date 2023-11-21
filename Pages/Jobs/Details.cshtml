@@ -15,7 +15,13 @@
             @Html.DisplayNameFor(model => model.Job.OwnerID)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Job.OwnerID)
+            @Html.DisplayFor(model => model.Job.Owner.FullName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Job.AssignedEmployeeID)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Job.AssignedEmployee.FullName)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Job.TeamID)

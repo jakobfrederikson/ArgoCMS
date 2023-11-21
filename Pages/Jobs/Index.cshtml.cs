@@ -1,6 +1,7 @@
 ﻿using ArgoCMS.Models;
 using ArgoCMS.Data;
 using ArgoCMS.Authorization;
+using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -12,105 +13,129 @@ namespace ArgoCMS.Pages.Jobs
         public IndexModel(
             ApplicationDbContext context,
             IAuthorizationService authorizationService,
-            UserManager<Employee> userManager)
+            UserManager<Employee> userManager,
+            IConfiguration configuration)
             : base(context, authorizationService, userManager)
         {
+            Configuration = configuration;
         }
 
-        public Dictionary<Job, string> Jobs { get;set; } = default!;
-        public Dictionary<string, string> CreatedByIdToFullName { get; set; } = default!;
-        public Dictionary<string, string> AssignedToIdToFullName { get; set; } = default!;
-        public Dictionary<int, string> TeamsToFullName { get; set; } = default!;
-        public Dictionary<int, string> ProjectsToFullName { get; set; } = default!;
+        private readonly IConfiguration Configuration;
 
-        public async Task OnGetAsync()
+        public PaginatedList<Job> Jobs { get; set; }
+
+        // Sorting filters
+        public string NameSort { get; set; }
+        public string DateSort { get; set; }
+        public string DueDateSort { get; set; }
+        public string JobStatusSort { get; set; }
+        public string PriorityLevelSort { get; set; }
+        public string CreatedBySort { get; set; }
+        public string AssignedToSort { get; set; }
+        public string TeamSort { get; set; }
+        public string ProjectSort { get; set;}
+        public string CurrentFilter { get; set; }
+        public string CurrentSort { get; set; }
+
+        public async Task OnGetAsync(string sortOrder,
+            string currentFilter, string searchString, int? pageIndex)
         {
             var userId = UserManager.GetUserId(User);
-            if (Context.Jobs != null)
+
+            CurrentSort = sortOrder;
+            NameSort = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            DateSort = sortOrder == "Date" ? "date_desc" : "Date";
+            DueDateSort = sortOrder == "DueDate" ? "dueDate_desc" : "DueDate";
+            JobStatusSort = sortOrder == "JobStatus" ? "jobStatus_desc" : "JobStatus";
+            PriorityLevelSort = sortOrder == "PriorityLevel" ? "priorityLevel_desc" : "PriorityLevel";
+            CreatedBySort = sortOrder == "CreatedBy" ? "createdBy_desc" : "CreatedBy";
+            AssignedToSort = sortOrder == "AssignedTo" ? "assignedTo_desc" : "AssignedTo";
+            TeamSort = sortOrder == "Team" ? "team_desc" : "Team";
+            ProjectSort = sortOrder == "Project" ? "project_desc" : "Project";
+            if (searchString != null)
             {
-                var jobsQuery = Context.Jobs
-                    .Where(j => j.JobStatus != JobStatus.Completed)
+                pageIndex = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            CurrentFilter = searchString;
+
+            IQueryable<Job> jobsIQ = Context.Jobs
                     .Where(j => j.OwnerID == userId || j.AssignedEmployeeID == userId)
-                    .OrderByDescending(j => (int)j.PriorityLevel);
+                    .Include(j => j.Owner)
+                    .Include(j => j.AssignedEmployee)
+                    .Include(j => j.Team)
+                    .Include(j => j.Project);
 
-                Jobs = await GetJobsWithStatusCssClassAsync(jobsQuery);
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                jobsIQ = jobsIQ.Where(j => j.JobName.Contains(searchString));
             }
 
-            var createdByIds = Jobs.Keys.Select(job => job.OwnerID).Distinct();
-            var assignedToIds = Jobs.Keys.Select(job => job.AssignedEmployeeID).Distinct();
-            var teamIds = Jobs.Keys.Select(job => job.TeamID).Distinct();
-            var projectIds = Jobs.Keys.Select(job => job.ProjectID).Distinct();
-
-            var employees = await Context.Employees
-                .Where(e => createdByIds.Contains(e.Id) || assignedToIds.Contains(e.Id))
-                .ToDictionaryAsync(e => e.Id, e => e.FullName);
-
-            var teams = await Context.Teams
-                .Where(t => teamIds.Contains(t.TeamId))
-                .ToDictionaryAsync(t => t.TeamId, t => t.TeamName);
-
-            var projects = await Context.Projects
-                .Where(p => projectIds.Contains(p.ProjectId))
-                .ToDictionaryAsync(p => p.ProjectId, p => p.ProjectName);
-
-            var createdByIdToFullName = new Dictionary<string, string>();
-            var assignedToIdToFullName = new Dictionary<string, string>();
-            var teamsToFullName = new Dictionary<int, string>();
-            var projectsToFullName = new Dictionary<int, string>();
-
-            foreach (var job in Jobs.Keys)
+            switch (sortOrder)
             {
-                if (employees.ContainsKey(job.OwnerID))
-                {
-                    createdByIdToFullName[job.OwnerID] = employees[job.OwnerID];
-                }
-
-                if (employees.ContainsKey(job.AssignedEmployeeID))
-                {
-                    assignedToIdToFullName[job.AssignedEmployeeID] = employees[job.AssignedEmployeeID];
-                }
-
-                if (job.TeamID != null && teams.ContainsKey(job.TeamID.Value))
-                {
-                    teamsToFullName[job.TeamID.Value] = teams[job.TeamID.Value];
-                }
-
-                if (job.ProjectID != null && projects.ContainsKey(job.ProjectID.Value))
-                {
-                    projectsToFullName[job.ProjectID.Value] = projects[job.ProjectID.Value];
-                }
-            }
-
-            CreatedByIdToFullName = createdByIdToFullName;
-            AssignedToIdToFullName = assignedToIdToFullName;
-            TeamsToFullName = teamsToFullName;
-            ProjectsToFullName = projectsToFullName;
-        }
-
-        private async Task<Dictionary<Job, string>> GetJobsWithStatusCssClassAsync(IQueryable<Job> query)
-        {
-            return await query
-                .ToDictionaryAsync(
-                    j => j,
-                    GetJobStatusCssClass
-                );
-        }
-
-        private string GetJobStatusCssClass(Job job)
-        {
-            switch (job.JobStatus)
-            {
-                case JobStatus.Unread:
-                    return "table-primary";
-                case JobStatus.Read:
-                    return "table-danger";
-                case JobStatus.Working:
-                    return "table-warning";
-                case JobStatus.Submitted:
-                    return "table-success";
+                case "name_desc":
+                    jobsIQ = jobsIQ.OrderByDescending(j => j.JobName);
+                    break;
+                case "Date":
+                    jobsIQ = jobsIQ.OrderBy(j => j.DateCreated);
+                    break;
+                case "date_desc":
+                    jobsIQ = jobsIQ.OrderByDescending(j => j.DateCreated);
+                    break;
+                case "DueDate":
+                    jobsIQ = jobsIQ.OrderBy(j => j.DueDate);
+                    break;
+                case "dueDate_desc":
+                    jobsIQ = jobsIQ.OrderByDescending(j => j.DueDate);
+                    break;
+                case "JobStatus":
+                    jobsIQ = jobsIQ.OrderBy(j => j.JobStatus);
+                    break;
+                case "jobStatus_desc":
+                    jobsIQ = jobsIQ.OrderByDescending(j => j.JobStatus);
+                    break;
+                case "PriorityLevel":
+                    jobsIQ = jobsIQ.OrderBy(j => j.PriorityLevel);
+                    break;
+                case "priorityLevel_dec":
+                    jobsIQ = jobsIQ.OrderByDescending(j => j.PriorityLevel);
+                    break;
+                case "CreatedBy":
+                    jobsIQ = jobsIQ.OrderBy(j => j.OwnerID);
+                    break;
+                case "createdBy_desc":
+                    jobsIQ = jobsIQ.OrderByDescending(j => j.OwnerID);
+                    break;
+                case "AssignedTo":
+                    jobsIQ = jobsIQ.OrderBy(j => j.AssignedEmployeeID);
+                    break;
+                case "assignedTo_desc":
+                    jobsIQ = jobsIQ.OrderByDescending(j => j.AssignedEmployeeID);
+                    break;
+                case "Team":
+                    jobsIQ = jobsIQ.OrderBy(j => j.TeamID);
+                    break;
+                case "team_desc":
+                    jobsIQ = jobsIQ.OrderByDescending(j => j.TeamID);
+                    break;
+                case "Project":
+                    jobsIQ = jobsIQ.OrderBy(j => j.ProjectID);
+                    break;
+                case "project_desc":
+                    jobsIQ = jobsIQ.OrderByDescending(j => j.ProjectID);
+                    break;
                 default:
-                    return "";
+                    jobsIQ = jobsIQ.OrderByDescending(j => j.PriorityLevel);
+                    break;
             }
+
+            var pageSize = Configuration.GetValue("PageSize", 4);
+            Jobs = await PaginatedList<Job>.CreateAsync(
+                jobsIQ.AsNoTracking(), pageIndex ?? 1, pageSize);
         }
     }
 }

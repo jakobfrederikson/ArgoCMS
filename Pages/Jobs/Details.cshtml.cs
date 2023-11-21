@@ -37,6 +37,8 @@ namespace ArgoCMS.Pages.Jobs
             }
 
             var job = await Context.Jobs
+                .Include(j => j.Owner)
+                .Include(j => j.AssignedEmployee)
                 .Include(j => j.Comments)
                 .ThenInclude(c => c.Owner)
                 .FirstOrDefaultAsync(j => j.JobId == id);
