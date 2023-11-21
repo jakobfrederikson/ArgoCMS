@@ -179,3 +179,39 @@ body {
 .delete-link {
     cursor:pointer;
 }
+
+.table > thead > tr {
+    background: #262A39 !important;
+}
+
+.table > tbody > tr {
+    background: #3B4158 !important;
+}
+
+.table-link {
+    color: #F3F5F7;
+}
+
+.table-link:hover {
+    color: #cfd2d4;
+}
+
+.unread {
+    background-color: #FF6262 !important;
+}
+
+.read {
+    background-color: #8DF9C5 !important;
+}
+
+.working {
+    background-color: #86A4F2 !important;
+}
+
+.submitted {
+    background-color: #F6F28F !important;
+}
+
+.completed {
+    background-color: #83BC55 !important;
+}

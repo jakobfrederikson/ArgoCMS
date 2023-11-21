@@ -26,63 +26,63 @@
     </div>
 </div>
 
-<table class="table table-light">
+<table class="job-table table table-bordered text-snow-white">
     <thead>
         <tr>
-            <th>
-                <a asp-page="./Index" asp-route-sortOrder="@Model.NameSort"
+            <th style="width:10%;">
+                <a class="table-link" asp-page="./Index" asp-route-sortOrder="@Model.NameSort"
                 asp-route-currentFilter="@Model.CurrentFilter">
                     @Html.DisplayNameFor(model => model.Jobs[0].JobName)
                 </a>                
             </th>
-            <th>
-                <a asp-page="./Index" asp-route-sortOrder="@Model.DateSort">
+            <th style ="width:10%;">
+                <a class="table-link" asp-page="./Index" asp-route-sortOrder="@Model.DateSort">
                     @Html.DisplayNameFor(model => model.Jobs[0].DateCreated)
                 </a>
             </th>
-            <th>
-                <a asp-page="./Index" asp-route-sortOrder="@Model.DueDateSort">
+            <th style="width:10%;">
+                <a class="table-link" asp-page="./Index" asp-route-sortOrder="@Model.DueDateSort">
                     @Html.DisplayNameFor(model => model.Jobs[0].DueDate)
                 </a>
             </th>
-            <th>
-                <a asp-page="./Index" asp-route-sortOrder="@Model.JobStatusSort">
+            <th style="width:10%;">
+                <a class="table-link" asp-page="./Index" asp-route-sortOrder="@Model.JobStatusSort">
                     @Html.DisplayNameFor(model => model.Jobs[0].JobStatus)
                 </a>
             </th>
-            <th>
-                <a asp-page="./Index" asp-route-sortOrder="@Model.PriorityLevelSort">
+            <th style="width:10%;">
+                <a class="table-link" asp-page="./Index" asp-route-sortOrder="@Model.PriorityLevelSort">
                     @Html.DisplayNameFor(model => model.Jobs[0].PriorityLevel)
                 </a>
             </th>
-            <th>
-                <a asp-page="./Index" asp-route-sortOrder="@Model.CreatedBySort">
+            <th style="width:10%;">
+                <a class="table-link" asp-page="./Index" asp-route-sortOrder="@Model.CreatedBySort">
                     @Html.DisplayNameFor(model => model.Jobs[0].OwnerID)
                 </a>
             </th>
-            <th>
-                <a asp-page="./Index" asp-route-sortOrder="@Model.AssignedToSort">
+            <th style="width:10%;">
+                <a class="table-link" asp-page="./Index" asp-route-sortOrder="@Model.AssignedToSort">
                     @Html.DisplayNameFor(model => model.Jobs[0].AssignedEmployeeID)
                 </a>
             </th>            
-            <th>
-                <a asp-page="./Index" asp-route-sortOrder="@Model.TeamSort">
+            <th style="width:10%;">
+                <a class="table-link" asp-page="./Index" asp-route-sortOrder="@Model.TeamSort">
                     @Html.DisplayNameFor(model => model.Jobs[0].TeamID)
                 </a>
             </th>
-            <th>
-                <a asp-page="./Index" asp-route-sortOrder="@Model.ProjectSort">
+            <th style="width:10%;">
+                <a class="table-link" asp-page="./Index" asp-route-sortOrder="@Model.ProjectSort">
                     @Html.DisplayNameFor(model => model.Jobs[0].ProjectID)
                 </a>
             </th>
-            <th></th>
+            <th style="width:10%;"></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model.Jobs) {
-        <tr>
+            <tr>
             <td>
-                <a asp-page="./Details" asp-route-id="@item.JobId" class="link-primary">
+                <a class="table-link" asp-page="./Details" asp-route-id="@item.JobId" class="link-primary">
                     @Html.DisplayFor(modelItem => item.JobName)
                 </a>
             </td>
@@ -95,28 +95,28 @@
             @switch (item.JobStatus)
                 {
                     case JobStatus.Unread:
-                        <td class="table-primary">
-                            @Html.DisplayFor(modelItem => item.JobStatus)
+                        <td class="unread text-black">
+                            <strong>@Html.DisplayFor(modelItem => item.JobStatus)</strong>
                         </td>
                         break;
                     case JobStatus.Read:
-                        <td class="table-danger">
-                            @Html.DisplayFor(modelItem => item.JobStatus)
+                        <td class="read text-black">
+                            <strong>@Html.DisplayFor(modelItem => item.JobStatus)</strong>
                         </td>
                         break;
                     case JobStatus.Working:
-                        <td class="table-warning">
-                            @Html.DisplayFor(modelItem => item.JobStatus)
+                        <td class="working text-black">
+                            <strong>@Html.DisplayFor(modelItem => item.JobStatus)</strong>
                         </td>
                         break;
                     case JobStatus.Submitted:
-                        <td class="table-info">
-                            @Html.DisplayFor(modelItem => item.JobStatus)
+                        <td class="submitted text-black">
+                            <strong>@Html.DisplayFor(modelItem => item.JobStatus)</strong>
                         </td>
                         break;
                     case JobStatus.Completed:
-                        <td class="table-success">
-                            @Html.DisplayFor(modelItem => item.JobStatus)
+                        <td class="completed text-black">
+                            <strong>@Html.DisplayFor(modelItem => item.JobStatus)</strong>
                         </td>
                         break;
                 }
@@ -124,20 +124,19 @@
                 @Html.DisplayFor(modelItem => item.PriorityLevel)
             </td>
             <td>
-                <a asp-area="Identity" asp-page="/Account/Manage/Index" asp-route-id="@item.OwnerID">
+                <a class="table-link" asp-area="Identity" asp-page="/Account/Manage/Index" asp-route-id="@item.OwnerID">
                     @item.Owner.FullName
                 </a>
             </td>
             <td>
-                <a asp-area="Identity" asp-page="/Account/Manage/Index" asp-route-id="@item.AssignedEmployeeID">
-                    
+                <a class="table-link" asp-area="Identity" asp-page="/Account/Manage/Index" asp-route-id="@item.AssignedEmployeeID">
                     @item.AssignedEmployee.FullName
                 </a>
             </td>
             <td>
                 @if (item.TeamID != null)
                 {
-                    <a asp-page="/Teams/TeamHome/Index" asp-route-teamId="@item.TeamID">
+                    <a class="table-link" asp-page="/Teams/TeamHome/Index" asp-route-teamId="@item.TeamID">
                         @item.Team.TeamName
                     </a>
                 }                
@@ -145,15 +144,15 @@
             <td>
                 @if (item.ProjectID != null)
                 {
-                    <a asp-page="/Projects/ProjectHome/Index" asp-route-projectId="@item.ProjectID">
+                    <a class="table-link" asp-page="/Projects/ProjectHome/Index" asp-route-projectId="@item.ProjectID">
                         @item.Project.ProjectName
                     </a>
                 }
             </td>
             <td>
-                <a asp-page="./Edit" asp-route-id="@item.JobId">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.JobId">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.JobId">Delete</a>
+                <a class="table-link" asp-page="./Edit" asp-route-id="@item.JobId">Edit</a> |
+                <a class="table-link" asp-page="./Details" asp-route-id="@item.JobId">Details</a> |
+                <a class="table-link" asp-page="./Delete" asp-route-id="@item.JobId">Delete</a>
             </td>
         </tr>
 }
