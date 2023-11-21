@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using ArgoCMS.Data;
 using ArgoCMS.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ArgoCMS.Pages.Projects
 {
+    [Authorize(Roles = "Administrators")]
     public class DeleteModel : PageModel
     {
         private readonly ArgoCMS.Data.ApplicationDbContext _context;

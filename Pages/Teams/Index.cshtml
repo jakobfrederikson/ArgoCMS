@@ -13,18 +13,31 @@
 <div class="row">
     @foreach (var item in Model.EmployeeTeams)
     {
-        <div class="col-xl-3 col-md-6 col-xl-6">
-            <a asp-page="TeamHome/Index" asp-route-teamId="@item.TeamId" class="text-decoration-none">
-                <div class="card mb-4 bg-dark_blue hover-shadow">
-                    <div class="card-body">
-                        <div class="row text-center">
-                            <div class="col text-snow-white text-decoration-none">
-                                <h5>@item.Team.TeamName</h5>
-                            </div>
-                        </div>
+        <div class="col-xl-3 col-md-6 col-xl-6 mb-2">
+            <div class="card bg-team_dashboard_blue">
+                <a asp-page="TeamHome/Index" asp-route-teamId="@item.TeamId" class="text-decoration-none">
+                    <div class="card-body text-snow-white text-center db-ql">
+                        <p class="mb-0">@item.Team.TeamName</p>
                     </div>
+                </a>
+                <div class="list-group list-group-horizontal">
+                    <a asp-page="/Jobs/Create" asp-route-teamId="@item.TeamId" asp-route-id="@item.Team.TeamId" class="list-group-item list-group-item-action dashboard-quick-link text-center">
+                    Create Job
+                </a>
+                    <a asp-page="/Notices/Create" asp-route-teamIds="@item.TeamId" asp-route-id="@item.Team.TeamId" class="list-group-item list-group-item-action dashboard-quick-link text-center">
+                    Create Notice
+                </a>
+                    @if ((await AuthorizationService.AuthorizeAsync(User, item.Team, ArgoAuthOperations.Create)).Succeeded)
+                    {                    
+                        <a asp-page="Edit" asp-route-id="@item.Team.TeamId" class="list-group-item list-group-item-action dashboard-quick-link text-center">
+                            Edit Team
+                        </a>
+                        <a asp-page="Delete" asp-route-id="@item.Team.TeamId" class="list-group-item list-group-item-action dashboard-quick-link text-center">
+                            Delete Team
+                        </a>                    
+                    }
                 </div>
-            </a>            
+            </div>    
         </div>
     }
 </div>
