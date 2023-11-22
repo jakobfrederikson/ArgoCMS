@@ -176,12 +176,12 @@ app.Map("/api/Jobs/GetEmployeesByTeam/{teamId:int}", (int teamId, IJobService se
     }
 });
 
-app.Map("/api/Dashboard/LoadListOfColours/{numberOfEmployees:int}", (int numberOfEmployees, IDashboardService service) =>
+app.Map("/api/teams/employee-colours/{numberOfEmployees:int}", (int numberOfEmployees, IDashboardService service) =>
 {
     try
     {
-        var employees = service.ListOfColours(numberOfEmployees);
-        return Results.Ok(employees);
+        var colours = service.ListOfColours(numberOfEmployees);
+        return Results.Ok(colours);
     }
     catch (Exception ex)
     {
@@ -189,11 +189,11 @@ app.Map("/api/Dashboard/LoadListOfColours/{numberOfEmployees:int}", (int numberO
     }
 });
 
-app.Map("/api/Dashboard/LoadTeamJobStats/{teamId:int}", (int teamId, IDashboardService service) =>
+app.Map("/api/teams/{teamId:int}/job-stats", async (int teamId, IDashboardService service) =>
 {
     try
     {
-        var employees = service.GetTeamJobStatistics(teamId);
+        var employees = await service.GetTeamJobStatisticsAsync(teamId);
         return Results.Ok(employees);
     }
     catch (Exception ex)
