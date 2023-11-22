@@ -13,20 +13,20 @@ namespace ArgoCMS.Services.Dashboard
             _context = context;
         }
 
-        public Dictionary<string, int> GetTeamJobStatistics(int teamId)
+        public async Task<Dictionary<string, int>> GetTeamJobStatisticsAsync(int teamId)
         {
-            Dictionary<string, int> teamJobStats = _context.EmployeeTeams
+            Dictionary<string, int> teamJobStats = await _context.EmployeeTeams
                 .Where(et => et.TeamId == teamId)
                 .Include(et => et.Employee)
                 .ThenInclude(e => e.Jobs)
-                .ToDictionary(
+                .ToDictionaryAsync(
                     et => et.Employee.FullName,
                     et => et.Employee.Jobs.Count(job => job.JobStatus == JobStatus.Completed && job.TeamID == teamId)
-                )
-                .OrderByDescending(kv => kv.Value) // order the list, putting those with most completed jobs at the front
-                .ToDictionary(kv => kv.Key, kv => kv.Value);
+                );
 
-            return teamJobStats;
+            return teamJobStats
+                .OrderByDescending(kv => kv.Value)
+                .ToDictionary(kv => kv.Key, kv => kv.Value); // order the list, putting those with most completed jobs at the front
         }
 
         public List<string> ListOfColours(int numberOfEmployees)

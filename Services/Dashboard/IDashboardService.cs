@@ -3,6 +3,6 @@
     public interface IDashboardService
     {
         List<string> ListOfColours(int numberOfEmployees);
-        Dictionary<string, int> GetTeamJobStatistics(int teamId);
+        Task<Dictionary<string, int>> GetTeamJobStatisticsAsync(int teamId);
     }
 }

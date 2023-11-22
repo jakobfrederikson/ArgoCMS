@@ -343,7 +343,7 @@
 
             function fetchTeamJobStatistics(teamId) {
 
-                $.getJSON(`/api/Dashboard/LoadTeamJobStats/${teamId}`, function (data) {
+                $.getJSON(`/api/teams/${teamId}/job-stats`, function (data) {
                     fetchBackgroundColours(Object.keys(data).length, function (colours) {
                         updateChart(data, colours);
                     });
@@ -355,8 +355,7 @@
 
             function fetchBackgroundColours(count, callback) {
                 var bgColours;
-                console.log("starting background colour fetch");
-                $.getJSON(`/api/Dashboard/LoadListOfColours/${count}`, function (colours) {
+                $.getJSON(`/api/teams/employee-colours/${count}`, function (colours) {
                     callback(colours);
                 })
                 .fail(function (error) {
