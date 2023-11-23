@@ -17,11 +17,10 @@ The Argo Company Management System (Argo CMS) is a comprehensive web application
     * JavaScript
     * Figma
   *  Backend:
-  *    * C#
-    * C#
-    * ASP.NET Core
-    * EFCore
-    * SignalR
+      * C#
+      * ASP.NET Core
+      * EFCore
+      * SignalR
  
 ## Deployment
 The application is deployed to Azure, utilising GitHub for CI/CD.
