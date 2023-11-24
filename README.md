@@ -1,4 +1,5 @@
 # Argo Company Management System
+![Gif showing the different screens and options within the Argo app](readme_assets/optimised_argo_gif.gif)
 
 ## Overview
 The Argo Company Management System (Argo CMS) is a comprehensive web application designed to streamline workplace management and enhance team collaboration. Built using C#, ASP.NET Core, and EFCore, Argo CMS provides a robust platform for managing tasks, teams, and projects efficiently.
