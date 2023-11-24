@@ -31,7 +31,7 @@ Argo prioritises a user-friendly, dark-mode interface.
 ## Setup
 1. Clone the repository.
 2. Open the project in Visual Studio 2022.
-3. Change the connection string to "connectionString".
+3. In **Program.cs**, Change the connection string to "connectionString".
 4. Run.
 
 ## Future Enhancements
