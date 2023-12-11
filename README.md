@@ -17,11 +17,13 @@ The Argo Company Management System (Argo CMS) is a comprehensive web application
 * **CRUD Operations for Administrators**: Administrators can perform Create, Read, Update, and Delete operations for data management.
 
   ## Technology Stack
+
+  * Design:
+    * Figma
   * Frontend:
     * HTML
     * Bootstrap
     * JavaScript
-    * Figma
   *  Backend:
       * C#
       * ASP.NET Core
