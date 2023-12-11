@@ -22,6 +22,7 @@ The Argo Company Management System (Argo CMS) is a comprehensive web application
     * Figma
   * Frontend:
     * HTML
+    * CSS
     * Bootstrap
     * JavaScript
   *  Backend:
