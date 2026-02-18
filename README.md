@@ -7,32 +7,24 @@
 </p>
 
 ## Overview
-The Argo Company Management System (Argo CMS) is a comprehensive web application designed to streamline workplace management and enhance team collaboration. Built using C#, ASP.NET Core, and EFCore, Argo CMS provides a robust platform for managing tasks, teams, and projects efficiently.
+The Argo Company Management System (Argo CMS) is a web application I made or my final project form my software engineering degree. Built using C#, ASP.NET Core, EF Core, and SignalR. The inspiration for this project was ServiceNOW.
 
 ## Features
-* **Real-time Notification System**: Using SignalR, Argo keeps its users informed with real-time notifications, creating instant feedback and communication.
-* **Customised Microsoft Identity API**: User identity is tailored to meet the needs of Argo, while keeping with Microsoft's identity schema.
-* **Interactive Dashboard**: The dashboard provides stastics about employee tasks and team performance.
-* **Role-based Authorisation**: Argo uses a role-based authorisation system, ensuring secure access control based on user roles.
-* **CRUD Operations for Administrators**: Administrators can perform Create, Read, Update, and Delete operations for data management.
+* Realtime notififcations with SignalR.
+* Dashboard providing stastics about employee tasks and team performance.
+* Role-based authorisation system (e.g. only team leaders (and admins) can edit Teams).
+* Full CRUD options for Admins.
 
-  ## Technology Stack
+  # Technology Stack
   * Frontend:
     * HTML
-    * Bootstrap
+    * Bootstrap/CSS
     * JavaScript
-    * Figma
   *  Backend:
-      * C#
-      * ASP.NET Core
-      * EFCore
-      * SignalR
+      * C# (ASP.NET Core)
  
 ## Deployment
-The application is deployed to Azure, utilising GitHub for CI/CD.
-
-## User Experience
-Argo prioritises a user-friendly, dark-mode interface. 
+The application was deployed to Azure, utilising GitHub for CI/CD. 
 
 ## Setup
 1. Clone the repository.
@@ -40,5 +32,4 @@ Argo prioritises a user-friendly, dark-mode interface.
 4. Click the green arrow on the tool bar to run.
 
 ## Future Enhancements
-The project is open to future enhancements and addtional features. Feel free to suggest ideas or contribute to development.
-
+I have not touched this project since finishing my degree, but I had a lot of fun making this application. I don't have any major plans for this application apart from one day tidying up the code.
